@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  dockergen:
+    image: ${DOCKER_REGISTRY-}dockergen
+    build:
+      context: .
+      dockerfile: DockerGen/Dockerfile
+  
+  challengefirst:
+    image: ${DOCKER_REGISTRY-}challengefirst
+    build:
+      context: .
+      dockerfile: ChallengeFirst/Dockerfile
+  
+  db:
+    image: mysql:8.0
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=teste
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=132435
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  redis:
+    image: redis
+
+volumes:
+  db: 
+    driver: local

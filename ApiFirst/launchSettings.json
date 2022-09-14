@@ -1,0 +1,27 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "challengefirst": "StartDebugging",
+        "dockergen": "StartDebugging",
+        "redis": "StartWithoutDebugging",
+        "db": "StartWithoutDebugging"
+      }
+    },
+    "Start My Services": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "dockergen",
+      "composeLaunchUrl": "{Scheme}://localhost:3306",
+      "serviceActions": {
+        "challengefirst": "StartDebugging",
+        "dockergen": "StartDebugging",
+        "redis": "StartWithoutDebugging",
+        "db": "StartWithoutDebugging"
+      }
+    }
+  }
+}
