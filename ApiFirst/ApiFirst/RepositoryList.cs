@@ -9,7 +9,7 @@ namespace DomainServices.Repositories
 
         public bool Create(Customer model)
         {
-            model.Id = List.LastOrDefault()?.Id + 1 ?? 1;
+            model.Id = GetAll().LastOrDefault()?.Id + 1 ?? 0;
 
             bool exist = GetAll().Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
             if (exist)
@@ -18,7 +18,6 @@ namespace DomainServices.Repositories
             }
             else
             {
-                model.Id = GetAll().Count + 1;
                 GetAll().Add(model);
                 return true;
             }
@@ -40,13 +39,14 @@ namespace DomainServices.Repositories
 
         public Customer? GetByCpf(string cpf)
         {
+            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             return GetAll().FirstOrDefault(customer => customer.Cpf == cpf);
         }
 
-        public int Update(string cpf, Customer model)
+        public int Update(int id, Customer model)
         {
 
-            int index = GetAll().FindIndex(customer => customer.Cpf == cpf);
+            int index = GetAll().FindIndex(customer => customer.Id == id);
             if (index == -1) return -1;
 
             bool exist = GetAll().Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != GetAll()[index].Id);
@@ -62,20 +62,12 @@ namespace DomainServices.Repositories
 
         public Customer? GetById(int id)
         {
-            if (!GetAll().Any())
-            {
-                return null;
-            }
-            if (GetAll().Count() >= id)
-            {
-                return GetAll().ElementAt(id);
-            }
-            return null;
+            return GetAll().FirstOrDefault(x => x.Id == id);
         }
 
-        public int Modify(string cpf, Customer model)
+        public int Modify(int id, Customer model)
         {
-            int index = GetAll().FindIndex(customer => customer.Cpf == cpf);
+            int index = GetAll().FindIndex(customer => customer.Id == id);
             if (index == -1) return -1;
 
             bool exist = GetAll().Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != GetAll()[index].Id);

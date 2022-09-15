@@ -8,56 +8,63 @@ namespace WebApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerRepository _service;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomersController(ICustomerRepository repo)
+        public CustomersController(ICustomerRepository customerRepository)
         {
-            _service = repo ?? throw new ArgumentNullException(nameof(repo));
+            _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
         }
 
-        [HttpGet("get-by-cpf")]
-        public Customer? GetByCpf([FromQuery] string cpf)
+        [HttpGet("cpf/{cpf}")]
+        public Customer? GetByCpf(string cpf)
         {
-            return _service.GetByCpf(cpf);
+            return _customerRepository.GetByCpf(cpf);
         }
 
-
-        [HttpGet("get-all")]
-        public List<Customer> GetAll()
-        {
-            return _service.GetAll();
-        }
 
         [HttpGet]
-        public Customer? GetById(int id)
+        public List<Customer> GetAll()
         {
-            return _service.GetById(id);
+            return _customerRepository.GetAll();
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Customer?> GetById(int id)
+        {
+
+            var response = _customerRepository.GetById(id);
+
+            if (response is null)
+            {
+                return NotFound($"Não foi encontrado Costumer para o Id: {id}");
+            }
+            return Ok(response);
         }
 
         [HttpPost]
         public IActionResult Create([FromBody] Customer model)
         {
-            if (_service.Create(model))
+            if (_customerRepository.Create(model))
             {
                 return CreatedAtAction(nameof(GetById), new { id = model.Id }, model);
             }
             return BadRequest("O Email ou CPF já é usado.");
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (_service.Delete(id))
+            if (_customerRepository.Delete(id))
             {
                 return Ok();
             }
             return NotFound($"Usuário não encontrado para o id: {id}");
         }
 
-        [HttpPatch]
-        public IActionResult Update(string cpf, Customer model)
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, Customer model)
         {
-            int result = _service.Update(cpf, model);
+            int result = _customerRepository.Update(id, model);
 
             if (result == 1)
             {
@@ -67,17 +74,17 @@ namespace WebApi.Controllers
             {
                 return BadRequest("Já existe Customer com estes dados de CPF e Email.");
             }
-            return NotFound($"Não foi encontrado Customer para os valores do campo CPF: {cpf}.");
+            return NotFound($"Não foi encontrado Customer para os valores do campo CPF: {model.Cpf}.");
         }
 
-        [HttpPut]
-        public IActionResult Modify(string cpf, Customer model)
+        [HttpPatch("{id}")]
+        public IActionResult Modify(int id, Customer model)
         {
-            int result = _service.Modify(cpf, model);
+            int result = _customerRepository.Modify(id, model);
 
             if (result == -1)
             {
-                return NotFound($"Não foi encontrado Customer para os valores do campo CPF: {cpf}.");
+                return NotFound($"Não foi encontrado Customer para os valores do campo CPF: {model.Cpf}.");
             }
             else if (result == 0)
             {
