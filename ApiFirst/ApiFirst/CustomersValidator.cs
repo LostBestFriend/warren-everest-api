@@ -7,21 +7,20 @@ namespace AppServices.Validation
     {
         public CustomersValidator()
         {
-            RuleFor(x => x.Cpf.Trim().Replace(".", "").Replace("-", "")).MinimumLength(10).MaximumLength(14).Must(BeAValidCpf).
-                NotNull().NotEmpty().WithMessage("Please enter a valid CPF");
+            RuleFor(x => x.Cpf).Must(BeAValidCpf).NotEmpty().WithMessage("Please enter a valid CPF");
 
             RuleFor(x => x.Email).EmailAddress().Equal(x => x.EmailConfirmation).NotNull().NotEmpty();
 
-            RuleFor(x => x.DateOfBirth).NotEmpty().GreaterThan(DateTime.MinValue).WithMessage("This is required");
-            RuleFor(x => x.FullName).NotEmpty().WithMessage("This is required");
-            RuleFor(x => x.Cellphone).NotEmpty().WithMessage("This is required");
-            RuleFor(x => x.EmailSms).NotEmpty().WithMessage("This is required");
-            RuleFor(x => x.Whatsapp).NotEmpty().WithMessage("This is required");
-            RuleFor(x => x.Country).NotEmpty().WithMessage("This is required");
-            RuleFor(x => x.City).NotEmpty().WithMessage("This is required");
-            RuleFor(x => x.PostalCode).NotEmpty().WithMessage("This is required");
-            RuleFor(x => x.Address).NotEmpty().WithMessage("This is required");
-            RuleFor(x => x.Number).NotEmpty().WithMessage("This is required");
+            RuleFor(x => x.DateOfBirth).NotEmpty().GreaterThan(DateTime.MinValue).WithMessage("A valid DateofBirth is required");
+            RuleFor(x => x.FullName).NotEmpty().WithMessage("FullName is required");
+            RuleFor(x => x.Cellphone).NotEmpty().WithMessage("Cellphone is required");
+            RuleFor(x => x.EmailSms).NotEmpty().WithMessage("EmailSms is required");
+            RuleFor(x => x.Whatsapp).NotEmpty().WithMessage("WhatsApp is required");
+            RuleFor(x => x.Country).NotEmpty().WithMessage("Country is required");
+            RuleFor(x => x.City).NotEmpty().WithMessage("City is required");
+            RuleFor(x => x.PostalCode).NotEmpty().WithMessage("PostalCode is required");
+            RuleFor(x => x.Address).NotEmpty().WithMessage("Address is required");
+            RuleFor(x => x.Number).NotEmpty().WithMessage("Number is required");
 
             bool BeAValidCpf(string cpf)
             {
@@ -33,10 +32,9 @@ namespace AppServices.Validation
                 int soma;
                 int resto;
 
-                cpf = cpf.Trim();
-                cpf = cpf.Replace(".", "").Replace("-", "");
-
                 if (cpf.Length != 11) return false;
+                if (cpf.All(x => x == cpf.First())) return false;
+
 
                 tempCpf = cpf.Substring(0, 9);
                 soma = 0;

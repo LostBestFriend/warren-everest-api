@@ -1,137 +1,66 @@
-﻿using DomainModels.DataBase;
-using DomainModels.Models;
+﻿using DomainModels.Models;
 using DomainServices.Interfaces;
 
 namespace DomainServices.Repositories
 {
     public class RepositoryList : ICustomerRepository
     {
-        public int Create(Customer model)
+        private readonly List<Customer> List = new();
+
+        public bool Create(Customer model)
         {
-            model.Cpf = model.Cpf.Trim().Replace(".", "").Replace("-", "");
-            int response = 409;
+            model.Id = List.LastOrDefault()?.Id + 1 ?? 1;
 
-            ListCustomer list = ListCustomer.GetInstance();
-
-            model.Id = list.GetCustomerList().Count;
-
-
-            if (!list.GetCustomerList().Any())
+            bool exist = GetAll().Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
+            if (exist)
             {
-                model.Id = 0;
+                return false;
+            }
+            else
+            {
+                model.Id = GetAll().Count + 1;
                 GetAll().Add(model);
-                return 201;
+                return true;
             }
-
-            foreach (Customer item in list.GetCustomerList())
-            {
-                if (model.Cpf != item.Cpf && model.Email != item.Email)
-                {
-                    GetAll().Add(model);
-                    response = 201;
-                }
-                return response;
-            }
-
-            return 400;
         }
 
-        public int DeleteFromList(string cpf, string email)
+
+        public bool Delete(int id)
         {
-            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
-
-            if (!GetAll().Any())
-            {
-                return 400;
-            }
-
-            foreach (Customer item in GetAll())
-            {
-                if (cpf == item.Cpf && email == item.Email)
-                {
-                    GetAll().Remove(item);
-                    return 200;
-                }
-            }
-            return 404;
-        }
-        public int Delete(int id)
-        {
-
-            if (!GetAll().Any())
-            {
-                return 400;
-            }
-
-            if (GetAll().Count() >= id)
-            {
-                GetAll().Remove(GetAll().ElementAt(id));
-                return 200;
-            }
-
-            return 404;
+            int index = GetAll().FindIndex(customer => customer.Id == id);
+            if (index == -1) return false;
+            GetAll().RemoveAt(index);
+            return true;
         }
 
         public List<Customer> GetAll()
         {
-            ListCustomer list = ListCustomer.GetInstance();
-            return list.GetCustomerList();
+            return List;
         }
 
-        public Customer GetSpecificFromList(string cpf, string email)
+        public Customer? GetByCpf(string cpf)
         {
-            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
-
-            if (!GetAll().Any())
-            {
-                return null;
-            }
-
-            foreach (Customer item in GetAll())
-            {
-                if (item.Cpf == cpf && item.Email == email)
-                {
-                    return item;
-                }
-                return null;
-            }
-            return null;
+            return GetAll().FirstOrDefault(customer => customer.Cpf == cpf);
         }
 
-        public int Update(Customer model)
+        public int Update(string cpf, Customer model)
         {
-            model.Cpf = model.Cpf.Trim().Replace(".", "").Replace("-", "");
 
-            if (!GetAll().Any())
-            {
-                return 400;
-            }
+            int index = GetAll().FindIndex(customer => customer.Cpf == cpf);
+            if (index == -1) return -1;
 
-            foreach (Customer item in GetAll())
+            bool exist = GetAll().Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != GetAll()[index].Id);
+
+            if (exist) return 0;
+            else
             {
-                if (model.Cpf == item.Cpf && model.Email == item.Email)
-                {
-                    item.Address = model.Address;
-                    item.City = model.City;
-                    item.Cpf = model.Cpf;
-                    item.EmailSms = model.EmailSms;
-                    item.Cellphone = model.Cellphone;
-                    item.Country = model.Country;
-                    item.Email = model.Email;
-                    item.DateOfBirth = model.DateOfBirth;
-                    item.EmailConfirmation = model.EmailConfirmation;
-                    item.PostalCode = model.PostalCode;
-                    item.Number = model.Number;
-                    item.Whatsapp = model.Whatsapp;
-                    item.FullName = model.FullName;
-                    return 200;
-                }
-                return 404;
+                model.Id = GetAll()[index].Id;
+                GetAll()[index] = model;
+                return 1;
             }
-            return 400;
         }
 
-        public Customer GetSpecific(int id)
+        public Customer? GetById(int id)
         {
             if (!GetAll().Any())
             {
@@ -144,37 +73,45 @@ namespace DomainServices.Repositories
             return null;
         }
 
-        public int Modify(Customer model)
+        public int Modify(string cpf, Customer model)
         {
-            model.Cpf = model.Cpf.Trim().Replace(".", "").Replace("-", "");
+            int index = GetAll().FindIndex(customer => customer.Cpf == cpf);
+            if (index == -1) return -1;
 
-            if (!GetAll().Any())
+            bool exist = GetAll().Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != GetAll()[index].Id);
+            if (exist) return 0;
+            else
             {
-                return 400;
-            }
+                model.Id = GetAll()[index].Id;
 
-            foreach (Customer item in GetAll())
-            {
-                if (model.Cpf == item.Cpf && model.Email == item.Email)
-                {
-                    item.Address = model.Address;
-                    item.City = model.City;
-                    item.Cpf = model.Cpf;
-                    item.EmailSms = model.EmailSms;
-                    item.Cellphone = model.Cellphone;
-                    item.Country = model.Country;
-                    item.Email = model.Email;
-                    item.DateOfBirth = model.DateOfBirth;
-                    item.EmailConfirmation = model.EmailConfirmation;
-                    item.PostalCode = model.PostalCode;
-                    item.Number = model.Number;
-                    item.Whatsapp = model.Whatsapp;
-                    item.FullName = model.FullName;
-                    return 200;
-                }
-                return 404;
+                if (GetAll()[index].FullName != model.FullName) GetAll()[index].FullName = model.FullName;
+
+                if (GetAll()[index].Email != model.Email) GetAll()[index].Email = model.Email;
+
+                if (GetAll()[index].EmailConfirmation != model.EmailConfirmation) GetAll()[index].EmailConfirmation = model.EmailConfirmation;
+
+                if (GetAll()[index].Cpf != model.Cpf) GetAll()[index].Cpf = model.Cpf;
+
+                if (GetAll()[index].Cellphone != model.Cellphone) GetAll()[index].Cellphone = model.Cellphone;
+
+                if (GetAll()[index].DateOfBirth != model.DateOfBirth) GetAll()[index].DateOfBirth = model.DateOfBirth;
+
+                if (GetAll()[index].EmailSms != model.EmailSms) GetAll()[index].EmailSms = model.EmailSms;
+
+                if (GetAll()[index].Whatsapp != model.Whatsapp) GetAll()[index].Whatsapp = model.Whatsapp;
+
+                if (GetAll()[index].Country != model.Country) GetAll()[index].Country = model.Country;
+
+                if (GetAll()[index].City != model.City) GetAll()[index].City = model.City;
+
+                if (GetAll()[index].PostalCode != model.PostalCode) GetAll()[index].PostalCode = model.PostalCode;
+
+                if (GetAll()[index].Address != model.Address) GetAll()[index].Address = model.Address;
+
+                if (GetAll()[index].Number != model.Number) GetAll()[index].Number = model.Number;
+
+                return 1;
             }
-            return 400;
         }
     }
 }
