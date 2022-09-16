@@ -19,12 +19,9 @@ namespace WebApi.Controllers
         public IActionResult GetByCpf(string cpf)
         {
             var response = _customerAppServices.GetByCpf(cpf);
-
-            if (response is null)
-            {
-                return NotFound($"Não foi encontrado Costumer para o CPF: {cpf}");
-            }
-            return Ok(response);
+            return response is null
+                ? NotFound($"Não foi encontrado Customer para o CPF: {cpf}")
+                : Ok(response);
         }
 
 
@@ -37,14 +34,10 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-
             var response = _customerAppServices.GetById(id);
-
-            if (response is null)
-            {
-                return NotFound($"Não foi encontrado Costumer para o Id: {id}");
-            }
-            return Ok(response);
+            return response is null
+                ? NotFound($"Não foi encontrado Costumer para o Id: {id}")
+                : Ok(response);
         }
 
         [HttpPost]
@@ -57,19 +50,20 @@ namespace WebApi.Controllers
             }
             catch (ArgumentException e)
             {
-
                 return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
             }
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (_customerAppServices.Delete(id))
-            {
-                return Ok();
-            }
-            return NotFound($"Usuário não encontrado para o id: {id}");
+            return _customerAppServices.Delete(id)
+                ? Ok()
+                : NotFound($"Usuário não encontrado para o id: {id}");
         }
 
         [HttpPut("{id}")]
