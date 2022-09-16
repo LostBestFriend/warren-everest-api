@@ -31,34 +31,26 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<Customer?> GetById(int id)
         {
-
             var response = _customerAppServices.GetById(id);
-
-            if (response is null)
-            {
-                return NotFound($"Não foi encontrado Costumer para o Id: {id}");
-            }
-            return Ok(response);
+            return response is null
+                ? NotFound($"Não foi encontrado Customer para o Id: {id}")
+                : Ok(response);
         }
 
         [HttpPost]
         public IActionResult Create([FromBody] Customer model)
         {
-            if (_customerAppServices.Create(model))
-            {
-                return CreatedAtAction(nameof(GetById), new { id = model.Id }, model);
-            }
-            return BadRequest("O Email ou CPF já é usado.");
+            return _customerAppServices.Create(model)
+                ? CreatedAtAction(nameof(GetById), new { id = model.Id }, model)
+                : BadRequest("O Email ou CPF já é usado.");
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (_customerAppServices.Delete(id))
-            {
-                return Ok();
-            }
-            return NotFound($"Usuário não encontrado para o id: {id}");
+            return _customerAppServices.Delete(id)
+                ? Ok()
+                : NotFound($"Usuário não encontrado para o id: {id}");
         }
 
         [HttpPut("{id}")]
