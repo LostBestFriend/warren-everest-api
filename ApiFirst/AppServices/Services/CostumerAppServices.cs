@@ -53,7 +53,7 @@ namespace AppServices.Services
         public void Modify(int id, CustomerUpdateDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
-            _customerServices.Modify(id, mapped);
+            _customerServices.Modify(mapped);
         }
     }
 }

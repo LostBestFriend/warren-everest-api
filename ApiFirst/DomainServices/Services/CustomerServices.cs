@@ -10,9 +10,7 @@ namespace DomainServices.Repositories
         public Customer Create(Customer model)
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
-
-            bool exist = _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
-            if (exist)
+            if (Exists(model))
             {
                 throw new ArgumentException("O CPF ou Email já estão sendo usados.");
             }
@@ -47,14 +45,21 @@ namespace DomainServices.Repositories
 
             int index = _customers.FindIndex(customer => customer.Id == model.Id);
             if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
-
-            bool exist = _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != _customers[index].Id);
-
-            if (exist) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
+            if (ExistsUpdate(_customers[index].Id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
             else
             {
                 _customers[index] = model;
             }
+        }
+
+        public bool ExistsUpdate(long id, Customer model)
+        {
+            return _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
+        }
+
+        public bool Exists(Customer model)
+        {
+            return _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
         }
 
         public Customer? GetById(int id)
@@ -67,8 +72,7 @@ namespace DomainServices.Repositories
             int index = _customers.FindIndex(customer => customer.Id == model.Id);
             if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
 
-            bool exist = _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != _customers[index].Id);
-            if (exist) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
+            if (ExistsUpdate(_customers[index].Id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
             else
             {
                 model.Id = _customers[index].Id;

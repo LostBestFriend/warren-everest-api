@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppServices\AppServices.csproj" />
+    <ProjectReference Include="..\DomainServices\DomainServices.csproj" />
   </ItemGroup>
 
 </Project>
