@@ -1,5 +1,5 @@
-﻿using DomainModels.Models;
-using DomainServices.Interfaces;
+﻿using AppServices.Interfaces;
+using DomainModels.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -8,31 +8,31 @@ namespace WebApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICustomerAppServices _customerAppServices;
 
-        public CustomersController(ICustomerRepository customerRepository)
+        public CustomersController(ICustomerAppServices customerAppServices)
         {
-            _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+            _customerAppServices = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
         }
 
         [HttpGet("cpf/{cpf}")]
         public Customer? GetByCpf(string cpf)
         {
-            return _customerRepository.GetByCpf(cpf);
+            return _customerAppServices.GetByCpf(cpf);
         }
 
 
         [HttpGet]
         public List<Customer> GetAll()
         {
-            return _customerRepository.GetAll();
+            return _customerAppServices.GetAll();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Customer?> GetById(int id)
         {
 
-            var response = _customerRepository.GetById(id);
+            var response = _customerAppServices.GetById(id);
 
             if (response is null)
             {
@@ -44,7 +44,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] Customer model)
         {
-            if (_customerRepository.Create(model))
+            if (_customerAppServices.Create(model))
             {
                 return CreatedAtAction(nameof(GetById), new { id = model.Id }, model);
             }
@@ -54,7 +54,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (_customerRepository.Delete(id))
+            if (_customerAppServices.Delete(id))
             {
                 return Ok();
             }
@@ -64,7 +64,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, Customer model)
         {
-            int result = _customerRepository.Update(id, model);
+            int result = _customerAppServices.Update(id, model);
 
             if (result == 1)
             {
@@ -74,17 +74,17 @@ namespace WebApi.Controllers
             {
                 return BadRequest("Já existe Customer com estes dados de CPF e Email.");
             }
-            return NotFound($"Não foi encontrado Customer para os valores do campo CPF: {model.Cpf}.");
+            return NotFound($"Usuário não encontrado para o id: {id}");
         }
 
         [HttpPatch("{id}")]
         public IActionResult Modify(int id, Customer model)
         {
-            int result = _customerRepository.Modify(id, model);
+            int result = _customerAppServices.Modify(id, model);
 
             if (result == -1)
             {
-                return NotFound($"Não foi encontrado Customer para os valores do campo CPF: {model.Cpf}.");
+                return NotFound($"Usuário não encontrado para o id: {id}");
             }
             else if (result == 0)
             {

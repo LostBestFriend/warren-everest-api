@@ -3,7 +3,7 @@ using DomainServices.Interfaces;
 
 namespace DomainServices.Repositories
 {
-    public class RepositoryList : ICustomerRepository
+    public class CustomerServices : ICustomerServices
     {
         private readonly List<Customer> List = new();
 

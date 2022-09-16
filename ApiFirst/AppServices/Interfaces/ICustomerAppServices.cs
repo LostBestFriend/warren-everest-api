@@ -1,8 +1,8 @@
 ﻿using DomainModels.Models;
 
-namespace DomainServices.Interfaces
+namespace AppServices.Interfaces
 {
-    public interface ICustomerRepository
+    public interface ICustomerAppServices
     {
         bool Create(Customer model);
 
