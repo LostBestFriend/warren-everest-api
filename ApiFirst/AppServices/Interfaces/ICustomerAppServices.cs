@@ -1,21 +1,21 @@
-﻿using DomainModels.Models;
+﻿using AppModels.MapperModels;
 
 namespace AppServices.Interfaces
 {
     public interface ICustomerAppServices
     {
-        bool Create(Customer model);
+        long Create(CustomerCreateDTO model);
 
-        int Update(int id, Customer model);
+        void Update(int id, CustomerUpdateDTO model);
 
         bool Delete(int id);
 
-        List<Customer> GetAll();
+        List<CustomerResponseDTO> GetAll();
 
-        Customer? GetById(int id);
+        CustomerResponseDTO? GetById(int id);
 
-        int Modify(int id, Customer model);
+        void Modify(int id, CustomerUpdateDTO model);
 
-        Customer? GetByCpf(string cpf);
+        CustomerResponseDTO? GetByCpf(string cpf);
     }
 }

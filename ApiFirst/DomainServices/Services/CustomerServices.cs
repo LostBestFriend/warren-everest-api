@@ -7,19 +7,19 @@ namespace DomainServices.Repositories
     {
         private readonly List<Customer> List = new();
 
-        public bool Create(Customer model)
+        public Customer Create(Customer model)
         {
             model.Id = GetAll().LastOrDefault()?.Id + 1 ?? 0;
 
             bool exist = GetAll().Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
             if (exist)
             {
-                return false;
+                throw new ArgumentException("O CPF ou Email já estão sendo usados.");
             }
             else
             {
                 GetAll().Add(model);
-                return true;
+                return model;
             }
         }
 
@@ -43,20 +43,18 @@ namespace DomainServices.Repositories
             return GetAll().FirstOrDefault(customer => customer.Cpf == cpf);
         }
 
-        public int Update(int id, Customer model)
+        public void Update(Customer model)
         {
 
-            int index = GetAll().FindIndex(customer => customer.Id == id);
-            if (index == -1) return -1;
+            int index = GetAll().FindIndex(customer => customer.Id == model.Id);
+            if (index == -1) throw new ArgumentException($"$Não foi encontrado Costumer para o Id: {model.Id}");
 
             bool exist = GetAll().Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != GetAll()[index].Id);
 
-            if (exist) return 0;
+            if (exist) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
             else
             {
-                model.Id = GetAll()[index].Id;
                 GetAll()[index] = model;
-                return 1;
             }
         }
 
@@ -65,13 +63,13 @@ namespace DomainServices.Repositories
             return GetAll().FirstOrDefault(x => x.Id == id);
         }
 
-        public int Modify(int id, Customer model)
+        public void Modify(Customer model)
         {
-            int index = GetAll().FindIndex(customer => customer.Id == id);
-            if (index == -1) return -1;
+            int index = GetAll().FindIndex(customer => customer.Id == model.Id);
+            if (index == -1) throw new ArgumentException($"$Não foi encontrado Costumer para o Id: {model.Id}");
 
             bool exist = GetAll().Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != GetAll()[index].Id);
-            if (exist) return 0;
+            if (exist) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
             else
             {
                 model.Id = GetAll()[index].Id;
@@ -101,8 +99,6 @@ namespace DomainServices.Repositories
                 if (GetAll()[index].Address != model.Address) GetAll()[index].Address = model.Address;
 
                 if (GetAll()[index].Number != model.Number) GetAll()[index].Number = model.Number;
-
-                return 1;
             }
         }
     }

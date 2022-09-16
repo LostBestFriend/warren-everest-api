@@ -1,5 +1,5 @@
-﻿using AppServices.Interfaces;
-using DomainModels.Models;
+﻿using AppModels.MapperModels;
+using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -16,20 +16,26 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("cpf/{cpf}")]
-        public Customer? GetByCpf(string cpf)
+        public IActionResult GetByCpf(string cpf)
         {
-            return _customerAppServices.GetByCpf(cpf);
+            var response = _customerAppServices.GetByCpf(cpf);
+
+            if (response is null)
+            {
+                return NotFound($"Não foi encontrado Costumer para o CPF: {cpf}");
+            }
+            return Ok(response);
         }
 
 
         [HttpGet]
-        public List<Customer> GetAll()
+        public IActionResult GetAll()
         {
-            return _customerAppServices.GetAll();
+            return Ok(_customerAppServices.GetAll());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Customer?> GetById(int id)
+        public IActionResult GetById(int id)
         {
 
             var response = _customerAppServices.GetById(id);
@@ -42,13 +48,18 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Customer model)
+        public IActionResult Create([FromBody] CustomerCreateDTO model)
         {
-            if (_customerAppServices.Create(model))
+            try
             {
-                return CreatedAtAction(nameof(GetById), new { id = model.Id }, model);
+                long id = _customerAppServices.Create(model);
+                return CreatedAtAction(nameof(GetById), new { id }, id);
             }
-            return BadRequest("O Email ou CPF já é usado.");
+            catch (ArgumentException e)
+            {
+
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -62,35 +73,48 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Customer model)
+        public IActionResult Update(int id, CustomerUpdateDTO model)
         {
-            int result = _customerAppServices.Update(id, model);
-
-            if (result == 1)
+            try
             {
+                _customerAppServices.Update(id, model);
                 return Ok();
             }
-            else if (result == 0)
+            catch (ArgumentNullException ex)
             {
-                return BadRequest("Já existe Customer com estes dados de CPF e Email.");
+                return NotFound(ex.Message);
             }
-            return NotFound($"Usuário não encontrado para o id: {id}");
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(int id, Customer model)
+        public IActionResult Modify(int id, CustomerUpdateDTO model)
         {
-            int result = _customerAppServices.Modify(id, model);
-
-            if (result == -1)
+            try
             {
-                return NotFound($"Usuário não encontrado para o id: {id}");
+                _customerAppServices.Modify(id, model);
+                return Ok();
             }
-            else if (result == 0)
+            catch (ArgumentNullException ex)
             {
-                return BadRequest("Já existe Customer com estes dados de CPF e Email.");
+                return NotFound(ex.Message);
             }
-            return Ok();
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
     }
 }

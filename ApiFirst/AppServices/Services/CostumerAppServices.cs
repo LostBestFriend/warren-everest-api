@@ -1,4 +1,6 @@
-﻿using AppServices.Interfaces;
+﻿using AppModels.MapperModels;
+using AppServices.Interfaces;
+using AutoMapper;
 using DomainModels.Models;
 using DomainServices.Interfaces;
 
@@ -7,20 +9,24 @@ namespace AppServices.Services
     public class CustomerAppServices : ICustomerAppServices
     {
         private readonly ICustomerServices _customerServices;
+        private readonly IMapper _mapper;
 
-        public CustomerAppServices(ICustomerServices customerServices)
+        public CustomerAppServices(ICustomerServices customerServices, IMapper mapper)
         {
             _customerServices = customerServices;
+            _mapper = mapper;
         }
 
-        public Customer? GetByCpf(string cpf)
+        public CustomerResponseDTO? GetByCpf(string cpf)
         {
-            return _customerServices.GetByCpf(cpf);
+            var result = _customerServices.GetByCpf(cpf);
+            return _mapper.Map<CustomerResponseDTO>(result);
         }
 
-        public bool Create(Customer model)
+        public long Create(CustomerCreateDTO model)
         {
-            return _customerServices.Create(model);
+            var mapped = _mapper.Map<Customer>(model);
+            return _customerServices.Create(mapped).Id;
         }
 
         public bool Delete(int id)
@@ -28,22 +34,26 @@ namespace AppServices.Services
             return _customerServices.Delete(id);
         }
 
-        public List<Customer> GetAll()
+        public List<CustomerResponseDTO> GetAll()
         {
-            return _customerServices.GetAll();
+            var result = _customerServices.GetAll();
+            return _mapper.Map<List<CustomerResponseDTO>>(result);
         }
 
-        public Customer? GetById(int id)
+        public CustomerResponseDTO? GetById(int id)
         {
-            return _customerServices.GetById(id);
+            var result = _customerServices.GetById(id);
+            return _mapper.Map<CustomerResponseDTO>(result);
         }
-        public int Update(int id, Customer model)
+        public void Update(int id, CustomerUpdateDTO model)
         {
-            return _customerServices.Update(id, model);
+            var mapped = _mapper.Map<Customer>(model);
+            _customerServices.Update(mapped);
         }
-        public int Modify(int id, Customer model)
+        public void Modify(int id, CustomerUpdateDTO model)
         {
-            return _customerServices.Modify(id, model);
+            var mapped = _mapper.Map<Customer>(model);
+            _customerServices.Modify(id, mapped);
         }
     }
 }

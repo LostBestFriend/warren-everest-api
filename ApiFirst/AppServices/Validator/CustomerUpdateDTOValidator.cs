@@ -1,11 +1,11 @@
-﻿using DomainModels.Models;
+﻿using AppModels.MapperModels;
 using FluentValidation;
 
-namespace AppServices.Validation
+namespace AppServices.Validator
 {
-    public class CustomersValidator : AbstractValidator<Customer>
+    public class CustomerUpdateDTOValidator : AbstractValidator<CustomerUpdateDTO>
     {
-        public CustomersValidator()
+        public CustomerUpdateDTOValidator()
         {
             RuleFor(x => x.Cpf).Must(BeAValidCpf).NotEmpty().WithMessage("Please enter a valid CPF");
 

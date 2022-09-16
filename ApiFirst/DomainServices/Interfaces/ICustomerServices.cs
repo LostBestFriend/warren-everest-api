@@ -4,9 +4,9 @@ namespace DomainServices.Interfaces
 {
     public interface ICustomerServices
     {
-        bool Create(Customer model);
+        Customer Create(Customer model);
 
-        int Update(int id, Customer model);
+        void Update(Customer model);
 
         bool Delete(int id);
 
@@ -14,7 +14,7 @@ namespace DomainServices.Interfaces
 
         Customer? GetById(int id);
 
-        int Modify(int id, Customer model);
+        void Modify(int id, Customer model);
 
         Customer? GetByCpf(string cpf);
     }

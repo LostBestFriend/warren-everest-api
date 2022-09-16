@@ -1,7 +1,8 @@
+using AppModels.MapperModels;
 using AppServices.Interfaces;
 using AppServices.Services;
 using AppServices.Validation;
-using DomainModels.Models;
+using AppServices.Validator;
 using DomainServices.Interfaces;
 using DomainServices.Repositories;
 using FluentValidation;
@@ -18,7 +19,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ICustomerServices, CustomerServices>();
 builder.Services.AddSingleton<ICustomerAppServices, CustomerAppServices>();
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddScoped<IValidator<Customer>, CustomersValidator>();
+builder.Services.AddScoped<IValidator<CustomerCreateDTO>, CustomerCreateDTOValidator>();
+builder.Services.AddScoped<IValidator<CustomerUpdateDTO>, CustomerUpdateDTOValidator>();
 
 var app = builder.Build();
 
