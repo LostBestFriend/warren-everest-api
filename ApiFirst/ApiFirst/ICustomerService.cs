@@ -2,7 +2,7 @@
 
 namespace DomainServices.Interfaces
 {
-    public interface ICustomerRepository
+    public interface ICustomerService
     {
         bool Create(Customer model);
 

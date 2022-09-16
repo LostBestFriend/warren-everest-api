@@ -8,9 +8,9 @@ namespace WebApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICustomerService _customerRepository;
 
-        public CustomersController(ICustomerRepository customerRepository)
+        public CustomersController(ICustomerService customerRepository)
         {
             _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
         }
@@ -34,31 +34,25 @@ namespace WebApi.Controllers
 
             var response = _customerRepository.GetById(id);
 
-            if (response is null)
-            {
-                return NotFound($"Não foi encontrado Costumer para o Id: {id}");
-            }
-            return Ok(response);
+            return response is null
+                ? NotFound($"Não foi encontrado Customer para o Id: {id}")
+                : Ok(response);
         }
 
         [HttpPost]
         public IActionResult Create([FromBody] Customer model)
         {
-            if (_customerRepository.Create(model))
-            {
-                return CreatedAtAction(nameof(GetById), new { id = model.Id }, model);
-            }
-            return BadRequest("O Email ou CPF já é usado.");
+            return _customerRepository.Create(model)
+                ? CreatedAtAction(nameof(GetById), new { id = model.Id }, model)
+                : BadRequest("O Email ou CPF já é usado.");
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (_customerRepository.Delete(id))
-            {
-                return Ok();
-            }
-            return NotFound($"Usuário não encontrado para o id: {id}");
+            return _customerRepository.Delete(id)
+                ? Ok()
+                : NotFound($"Usuário não encontrado para o id: {id}");
         }
 
         [HttpPut("{id}")]
