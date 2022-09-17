@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  apifirst:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5125:5125"
+    image: ${DOCKER_REGISTRY-}apifirst
+    build:
+      context: .
+      dockerfile: ApiFirst/Dockerfile
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: ApiFirstDb
+      MYSQL_USER: joaoarrudawarren
+      MYSQL_PASSWORD: 132435
+      MYSQL_ROOT_PASSWORD: 132435
+    ports:
+      - '3306:3306'
