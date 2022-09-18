@@ -8,7 +8,7 @@ namespace AppServices.Interfaces
 
         void Update(int id, CustomerUpdateDTO model);
 
-        bool Delete(int id);
+        void Delete(int id);
 
         List<CustomerResponseDTO> GetAll();
 

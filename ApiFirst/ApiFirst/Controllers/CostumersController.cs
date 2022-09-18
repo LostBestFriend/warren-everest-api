@@ -2,7 +2,7 @@
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace ApiFirst.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -61,9 +61,19 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return _customerAppServices.Delete(id)
-                ? Ok()
-                : NotFound($"Usuário não encontrado para o id: {id}");
+            try
+            {
+                _customerAppServices.Delete(id);
+                return Ok();
+            }
+            catch (ArgumentNullException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpPut("{id}")]

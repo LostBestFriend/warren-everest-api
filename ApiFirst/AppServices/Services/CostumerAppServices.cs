@@ -26,12 +26,12 @@ namespace AppServices.Services
         public long Create(CustomerCreateDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
-            return _customerServices.Create(mapped).Id;
+            return _customerServices.Create(mapped);
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
-            return _customerServices.Delete(id);
+            _customerServices.Delete(id);
         }
 
         public List<CustomerResponseDTO> GetAll()
@@ -48,11 +48,13 @@ namespace AppServices.Services
         public void Update(int id, CustomerUpdateDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
+            mapped.Id = id;
             _customerServices.Update(mapped);
         }
         public void Modify(int id, CustomerUpdateDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
+            mapped.Id = id;
             _customerServices.Modify(mapped);
         }
     }
