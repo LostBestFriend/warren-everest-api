@@ -28,7 +28,8 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_customerAppServices.GetAll());
+            var response = _customerAppServices.GetAll();
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -46,7 +47,7 @@ namespace WebApi.Controllers
             try
             {
                 long id = _customerAppServices.Create(model);
-                return CreatedAtAction(nameof(GetById), new { id }, id);
+                return Created("", id);
             }
             catch (ArgumentException e)
             {
@@ -61,7 +62,8 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return _customerAppServices.Delete(id)
+            var response = _customerAppServices.Delete(id);
+            return response
                 ? Ok()
                 : NotFound($"Usuário não encontrado para o id: {id}");
         }
@@ -90,11 +92,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(int id, CustomerUpdateDTO model)
+        public IActionResult Modify(int id, string email)
         {
             try
             {
-                _customerAppServices.Modify(id, model);
+                _customerAppServices.Modify(id, email);
                 return Ok();
             }
             catch (ArgumentNullException ex)

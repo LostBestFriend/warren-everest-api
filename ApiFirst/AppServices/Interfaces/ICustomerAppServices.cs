@@ -14,7 +14,7 @@ namespace AppServices.Interfaces
 
         CustomerResponseDTO? GetById(int id);
 
-        void Modify(int id, CustomerUpdateDTO model);
+        void Modify(int id, string email);
 
         CustomerResponseDTO? GetByCpf(string cpf);
     }

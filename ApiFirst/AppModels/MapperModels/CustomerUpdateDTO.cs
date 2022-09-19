@@ -2,7 +2,21 @@
 {
     public class CustomerUpdateDTO
     {
-        public CustomerUpdateDTO(string fullName, string email, string emailConfirmation, string cpf, string cellphone, DateTime dateOfBirth, bool emailSms, bool whatsapp, string country, string city, string postalCode, string address, string number)
+        public CustomerUpdateDTO(
+            string fullName,
+            string email,
+            string emailConfirmation,
+            string cpf,
+            string cellphone,
+            DateTime dateOfBirth,
+            bool emailSms,
+            bool whatsapp,
+            string country,
+            string city,
+            string postalCode,
+            string address,
+            int number
+            )
         {
             FullName = fullName;
             Email = email;
@@ -31,6 +45,6 @@
         public string City { get; set; }
         public string PostalCode { get; set; }
         public string Address { get; set; }
-        public string Number { get; set; }
+        public int Number { get; set; }
     }
 }

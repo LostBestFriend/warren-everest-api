@@ -48,12 +48,11 @@ namespace AppServices.Services
         public void Update(int id, CustomerUpdateDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
-            _customerServices.Update(mapped);
+            _customerServices.Update(id, mapped);
         }
-        public void Modify(int id, CustomerUpdateDTO model)
+        public void Modify(int id, string email)
         {
-            var mapped = _mapper.Map<Customer>(model);
-            _customerServices.Modify(mapped);
+            _customerServices.Modify(id, email);
         }
     }
 }
