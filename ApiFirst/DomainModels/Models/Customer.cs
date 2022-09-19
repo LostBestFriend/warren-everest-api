@@ -14,7 +14,7 @@
             string city,
             string postalCode,
             string address,
-            string number
+            int number
             )
         {
             FullName = fullName;
@@ -44,6 +44,6 @@
         public string City { get; set; }
         public string PostalCode { get; set; }
         public string Address { get; set; }
-        public string Number { get; set; }
+        public int Number { get; set; }
     }
 }

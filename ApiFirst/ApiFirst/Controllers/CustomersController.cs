@@ -18,14 +18,14 @@ namespace WebApi.Controllers
         [HttpGet("cpf/{cpf}")]
         public Customer? GetByCpf(string cpf)
         {
-            return _customerAppServices.GetByCpf(cpf);
+            var response = _customerAppServices.GetByCpf(cpf);
+            return response;
         }
-
-
         [HttpGet]
-        public List<Customer> GetAll()
+        public IList<Customer> GetAll()
         {
-            return _customerAppServices.GetAll();
+            var response = _customerAppServices.GetAll();
+            return response;
         }
 
         [HttpGet("{id}")]
@@ -40,15 +40,17 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] Customer model)
         {
-            return _customerAppServices.Create(model)
-                ? CreatedAtAction(nameof(GetById), new { id = model.Id }, model)
-                : BadRequest("O Email ou CPF já é usado.");
+            var response = _customerAppServices.Create(model);
+            return response
+                ? Created("", model.Id)
+                : BadRequest("O Email ou CPF já existem.");
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return _customerAppServices.Delete(id)
+            var response = _customerAppServices.Delete(id);
+            return response
                 ? Ok()
                 : NotFound($"Usuário não encontrado para o id: {id}");
         }
