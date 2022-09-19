@@ -82,7 +82,7 @@ namespace WebApi.Controllers
             }
             else if (result == 0)
             {
-                return BadRequest("Já existe Customer com estes dados de CPF e Email.");
+                return BadRequest("Já existe Customer com estes dados de Email.");
             }
             return Ok();
         }
