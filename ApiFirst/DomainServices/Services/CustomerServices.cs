@@ -5,7 +5,12 @@ namespace DomainServices.Repositories
 {
     public class CustomerServices : ICustomerServices
     {
-        private readonly List<Customer> _customers = new();
+        private readonly IList<Customer> _customers;
+
+        public CustomerServices()
+        {
+            _customers = new List<Customer>();
+        }
 
         public Customer Create(Customer model)
         {
@@ -23,13 +28,20 @@ namespace DomainServices.Repositories
 
         public bool Delete(int id)
         {
-            int index = _customers.FindIndex(customer => customer.Id == id);
+            var response = _customers.FirstOrDefault(customer => customer.Id == id);
+
+            if (response is null) return false;
+
+            int index = _customers.IndexOf(response);
+
             if (index == -1) return false;
+
             _customers.RemoveAt(index);
+
             return true;
         }
 
-        public List<Customer> GetAll()
+        public IList<Customer> GetAll()
         {
             return _customers;
         }
@@ -37,14 +49,18 @@ namespace DomainServices.Repositories
         public Customer? GetByCpf(string cpf)
         {
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
-            return _customers.FirstOrDefault(customer => customer.Cpf == cpf);
+            var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
+            return response;
         }
 
-        public void Update(Customer model)
+        public void Update(int id, Customer model)
         {
+            var response = _customers.FirstOrDefault(customer => customer.Id == id);
 
-            int index = _customers.FindIndex(customer => customer.Id == model.Id);
-            if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
+            if (response is null) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
+
+            int index = _customers.IndexOf(response);
+
             if (ExistsUpdate(_customers[index].Id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
             else
             {
@@ -54,54 +70,35 @@ namespace DomainServices.Repositories
 
         public bool ExistsUpdate(long id, Customer model)
         {
-            return _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
+            var response = _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
+            return response;
         }
 
         public bool Exists(Customer model)
         {
-            return _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
+            var response = _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
+            return response;
         }
 
         public Customer? GetById(int id)
         {
-            return _customers.FirstOrDefault(x => x.Id == id);
+            var response = _customers.FirstOrDefault(x => x.Id == id);
+            return response;
         }
 
-        public void Modify(Customer model)
+        public void Modify(int id, string email)
         {
-            int index = _customers.FindIndex(customer => customer.Id == model.Id);
-            if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
+            var response = _customers.FirstOrDefault(customer => customer.Id == id);
 
-            if (ExistsUpdate(_customers[index].Id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
+            if (response is null) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {id}");
+
+            int index = _customers.IndexOf(response);
+
+            if (_customers.Any(customer => customer.Email == response.Email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
             else
             {
-                model.Id = _customers[index].Id;
-
-                if (_customers[index].FullName != model.FullName) _customers[index].FullName = model.FullName;
-
-                if (_customers[index].Email != model.Email) _customers[index].Email = model.Email;
-
-                if (_customers[index].EmailConfirmation != model.EmailConfirmation) _customers[index].EmailConfirmation = model.EmailConfirmation;
-
-                if (_customers[index].Cpf != model.Cpf) _customers[index].Cpf = model.Cpf;
-
-                if (_customers[index].Cellphone != model.Cellphone) _customers[index].Cellphone = model.Cellphone;
-
-                if (_customers[index].DateOfBirth != model.DateOfBirth) _customers[index].DateOfBirth = model.DateOfBirth;
-
-                if (_customers[index].EmailSms != model.EmailSms) _customers[index].EmailSms = model.EmailSms;
-
-                if (_customers[index].Whatsapp != model.Whatsapp) _customers[index].Whatsapp = model.Whatsapp;
-
-                if (_customers[index].Country != model.Country) _customers[index].Country = model.Country;
-
-                if (_customers[index].City != model.City) _customers[index].City = model.City;
-
-                if (_customers[index].PostalCode != model.PostalCode) _customers[index].PostalCode = model.PostalCode;
-
-                if (_customers[index].Address != model.Address) _customers[index].Address = model.Address;
-
-                if (_customers[index].Number != model.Number) _customers[index].Number = model.Number;
+                response.Id = id;
+                response.Email = email;
             }
         }
     }

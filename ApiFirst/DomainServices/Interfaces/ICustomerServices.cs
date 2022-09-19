@@ -6,15 +6,15 @@ namespace DomainServices.Interfaces
     {
         Customer Create(Customer model);
 
-        void Update(Customer model);
+        void Update(int id, Customer model);
 
         bool Delete(int id);
 
-        List<Customer> GetAll();
+        IList<Customer> GetAll();
 
         Customer? GetById(int id);
 
-        void Modify(Customer model);
+        void Modify(int id, string email);
 
         Customer? GetByCpf(string cpf);
     }
