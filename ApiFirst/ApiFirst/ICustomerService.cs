@@ -14,7 +14,7 @@ namespace DomainServices.Interfaces
 
         Customer? GetById(int id);
 
-        int Modify(int id, Customer model);
+        int Modify(int id, string email);
 
         Customer? GetByCpf(string cpf);
     }

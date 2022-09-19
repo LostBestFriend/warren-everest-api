@@ -31,7 +31,6 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<Customer?> GetById(int id)
         {
-
             var response = _customerService.GetById(id);
 
             return response is null
@@ -44,7 +43,7 @@ namespace WebApi.Controllers
         {
             return _customerService.Create(model)
                 ? CreatedAtAction(nameof(GetById), new { id = model.Id }, model)
-                : BadRequest("O Email ou CPF já é usado.");
+                : BadRequest("O Email ou CPF já existem.");
         }
 
         [HttpDelete("{id}")]
@@ -72,17 +71,17 @@ namespace WebApi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(int id, Customer model)
+        public IActionResult Modify(int id, string email)
         {
-            int result = _customerService.Modify(id, model);
+            int result = _customerService.Modify(id, email);
 
             if (result == -1)
             {
-                return NotFound($"Não foi encontrado Customer para os valores do campo CPF: {model.Cpf}.");
+                return NotFound($"Não foi encontrado Customer para os valores do campo id: {id}.");
             }
             else if (result == 0)
             {
-                return BadRequest("Já existe Customer com estes dados de CPF e Email.");
+                return BadRequest("Já existe Customer com estes dados de Email.");
             }
             return Ok();
         }

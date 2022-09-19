@@ -58,7 +58,7 @@ namespace DomainServices.Repositories
             int index = _customers.FindIndex(customer => customer.Id == id);
             if (index == -1) return -1;
 
-            if (ExistsUpdate(id, model)) return 0;
+            if (!ExistsUpdate(id, model)) return 0;
             else
             {
                 model.Id = _customers[index].Id;
@@ -72,42 +72,16 @@ namespace DomainServices.Repositories
             return _customers.FirstOrDefault(x => x.Id == id);
         }
 
-        public int Modify(int id, Customer model)
+        public int Modify(int id, string email)
         {
-            int index = _customers.FindIndex(customer => customer.Id == id);
-            if (index == -1) return -1;
+            Customer? model = _customers.FirstOrDefault(customer => customer.Id == id);
+            if (model is null) return -1;
 
-            if (ExistsUpdate(id, model)) return 0;
+            else if (_customers.Any(customer => customer.Email == model.Email)) return 0;
             else
             {
-                model.Id = _customers[index].Id;
-
-                if (_customers[index].FullName != model.FullName) _customers[index].FullName = model.FullName;
-
-                if (_customers[index].Email != model.Email) _customers[index].Email = model.Email;
-
-                if (_customers[index].EmailConfirmation != model.EmailConfirmation) _customers[index].EmailConfirmation = model.EmailConfirmation;
-
-                if (_customers[index].Cpf != model.Cpf) _customers[index].Cpf = model.Cpf;
-
-                if (_customers[index].Cellphone != model.Cellphone) _customers[index].Cellphone = model.Cellphone;
-
-                if (_customers[index].DateOfBirth != model.DateOfBirth) _customers[index].DateOfBirth = model.DateOfBirth;
-
-                if (_customers[index].EmailSms != model.EmailSms) _customers[index].EmailSms = model.EmailSms;
-
-                if (_customers[index].Whatsapp != model.Whatsapp) _customers[index].Whatsapp = model.Whatsapp;
-
-                if (_customers[index].Country != model.Country) _customers[index].Country = model.Country;
-
-                if (_customers[index].City != model.City) _customers[index].City = model.City;
-
-                if (_customers[index].PostalCode != model.PostalCode) _customers[index].PostalCode = model.PostalCode;
-
-                if (_customers[index].Address != model.Address) _customers[index].Address = model.Address;
-
-                if (_customers[index].Number != model.Number) _customers[index].Number = model.Number;
-
+                model.Id = id;
+                model.Email = email;
                 return 1;
             }
         }
