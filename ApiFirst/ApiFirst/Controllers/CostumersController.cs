@@ -8,31 +8,31 @@ namespace WebApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerService _customerRepository;
+        private readonly ICustomerService _customerService;
 
-        public CustomersController(ICustomerService customerRepository)
+        public CustomersController(ICustomerService customerService)
         {
-            _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+            _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
         }
 
         [HttpGet("cpf/{cpf}")]
         public Customer? GetByCpf(string cpf)
         {
-            return _customerRepository.GetByCpf(cpf);
+            return _customerService.GetByCpf(cpf);
         }
 
 
         [HttpGet]
         public List<Customer> GetAll()
         {
-            return _customerRepository.GetAll();
+            return _customerService.GetAll();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Customer?> GetById(int id)
         {
 
-            var response = _customerRepository.GetById(id);
+            var response = _customerService.GetById(id);
 
             return response is null
                 ? NotFound($"Não foi encontrado Customer para o Id: {id}")
@@ -42,7 +42,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] Customer model)
         {
-            return _customerRepository.Create(model)
+            return _customerService.Create(model)
                 ? CreatedAtAction(nameof(GetById), new { id = model.Id }, model)
                 : BadRequest("O Email ou CPF já é usado.");
         }
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return _customerRepository.Delete(id)
+            return _customerService.Delete(id)
                 ? Ok()
                 : NotFound($"Usuário não encontrado para o id: {id}");
         }
@@ -58,7 +58,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, Customer model)
         {
-            int result = _customerRepository.Update(id, model);
+            int result = _customerService.Update(id, model);
 
             if (result == 1)
             {
@@ -74,7 +74,7 @@ namespace WebApi.Controllers
         [HttpPatch("{id}")]
         public IActionResult Modify(int id, Customer model)
         {
-            int result = _customerRepository.Modify(id, model);
+            int result = _customerService.Modify(id, model);
 
             if (result == -1)
             {
