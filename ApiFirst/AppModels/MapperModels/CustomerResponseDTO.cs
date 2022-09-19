@@ -2,12 +2,11 @@
 {
     public class CustomerResponseDTO
     {
-        public CustomerResponseDTO(long id, string fullName, string email, string emailConfirmation, string cpf, string cellphone, DateTime dateOfBirth, bool emailSms, bool whatsapp, string country, string city, string postalCode, string address, string number)
+        public CustomerResponseDTO(long id, string fullName, string email, string cpf, string cellphone, DateTime dateOfBirth, bool emailSms, bool whatsapp, string country, string city, string postalCode, string address, string number)
         {
             Id = id;
             FullName = fullName;
             Email = email;
-            EmailConfirmation = emailConfirmation;
             Cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;

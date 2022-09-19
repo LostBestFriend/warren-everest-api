@@ -9,7 +9,7 @@ namespace AppServices.Validator
         {
             RuleFor(x => x.Cpf).Must(BeAValidCpf).NotEmpty().WithMessage("Please enter a valid CPF");
 
-            RuleFor(x => x.Email).EmailAddress().Equal(x => x.EmailConfirmation).NotNull().NotEmpty();
+            RuleFor(x => x.Email).EmailAddress().NotEmpty();
 
             RuleFor(x => x.DateOfBirth).NotEmpty().GreaterThan(DateTime.MinValue).WithMessage("A valid DateofBirth is required");
             RuleFor(x => x.FullName).NotEmpty().WithMessage("FullName is required");

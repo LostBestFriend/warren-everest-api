@@ -2,11 +2,10 @@
 {
     public class CustomerUpdateDTO
     {
-        public CustomerUpdateDTO(string fullName, string email, string emailConfirmation, string cpf, string cellphone, DateTime dateOfBirth, bool emailSms, bool whatsapp, string country, string city, string postalCode, string address, string number)
+        public CustomerUpdateDTO(string fullName, string email, string cpf, string cellphone, DateTime dateOfBirth, bool emailSms, bool whatsapp, string country, string city, string postalCode, string address, string number)
         {
             FullName = fullName;
             Email = email;
-            EmailConfirmation = emailConfirmation;
             Cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
@@ -21,7 +20,6 @@
 
         public string FullName { get; set; }
         public string Email { get; set; }
-        public string EmailConfirmation { get; set; }
         public string Cpf { get; set; }
         public string Cellphone { get; set; }
         public DateTime DateOfBirth { get; set; }
