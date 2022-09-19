@@ -29,7 +29,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Customer?> GetById(int id)
+        public IActionResult GetById(int id)
         {
             var response = _customerAppServices.GetById(id);
             return response is null

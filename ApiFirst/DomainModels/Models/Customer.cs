@@ -2,7 +2,20 @@
 {
     public class Customer : BaseModel
     {
-        public Customer(string fullName, string email, string emailConfirmation, string cpf, string cellphone, DateTime dateOfBirth, bool emailSms, bool whatsapp, string country, string city, string postalCode, string address, string number)
+        public Customer(
+            string fullName,
+            string email,
+            string emailConfirmation,
+            string cpf, string cellphone,
+            DateTime dateOfBirth,
+            bool emailSms,
+            bool whatsapp,
+            string country,
+            string city,
+            string postalCode,
+            string address,
+            string number
+            )
         {
             FullName = fullName;
             Email = email;
