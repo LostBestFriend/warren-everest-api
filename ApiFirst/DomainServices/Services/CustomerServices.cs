@@ -7,9 +7,9 @@ namespace DomainServices.Repositories
     {
         private readonly IList<Customer> _customers;
 
-        public CustomerServices(IList<Customer> customers)
+        public CustomerServices()
         {
-            _customers = customers;
+            _customers = new List<Customer>();
         }
 
         public bool Create(Customer model)
@@ -29,12 +29,14 @@ namespace DomainServices.Repositories
 
         public bool ExistsUpdate(long id, Customer model)
         {
-            return _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
+            var response = _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
+            return response;
         }
 
         public bool Exists(Customer model)
         {
-            return _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
+            var response = _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
+            return response;
         }
 
         public bool Delete(int id)
@@ -58,7 +60,8 @@ namespace DomainServices.Repositories
         public Customer? GetByCpf(string cpf)
         {
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
-            return _customers.FirstOrDefault(customer => customer.Cpf == cpf);
+            var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
+            return response;
         }
 
         public int Update(int id, Customer model)

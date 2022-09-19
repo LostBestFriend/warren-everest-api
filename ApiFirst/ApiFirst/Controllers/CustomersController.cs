@@ -72,9 +72,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(int id, Customer model)
+        public IActionResult Modify(int id, string email)
         {
-            int result = _customerAppServices.Modify(id, model);
+            int result = _customerAppServices.Modify(id, email);
 
             if (result == -1)
             {

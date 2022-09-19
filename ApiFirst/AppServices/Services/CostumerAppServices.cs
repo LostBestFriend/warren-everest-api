@@ -15,35 +15,42 @@ namespace AppServices.Services
 
         public Customer? GetByCpf(string cpf)
         {
-            return _customerServices.GetByCpf(cpf);
+            var response = _customerServices.GetByCpf(cpf);
+            return response;
         }
 
         public bool Create(Customer model)
         {
-            return _customerServices.Create(model);
+            var response = _customerServices.Create(model);
+            return response;
         }
 
         public bool Delete(int id)
         {
-            return _customerServices.Delete(id);
+            var response = _customerServices.Delete(id);
+            return response;
         }
 
-        public List<Customer> GetAll()
+        public IList<Customer> GetAll()
         {
-            return _customerServices.GetAll();
+            var response = _customerServices.GetAll();
+            return response;
         }
 
         public Customer? GetById(int id)
         {
-            return _customerServices.GetById(id);
+            var response = _customerServices.GetById(id);
+            return response;
         }
         public int Update(int id, Customer model)
         {
-            return _customerServices.Update(id, model);
+            var response = _customerServices.Update(id, model);
+            return response;
         }
-        public int Modify(int id, Customer model)
+        public int Modify(int id, string email)
         {
-            return _customerServices.Modify(id, model);
+            var response = _customerServices.Modify(id, email);
+            return response;
         }
     }
 }

@@ -10,11 +10,11 @@ namespace DomainServices.Interfaces
 
         bool Delete(int id);
 
-        List<Customer> GetAll();
+        IList<Customer> GetAll();
 
         Customer? GetById(int id);
 
-        int Modify(int id, Customer model);
+        int Modify(int id, string email);
 
         Customer? GetByCpf(string cpf);
     }
