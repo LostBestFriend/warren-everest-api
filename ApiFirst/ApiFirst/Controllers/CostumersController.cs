@@ -24,11 +24,11 @@ namespace ApiFirst.Controllers
                 : Ok(response);
         }
 
-
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_customerAppServices.GetAll());
+            var response = _customerAppServices.GetAll();
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -46,7 +46,7 @@ namespace ApiFirst.Controllers
             try
             {
                 long id = _customerAppServices.Create(model);
-                return CreatedAtAction(nameof(GetById), new { id }, id);
+                return Created("", id);
             }
             catch (ArgumentException e)
             {

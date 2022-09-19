@@ -15,7 +15,7 @@ namespace DomainServices.Services
 
         public long Create(Customer model)
         {
-            model.Id = _context.Set<Customer>().ToList().LastOrDefault()?.Id + 1 ?? 0;
+            model.Id = _context.Set<Customer>().LastOrDefault()?.Id + 1 ?? 0;
             if (Exists(model))
             {
                 throw new ArgumentException("O CPF ou Email já estão sendo usados.");
@@ -38,13 +38,15 @@ namespace DomainServices.Services
 
         public List<Customer> GetAll()
         {
-            return _context.Set<Customer>().ToList();
+            var response = _context.Set<Customer>().ToList();
+            return response;
         }
 
         public Customer? GetByCpf(string cpf)
         {
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
-            return _context.Set<Customer>().FirstOrDefault(customer => customer.Cpf == cpf);
+            var response = _context.Set<Customer>().FirstOrDefault(customer => customer.Cpf == cpf);
+            return response;
         }
 
         public void Update(Customer model)
@@ -62,17 +64,20 @@ namespace DomainServices.Services
 
         public bool ExistsUpdate(long id, Customer model)
         {
-            return _context.Set<Customer>().ToList().Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
+            var response = _context.Set<Customer>().Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
+            return response;
         }
 
         public bool Exists(Customer model)
         {
-            return _context.Set<Customer>().ToList().Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
+            var response = _context.Set<Customer>().Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
+            return response;
         }
 
         public Customer? GetById(int id)
         {
-            return _context.Set<Customer>().FirstOrDefault(x => x.Id == id);
+            var response = _context.Set<Customer>().FirstOrDefault(x => x.Id == id);
+            return response;
         }
 
         public void Modify(Customer model)
@@ -84,7 +89,7 @@ namespace DomainServices.Services
             else
             {
                 model.Id = _context.Set<Customer>().ToList()[index].Id;
-                _context.Entry<Customer>(model).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
         }
     }
