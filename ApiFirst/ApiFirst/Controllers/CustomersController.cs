@@ -1,5 +1,4 @@
-﻿using DomainModels.Models;
-using DomainServices.Interfaces;
+﻿using ApiFirst;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -18,14 +17,18 @@ namespace WebApi.Controllers
         [HttpGet("cpf/{cpf}")]
         public Customer? GetByCpf(string cpf)
         {
-            return _customerService.GetByCpf(cpf);
+            var response = _customerService.GetByCpf(cpf);
+
+            return response;
         }
 
 
         [HttpGet]
-        public List<Customer> GetAll()
+        public IList<Customer> GetAll()
         {
-            return _customerService.GetAll();
+            var response = _customerService.GetAll();
+
+            return response;
         }
 
         [HttpGet("{id}")]
@@ -41,15 +44,19 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] Customer model)
         {
-            return _customerService.Create(model)
-                ? CreatedAtAction(nameof(GetById), new { id = model.Id }, model)
+            var response = _customerService.Create(model);
+
+            return response
+                ? Created("", model.Id)
                 : BadRequest("O Email ou CPF já existem.");
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return _customerService.Delete(id)
+            var response = _customerService.Delete(id);
+
+            return response
                 ? Ok()
                 : NotFound($"Usuário não encontrado para o id: {id}");
         }
@@ -57,7 +64,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, Customer model)
         {
-            int result = _customerService.Update(id, model);
+            var result = _customerService.Update(id, model);
 
             if (result == 1)
             {
@@ -73,7 +80,7 @@ namespace WebApi.Controllers
         [HttpPatch("{id}")]
         public IActionResult Modify(int id, string email)
         {
-            int result = _customerService.Modify(id, email);
+            var result = _customerService.Modify(id, email);
 
             if (result == -1)
             {

@@ -1,4 +1,4 @@
-﻿namespace DomainModels.Models
+﻿namespace ApiFirst
 {
     public abstract class BaseModel
     {

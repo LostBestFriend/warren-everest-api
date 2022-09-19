@@ -1,4 +1,4 @@
-﻿namespace DomainModels.Models
+﻿namespace ApiFirst
 {
     public class Customer : BaseModel
     {

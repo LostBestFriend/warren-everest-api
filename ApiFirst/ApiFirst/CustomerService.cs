@@ -1,11 +1,13 @@
-﻿using DomainModels.Models;
-using DomainServices.Interfaces;
-
-namespace DomainServices.Repositories
+﻿namespace ApiFirst
 {
     public class CustomerService : ICustomerService
     {
-        private readonly List<Customer> _customers = new();
+        private readonly IList<Customer> _customers;
+
+        public CustomerService(IList<Customer> customers)
+        {
+            _customers = customers;
+        }
 
         public bool Create(Customer model)
         {
@@ -25,13 +27,19 @@ namespace DomainServices.Repositories
 
         public bool Delete(int id)
         {
-            int index = _customers.FindIndex(customer => customer.Id == id);
+            var response = _customers.FirstOrDefault(customer => customer.Id == id);
+
+            if (response is null) return false;
+
+            int index = _customers.IndexOf(response);
+
             if (index == -1) return false;
+
             _customers.RemoveAt(index);
             return true;
         }
 
-        public List<Customer> GetAll()
+        public IList<Customer> GetAll()
         {
             return _customers;
         }
@@ -54,9 +62,11 @@ namespace DomainServices.Repositories
 
         public int Update(int id, Customer model)
         {
+            var response = _customers.FirstOrDefault(customer => customer.Id == id);
 
-            int index = _customers.FindIndex(customer => customer.Id == id);
-            if (index == -1) return -1;
+            if (response is null) return -1;
+
+            int index = _customers.IndexOf(response);
 
             if (!ExistsUpdate(id, model)) return 0;
             else

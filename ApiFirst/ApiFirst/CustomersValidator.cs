@@ -1,7 +1,6 @@
-﻿using DomainModels.Models;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace AppServices.Validation
+namespace ApiFirst
 {
     public class CustomersValidator : AbstractValidator<Customer>
     {

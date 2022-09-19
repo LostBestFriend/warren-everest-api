@@ -1,6 +1,4 @@
-﻿using DomainModels.Models;
-
-namespace DomainServices.Interfaces
+﻿namespace ApiFirst
 {
     public interface ICustomerService
     {
@@ -10,7 +8,7 @@ namespace DomainServices.Interfaces
 
         bool Delete(int id);
 
-        List<Customer> GetAll();
+        IList<Customer> GetAll();
 
         Customer? GetById(int id);
 

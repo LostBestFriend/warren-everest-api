@@ -1,7 +1,4 @@
-using AppServices.Validation;
-using DomainModels.Models;
-using DomainServices.Interfaces;
-using DomainServices.Repositories;
+using ApiFirst;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
