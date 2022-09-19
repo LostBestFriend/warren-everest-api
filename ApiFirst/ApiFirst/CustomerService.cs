@@ -4,9 +4,9 @@
     {
         private readonly IList<Customer> _customers;
 
-        public CustomerService(IList<Customer> customers)
+        public CustomerService()
         {
-            _customers = customers;
+            _customers = new List<Customer>();
         }
 
         public bool Create(Customer model)
