@@ -84,14 +84,14 @@
 
         public int Modify(int id, string email)
         {
-            Customer? model = _customers.FirstOrDefault(customer => customer.Id == id);
-            if (model is null) return -1;
+            Customer? response = _customers.FirstOrDefault(customer => customer.Id == id);
+            if (response is null) return -1;
 
-            else if (_customers.Any(customer => customer.Email == model.Email)) return 0;
+            else if (_customers.Any(customer => customer.Email == response.Email)) return 0;
             else
             {
-                model.Id = id;
-                model.Email = email;
+                response.Id = id;
+                response.Email = email;
                 return 1;
             }
         }
