@@ -8,10 +8,8 @@
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 1;
 
-            if (Exists(model))
-            {
-                return false;
-            }
+            if (Exists(model)) return false;
+
             _customers.Add(model);
             return true;
         }
