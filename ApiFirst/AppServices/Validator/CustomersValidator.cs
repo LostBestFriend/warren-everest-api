@@ -1,5 +1,6 @@
 ﻿using DomainModels.Models;
 using FluentValidation;
+using System.Globalization;
 
 namespace AppServices.Validation
 {
@@ -7,20 +8,79 @@ namespace AppServices.Validation
     {
         public CustomersValidator()
         {
-            RuleFor(x => x.Cpf).Must(BeAValidCpf).NotEmpty().WithMessage("Please enter a valid CPF");
+            RuleFor(x => x.Cpf)
+                .Must(BeAValidCpf)
+                .NotEmpty().NotEqual(" ").Length(11)
+                .WithMessage("Please enter a valid CPF");
 
-            RuleFor(x => x.Email).EmailAddress().Equal(x => x.EmailConfirmation).NotNull().NotEmpty();
+            RuleFor(x => x.Email)
+                .EmailAddress().Equal(x => x.EmailConfirmation).NotEqual(" ").
+                MinimumLength(3).NotEmpty();
 
-            RuleFor(x => x.DateOfBirth).NotEmpty().GreaterThan(DateTime.MinValue).WithMessage("A valid DateofBirth is required");
-            RuleFor(x => x.FullName).NotEmpty().WithMessage("FullName is required");
-            RuleFor(x => x.Cellphone).NotEmpty().WithMessage("Cellphone is required");
-            RuleFor(x => x.EmailSms).NotEmpty().WithMessage("EmailSms is required");
-            RuleFor(x => x.Whatsapp).NotEmpty().WithMessage("WhatsApp is required");
-            RuleFor(x => x.Country).NotEmpty().WithMessage("Country is required");
-            RuleFor(x => x.City).NotEmpty().WithMessage("City is required");
-            RuleFor(x => x.PostalCode).NotEmpty().WithMessage("PostalCode is required");
-            RuleFor(x => x.Address).NotEmpty().WithMessage("Address is required");
-            RuleFor(x => x.Number).NotEmpty().WithMessage("Number is required");
+            RuleFor(x => x.DateOfBirth)
+                .NotEmpty().GreaterThan(DateTime.MinValue)
+                .WithMessage("A valid DateOfBirth is required");
+
+            RuleFor(x => x.FullName)
+                .NotEmpty().NotEqual(" ").
+                Must(IsAName).MinimumLength(2).
+                WithMessage("FullName is required");
+
+            RuleFor(x => x.Cellphone)
+                .NotEmpty().NotEqual(" ").Length(13).
+                WithMessage("Cellphone is required");
+
+            RuleFor(x => x.EmailSms)
+                .NotEmpty().
+                WithMessage("EmailSms is required");
+
+            RuleFor(x => x.Whatsapp)
+                .NotEmpty().
+                WithMessage("WhatsApp is required");
+
+            RuleFor(x => x.Country)
+                .NotEmpty().NotEqual(" ").MinimumLength(3).
+                Must(FirstUpperCase).
+                WithMessage("Country is required");
+
+            RuleFor(x => x.City)
+                .NotEmpty().NotEqual(" ").MinimumLength(3).
+                Must(FirstUpperCase).
+                WithMessage("City is required");
+
+            RuleFor(x => x.PostalCode)
+                .NotEmpty().NotEqual(" ").Length(8).
+                WithMessage("PostalCode is required");
+
+            RuleFor(x => x.Address)
+                .NotEmpty().NotEqual(" ").MinimumLength(3).
+                Must(FirstUpperCase).
+                WithMessage("Address is required");
+
+            RuleFor(x => x.Number)
+                .NotEmpty().GreaterThanOrEqualTo(0).
+                WithMessage("Number is required");
+
+            bool IsAName(string fullname)
+            {
+                if (fullname == CultureInfo.CurrentCulture.TextInfo.ToTitleCase(fullname.ToLower()))
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            bool FirstUpperCase(string input)
+            {
+
+                input = input.Trim();
+                char chars = input[0];
+                if (Char.IsUpper(chars))
+                {
+                    return true;
+                }
+                return false;
+            }
 
             bool BeAValidCpf(string cpf)
             {
