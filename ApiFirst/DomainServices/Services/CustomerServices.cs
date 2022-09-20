@@ -19,10 +19,7 @@ namespace DomainServices.Services
         public long Create(Customer model)
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
-            if (Exists(model))
-            {
-                throw new ArgumentException("O CPF ou Email já estão sendo usados.");
-            }
+            if (Exists(model)) throw new ArgumentException("O CPF ou Email já estão sendo usados.");
 
             _customers.Add(model);
             _context.SaveChanges();
@@ -85,7 +82,7 @@ namespace DomainServices.Services
             int index = _customers.ToList().FindIndex(customer => customer.Id == model.Id);
             if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {model.Id}");
 
-            if (ExistsUpdate(_customers.ToList()[index].Id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
+            if (ExistsUpdate(_customers.ToList()[index].Id, model)) throw new ArgumentException("Já existe usuário com o E-mail ou CPF digitados");
 
             model.Id = _customers.ToList()[index].Id;
             _context.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
