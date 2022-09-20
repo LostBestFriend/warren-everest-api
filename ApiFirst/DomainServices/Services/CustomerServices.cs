@@ -10,10 +10,7 @@ namespace DomainServices.Repositories
         public Customer Create(Customer model)
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
-            if (Exists(model))
-            {
-                throw new ArgumentException("O CPF ou Email já estão sendo usados.");
-            }
+            if (Exists(model)) throw new ArgumentException("O CPF ou Email já estão sendo usados.");
 
             _customers.Add(model);
             return model;
