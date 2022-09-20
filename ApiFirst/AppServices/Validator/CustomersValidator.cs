@@ -36,11 +36,7 @@ namespace AppServices.Validation
 
                 input = input.Trim();
                 char chars = input[0];
-                if (Char.IsUpper(chars))
-                {
-                    return true;
-                }
-                return false;
+                return Char.IsUpper(chars);
             }
 
             bool BeAValidCpf(string cpf)
