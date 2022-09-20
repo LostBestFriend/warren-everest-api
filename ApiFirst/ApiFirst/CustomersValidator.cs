@@ -7,58 +7,29 @@ namespace ApiFirst
     {
         public CustomersValidator()
         {
-            RuleFor(x => x.Cpf)
-                .Must(BeAValidCpf)
-                .NotEmpty().NotEqual(" ").Length(11)
-                .WithMessage("Please enter a valid CPF");
+            RuleFor(x => x.Cpf).Must(BeAValidCpf).NotEmpty().NotEqual(" ").Length(11).WithMessage("Please enter a valid CPF");
 
-            RuleFor(x => x.Email)
-                .EmailAddress().Equal(x => x.EmailConfirmation).NotEqual(" ").
-                MinimumLength(3).NotEmpty();
+            RuleFor(x => x.Email).EmailAddress().Equal(x => x.EmailConfirmation).NotEqual(" ").MinimumLength(3).NotEmpty();
 
-            RuleFor(x => x.DateOfBirth)
-                .NotEmpty().GreaterThan(DateTime.MinValue)
-                .WithMessage("A valid DateOfBirth is required");
+            RuleFor(x => x.DateOfBirth).NotEmpty().GreaterThan(DateTime.MinValue).WithMessage("A valid DateOfBirth is required");
 
-            RuleFor(x => x.FullName)
-                .NotEmpty().NotEqual(" ").
-                Must(IsAName).MinimumLength(2).
-                WithMessage("FullName is required");
+            RuleFor(x => x.FullName).NotEmpty().NotEqual(" ").Must(IsAName).MinimumLength(2).WithMessage("FullName is required");
 
-            RuleFor(x => x.Cellphone)
-                .NotEmpty().NotEqual(" ").Length(13).
-                WithMessage("Cellphone is required");
+            RuleFor(x => x.Cellphone).NotEmpty().NotEqual(" ").Length(13).WithMessage("Cellphone is required");
 
-            RuleFor(x => x.EmailSms)
-                .NotEmpty().
-                WithMessage("EmailSms is required");
+            RuleFor(x => x.EmailSms).NotEmpty().WithMessage("EmailSms is required");
 
-            RuleFor(x => x.Whatsapp)
-                .NotEmpty().
-                WithMessage("WhatsApp is required");
+            RuleFor(x => x.Whatsapp).NotEmpty().WithMessage("WhatsApp is required");
 
-            RuleFor(x => x.Country)
-                .NotEmpty().NotEqual(" ").MinimumLength(3).
-                Must(FirstUpperCase).
-                WithMessage("Country is required");
+            RuleFor(x => x.Country).NotEmpty().NotEqual(" ").MinimumLength(3).Must(FirstUpperCase).WithMessage("Country is required");
 
-            RuleFor(x => x.City)
-                .NotEmpty().NotEqual(" ").MinimumLength(3).
-                Must(FirstUpperCase).
-                WithMessage("City is required");
+            RuleFor(x => x.City).NotEmpty().NotEqual(" ").MinimumLength(3).Must(FirstUpperCase).WithMessage("City is required");
 
-            RuleFor(x => x.PostalCode)
-                .NotEmpty().NotEqual(" ").Length(8).
-                WithMessage("PostalCode is required");
+            RuleFor(x => x.PostalCode).NotEmpty().NotEqual(" ").Length(8).WithMessage("PostalCode is required");
 
-            RuleFor(x => x.Address)
-                .NotEmpty().NotEqual(" ").MinimumLength(3).
-                Must(FirstUpperCase).
-                WithMessage("Address is required");
+            RuleFor(x => x.Address).NotEmpty().NotEqual(" ").MinimumLength(3).Must(FirstUpperCase).WithMessage("Address is required");
 
-            RuleFor(x => x.Number)
-                .NotEmpty().GreaterThanOrEqualTo(0).
-                WithMessage("Number is required");
+            RuleFor(x => x.Number).NotEmpty().GreaterThanOrEqualTo(0).WithMessage("Number is required");
 
             bool IsAName(string fullname)
             {
