@@ -2,7 +2,8 @@
 {
     public class CustomerUpdateDTO
     {
-        public CustomerUpdateDTO(
+        public CustomerUpdateDTO
+        (
             string fullName,
             string email,
             string cpf,
@@ -15,7 +16,7 @@
             string postalCode,
             string address,
             int number
-            )
+        )
         {
             FullName = fullName;
             Email = email;

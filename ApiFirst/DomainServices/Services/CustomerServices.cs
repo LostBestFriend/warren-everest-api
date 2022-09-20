@@ -5,12 +5,7 @@ namespace DomainServices.Repositories
 {
     public class CustomerServices : ICustomerServices
     {
-        private readonly IList<Customer> _customers;
-
-        public CustomerServices()
-        {
-            _customers = new List<Customer>();
-        }
+        private readonly List<Customer> _customers = new();
 
         public Customer Create(Customer model)
         {
@@ -19,29 +14,22 @@ namespace DomainServices.Repositories
             {
                 throw new ArgumentException("O CPF ou Email já estão sendo usados.");
             }
-            else
-            {
-                _customers.Add(model);
-                return model;
-            }
+
+            _customers.Add(model);
+            return model;
         }
 
         public bool Delete(int id)
         {
-            var response = _customers.FirstOrDefault(customer => customer.Id == id);
-
-            if (response is null) return false;
-
-            int index = _customers.IndexOf(response);
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
             if (index == -1) return false;
 
             _customers.RemoveAt(index);
-
             return true;
         }
 
-        public IList<Customer> GetAll()
+        public List<Customer> GetAll()
         {
             return _customers;
         }
@@ -55,17 +43,13 @@ namespace DomainServices.Repositories
 
         public void Update(int id, Customer model)
         {
-            var response = _customers.FirstOrDefault(customer => customer.Id == id);
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (response is null) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
-
-            int index = _customers.IndexOf(response);
+            if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {id}");
 
             if (ExistsUpdate(_customers[index].Id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
-            else
-            {
-                _customers[index] = model;
-            }
+
+            _customers[index] = model;
         }
 
         public bool ExistsUpdate(long id, Customer model)
@@ -88,18 +72,14 @@ namespace DomainServices.Repositories
 
         public void Modify(int id, string email)
         {
-            var response = _customers.FirstOrDefault(customer => customer.Id == id);
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (response is null) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {id}");
+            if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {id}");
 
-            int index = _customers.IndexOf(response);
+            if (_customers.Any(customer => customer.Email == email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
 
-            if (_customers.Any(customer => customer.Email == response.Email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
-            else
-            {
-                response.Id = id;
-                response.Email = email;
-            }
+            _customers[index].Id = id;
+            _customers[index].Email = email;
         }
     }
 }
