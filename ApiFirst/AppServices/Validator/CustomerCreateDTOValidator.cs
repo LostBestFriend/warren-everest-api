@@ -9,11 +9,11 @@ namespace AppServices.Validator
         {
             RuleFor(x => x.Cpf).Must(BeAValidCpf).NotEmpty().NotEqual(" ").Length(11).WithMessage("Please enter a valid CPF");
 
-            RuleFor(x => x.Email).EmailAddress().Equal(x => x.EmailConfirmation).NotEqual(" ").MinimumLength(3).NotEmpty().WithMessage("A valid Email is required");
+            RuleFor(x => x.Email).EmailAddress().Equal(x => x.EmailConfirmation).NotEqual(" ").MinimumLength(3).MaximumLength(50).NotEmpty().WithMessage("A valid Email is required");
 
             RuleFor(x => x.DateOfBirth).NotEmpty().GreaterThan(DateTime.MinValue).WithMessage("A valid DateOfBirth is required");
 
-            RuleFor(x => x.FullName).NotEmpty().NotEqual(" ").MinimumLength(2).WithMessage("FullName is required");
+            RuleFor(x => x.FullName).NotEmpty().NotEqual(" ").MinimumLength(2).MaximumLength(50).WithMessage("FullName is required");
 
             RuleFor(x => x.Cellphone).NotEmpty().NotEqual(" ").Length(13).WithMessage("Cellphone is required");
 
@@ -21,13 +21,13 @@ namespace AppServices.Validator
 
             RuleFor(x => x.Whatsapp).NotEmpty().WithMessage("WhatsApp is required");
 
-            RuleFor(x => x.Country).NotEmpty().NotEqual(" ").MinimumLength(3).Must(FirstUpperCase).WithMessage("Country is required");
+            RuleFor(x => x.Country).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(90).Must(FirstUpperCase).WithMessage("Country is required");
 
-            RuleFor(x => x.City).NotEmpty().NotEqual(" ").MinimumLength(3).Must(FirstUpperCase).WithMessage("City is required");
+            RuleFor(x => x.City).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(190).Must(FirstUpperCase).WithMessage("City is required");
 
             RuleFor(x => x.PostalCode).NotEmpty().NotEqual(" ").Length(8).WithMessage("PostalCode is required");
 
-            RuleFor(x => x.Address).NotEmpty().NotEqual(" ").MinimumLength(3).Must(FirstUpperCase).WithMessage("Address is required");
+            RuleFor(x => x.Address).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(200).Must(FirstUpperCase).WithMessage("Address is required");
 
             RuleFor(x => x.Number).NotEmpty().GreaterThanOrEqualTo(0).WithMessage("Number is required");
 
