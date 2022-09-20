@@ -27,7 +27,7 @@
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = postalCode;
+            PostalCode = postalCode.Trim().Replace(".", "").Replace("-", "");
             Address = address;
             Number = number;
         }

@@ -28,27 +28,27 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasColumnType("varchar(60)")
                         .HasColumnName("Address");
 
                     b.Property<string>("Cellphone")
                         .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("Cellphone");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("City");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("Country");
 
                     b.Property<string>("Cpf")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("varchar(11)")
                         .HasColumnName("Cpf");
 
                     b.Property<DateTime>("DateOfBirth")
@@ -57,12 +57,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("varchar(60)")
                         .HasColumnName("Email");
-
-                    b.Property<string>("EmailConfirmation")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<bool>("EmailSms")
                         .HasColumnType("tinyint(1)")
@@ -70,16 +66,16 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(250)")
+                        .HasColumnName("FullName");
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("longtext")
+                    b.Property<int>("Number")
+                        .HasColumnType("int")
                         .HasColumnName("number");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasColumnType("varchar(11)")
                         .HasColumnName("PostalCode");
 
                     b.Property<bool>("Whatsapp")

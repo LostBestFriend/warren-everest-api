@@ -16,23 +16,31 @@ namespace Infrastructure.Data.Mapping
                 .IsRequired()
                 .HasColumnName("id");
 
+            builder.Property(customer => customer.FullName)
+                .IsRequired()
+                .HasColumnName("FullName")
+                .HasColumnType("varchar(250)");
+
             builder.Property(customer => customer.Email)
                 .IsRequired()
-                .HasColumnName("Email");
+                .HasColumnName("Email")
+                .HasColumnType("varchar(60)");
 
             builder.HasIndex(customer => customer.Email)
                 .IsUnique();
 
             builder.Property(customer => customer.Cpf)
                 .IsRequired()
-                .HasColumnName("Cpf");
+                .HasColumnName("Cpf")
+                .HasColumnType("varchar(11)");
 
             builder.HasIndex(customer => customer.Cpf)
                 .IsUnique();
 
             builder.Property(customer => customer.Cellphone)
                 .IsRequired()
-                .HasColumnName("Cellphone");
+                .HasColumnName("Cellphone")
+                .HasColumnType("varchar(20)");
 
             builder.Property(customer => customer.DateOfBirth)
                 .IsRequired()
@@ -48,19 +56,23 @@ namespace Infrastructure.Data.Mapping
 
             builder.Property(customer => customer.Country)
                 .IsRequired()
-                .HasColumnName("Country");
+                .HasColumnName("Country")
+                .HasColumnType("varchar(30)");
 
             builder.Property(customer => customer.City)
                 .IsRequired()
-                .HasColumnName("City");
+                .HasColumnName("City")
+                .HasColumnType("varchar(30)");
 
             builder.Property(customer => customer.PostalCode)
                 .IsRequired()
-                .HasColumnName("PostalCode");
+                .HasColumnName("PostalCode")
+                .HasColumnType("varchar(11)");
 
             builder.Property(customer => customer.Address)
                 .IsRequired()
-                .HasColumnName("Address");
+                .HasColumnName("Address")
+                .HasColumnType("varchar(60)");
 
             builder.Property(customer => customer.Number)
                 .IsRequired()
