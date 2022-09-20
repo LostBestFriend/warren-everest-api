@@ -21,17 +21,17 @@ namespace AppServices.Validation
 
             RuleFor(x => x.Whatsapp).NotEmpty();
 
-            RuleFor(x => x.Country).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(90).Must(FirstUpperCase).WithMessage("Please enter a valid Country name");
+            RuleFor(x => x.Country).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(90).Must(FirstLetterUpperCase).WithMessage("Please enter a valid Country name");
 
-            RuleFor(x => x.City).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(190).Must(FirstUpperCase).WithMessage("Please enter a valid City name");
+            RuleFor(x => x.City).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(190).Must(FirstLetterUpperCase).WithMessage("Please enter a valid City name");
 
             RuleFor(x => x.PostalCode).NotEmpty().NotEqual(" ").Length(8);
 
-            RuleFor(x => x.Address).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(200).Must(FirstUpperCase).WithMessage("Please enter a valid Address");
+            RuleFor(x => x.Address).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(200).Must(FirstLetterUpperCase).WithMessage("Please enter a valid Address");
 
-            RuleFor(x => x.Number).NotEmpty().GreaterThanOrEqualTo(0);
+            RuleFor(x => x.Number).NotEmpty().GreaterThanOrEqualTo(1);
 
-            bool FirstUpperCase(string input)
+            bool FirstLetterUpperCase(string input)
             {
 
                 input = input.Trim();
