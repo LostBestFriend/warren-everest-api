@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using System.Globalization;
 
 namespace ApiFirst
 {
@@ -13,7 +12,7 @@ namespace ApiFirst
 
             RuleFor(x => x.DateOfBirth).NotEmpty().GreaterThan(DateTime.MinValue).WithMessage("A valid DateOfBirth is required");
 
-            RuleFor(x => x.FullName).NotEmpty().NotEqual(" ").Must(IsAName).MinimumLength(2).WithMessage("FullName is required");
+            RuleFor(x => x.FullName).NotEmpty().NotEqual(" ").MinimumLength(2).WithMessage("FullName is required");
 
             RuleFor(x => x.Cellphone).NotEmpty().NotEqual(" ").Length(13).WithMessage("Cellphone is required");
 
@@ -30,15 +29,6 @@ namespace ApiFirst
             RuleFor(x => x.Address).NotEmpty().NotEqual(" ").MinimumLength(3).Must(FirstUpperCase).WithMessage("Address is required");
 
             RuleFor(x => x.Number).NotEmpty().GreaterThanOrEqualTo(0).WithMessage("Number is required");
-
-            bool IsAName(string fullname)
-            {
-                if (fullname == CultureInfo.CurrentCulture.TextInfo.ToTitleCase(fullname.ToLower()))
-                {
-                    return true;
-                }
-                return false;
-            }
 
             bool FirstUpperCase(string input)
             {
