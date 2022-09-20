@@ -11,10 +11,8 @@ namespace DomainServices.Repositories
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
 
-            if (Exists(model))
-            {
-                return false;
-            }
+            if (Exists(model)) return false;
+
             _customers.Add(model);
             return true;
         }
