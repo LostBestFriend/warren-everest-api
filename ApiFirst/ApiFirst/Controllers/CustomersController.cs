@@ -22,7 +22,7 @@ namespace WebApi.Controllers
             return response;
         }
         [HttpGet]
-        public IList<Customer> GetAll()
+        public List<Customer> GetAll()
         {
             var response = _customerAppServices.GetAll();
             return response;

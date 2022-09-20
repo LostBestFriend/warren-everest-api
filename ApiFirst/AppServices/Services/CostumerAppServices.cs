@@ -31,7 +31,7 @@ namespace AppServices.Services
             return response;
         }
 
-        public IList<Customer> GetAll()
+        public List<Customer> GetAll()
         {
             var response = _customerServices.GetAll();
             return response;

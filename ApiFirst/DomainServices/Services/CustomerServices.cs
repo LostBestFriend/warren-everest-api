@@ -5,12 +5,7 @@ namespace DomainServices.Repositories
 {
     public class CustomerServices : ICustomerServices
     {
-        private readonly IList<Customer> _customers;
-
-        public CustomerServices()
-        {
-            _customers = new List<Customer>();
-        }
+        private readonly List<Customer> _customers = new();
 
         public bool Create(Customer model)
         {
@@ -20,11 +15,8 @@ namespace DomainServices.Repositories
             {
                 return false;
             }
-            else
-            {
-                _customers.Add(model);
-                return true;
-            }
+            _customers.Add(model);
+            return true;
         }
 
         public bool ExistsUpdate(long id, Customer model)
@@ -41,18 +33,14 @@ namespace DomainServices.Repositories
 
         public bool Delete(int id)
         {
-            var response = _customers.FirstOrDefault(customer => customer.Id == id);
-
-            if (response is null) return false;
-
-            int index = _customers.IndexOf(response);
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
             if (index == -1) return false;
 
             return true;
         }
 
-        public IList<Customer> GetAll()
+        public List<Customer> GetAll()
         {
             return _customers;
         }
@@ -67,19 +55,15 @@ namespace DomainServices.Repositories
         public int Update(int id, Customer model)
         {
 
-            var response = _customers.FirstOrDefault(customer => customer.Id == id);
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (response is null) return -1;
-
-            int index = _customers.IndexOf(response);
+            if (index == -1) return -1;
 
             if (ExistsUpdate(id, model)) return 0;
-            else
-            {
-                model.Id = _customers[index].Id;
-                _customers[index] = model;
-                return 1;
-            }
+
+            model.Id = _customers[index].Id;
+            _customers[index] = model;
+            return 1;
         }
 
         public Customer? GetById(int id)
@@ -90,16 +74,15 @@ namespace DomainServices.Repositories
 
         public int Modify(int id, string email)
         {
-            Customer? model = _customers.FirstOrDefault(customer => customer.Id == id);
-            if (model is null) return -1;
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
-            else if (_customers.Any(customer => customer.Email == model.Email)) return 0;
-            else
-            {
-                model.Id = id;
-                model.Email = email;
-                return 1;
-            }
+            if (index == -1) return -1;
+
+            else if (_customers.Any(customer => customer.Email == email)) return 0;
+
+            _customers[index].Id = id;
+            _customers[index].Email = email;
+            return 1;
         }
     }
 }
