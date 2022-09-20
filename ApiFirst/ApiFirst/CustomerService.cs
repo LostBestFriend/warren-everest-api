@@ -2,12 +2,7 @@
 {
     public class CustomerService : ICustomerService
     {
-        private readonly IList<Customer> _customers;
-
-        public CustomerService()
-        {
-            _customers = new List<Customer>();
-        }
+        private readonly List<Customer> _customers = new();
 
         public bool Create(Customer model)
         {
@@ -17,21 +12,14 @@
             {
                 return false;
             }
-            else
-            {
-                _customers.Add(model);
-                return true;
-            }
+            _customers.Add(model);
+            return true;
         }
 
 
         public bool Delete(int id)
         {
-            var response = _customers.FirstOrDefault(customer => customer.Id == id);
-
-            if (response is null) return false;
-
-            int index = _customers.IndexOf(response);
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
             if (index == -1) return false;
 
@@ -39,7 +27,7 @@
             return true;
         }
 
-        public IList<Customer> GetAll()
+        public List<Customer> GetAll()
         {
             return _customers;
         }
@@ -52,29 +40,27 @@
 
         public bool ExistsUpdate(long id, Customer model)
         {
-            return _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
+            var response = _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
+            return response;
         }
 
         public bool Exists(Customer model)
         {
-            return _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
+            var response = _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
+            return response;
         }
 
         public int Update(int id, Customer model)
         {
-            var response = _customers.FirstOrDefault(customer => customer.Id == id);
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (response is null) return -1;
-
-            int index = _customers.IndexOf(response);
+            if (index == -1) return -1;
 
             if (!ExistsUpdate(id, model)) return 0;
-            else
-            {
-                model.Id = _customers[index].Id;
-                _customers[index] = model;
-                return 1;
-            }
+
+            model.Id = _customers[index].Id;
+            _customers[index] = model;
+            return 1;
         }
 
         public Customer? GetById(int id)
@@ -84,16 +70,15 @@
 
         public int Modify(int id, string email)
         {
-            Customer? response = _customers.FirstOrDefault(customer => customer.Id == id);
-            if (response is null) return -1;
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
-            else if (_customers.Any(customer => customer.Email == response.Email)) return 0;
-            else
-            {
-                response.Id = id;
-                response.Email = email;
-                return 1;
-            }
+            if (index == -1) return -1;
+
+            else if (_customers.Any(customer => customer.Email == email)) return 0;
+
+            _customers[index].Id = id;
+            _customers[index].Email = email;
+            return 1;
         }
     }
 }

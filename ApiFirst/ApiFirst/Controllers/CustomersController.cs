@@ -18,7 +18,6 @@ namespace WebApi.Controllers
         public Customer? GetByCpf(string cpf)
         {
             var response = _customerService.GetByCpf(cpf);
-
             return response;
         }
 
@@ -27,12 +26,11 @@ namespace WebApi.Controllers
         public IList<Customer> GetAll()
         {
             var response = _customerService.GetAll();
-
             return response;
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Customer?> GetById(int id)
+        public IActionResult GetById(int id)
         {
             var response = _customerService.GetById(id);
 

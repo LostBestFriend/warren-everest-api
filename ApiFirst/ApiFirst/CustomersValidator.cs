@@ -6,38 +6,78 @@ namespace ApiFirst
     {
         public CustomersValidator()
         {
-            RuleFor(x => x.Cpf).NotEmpty().NotEqual(" ").Length(11).Must(BeAValidCpf).WithMessage("Please enter a valid CPF, this CPF is not valid");
+            RuleFor(x => x.Cpf).
+                NotEmpty().
+                NotEqual(" ").
+                Length(11).
+                Must(IsValidCpf).WithMessage("Please enter a valid CPF, this CPF is not valid");
 
-            RuleFor(x => x.Email).EmailAddress().Equal(x => x.EmailConfirmation).NotEqual(" ").MinimumLength(3).MaximumLength(50).NotEmpty();
+            RuleFor(x => x.Email).
+                EmailAddress().
+                Equal(x => x.EmailConfirmation).
+                NotEqual(" ").
+                MinimumLength(3).
+                MaximumLength(50).
+                NotEmpty();
 
-            RuleFor(x => x.DateOfBirth).NotEmpty().GreaterThan(DateTime.MinValue);
+            RuleFor(x => x.DateOfBirth).
+                NotEmpty().
+                GreaterThan(DateTime.MinValue);
 
-            RuleFor(x => x.FullName).NotEmpty().NotEqual(" ").MinimumLength(2).MaximumLength(50);
+            RuleFor(x => x.FullName).
+                NotEmpty().NotEqual(" ").
+                MinimumLength(2).
+                MaximumLength(50);
 
-            RuleFor(x => x.Cellphone).NotEmpty().NotEqual(" ").Length(13);
+            RuleFor(x => x.Cellphone).
+                NotEmpty().
+                NotEqual(" ").
+                Length(13);
 
-            RuleFor(x => x.EmailSms).NotEmpty();
+            RuleFor(x => x.EmailSms).
+                NotEmpty();
 
-            RuleFor(x => x.Whatsapp).NotEmpty();
+            RuleFor(x => x.Whatsapp).
+                NotEmpty();
 
-            RuleFor(x => x.Country).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(90).Must(FirstLetterUpperCase).WithMessage("Please enter a valid Country name");
+            RuleFor(x => x.Country).
+                NotEmpty().
+                NotEqual(" ").
+                MinimumLength(3).
+                MaximumLength(90).
+                Must(FirstLetterIsUpperCase).WithMessage("Please enter a valid Country name");
 
-            RuleFor(x => x.City).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(190).Must(FirstLetterUpperCase).WithMessage("Please enter a valid City name");
+            RuleFor(x => x.City).
+                NotEmpty().
+                NotEqual(" ").
+                MinimumLength(3).
+                MaximumLength(190).
+                Must(FirstLetterIsUpperCase).WithMessage("Please enter a valid City name");
 
-            RuleFor(x => x.PostalCode).NotEmpty().NotEqual(" ").Length(8);
+            RuleFor(x => x.PostalCode).
+                NotEmpty().
+                NotEqual(" ").
+                Length(8);
 
-            RuleFor(x => x.Address).NotEmpty().NotEqual(" ").MinimumLength(3).MaximumLength(200).Must(FirstLetterUpperCase).WithMessage("Please enter a valid Address");
+            RuleFor(x => x.Address).
+                NotEmpty().
+                NotEqual(" ").
+                MinimumLength(3).
+                MaximumLength(200).
+                Must(FirstLetterIsUpperCase).WithMessage("Please enter a valid Address");
 
-            RuleFor(x => x.Number).NotEmpty().GreaterThanOrEqualTo(1);
+            RuleFor(x => x.Number).
+                NotEmpty().
+                GreaterThanOrEqualTo(1);
 
-            bool FirstLetterUpperCase(string input)
+            bool FirstLetterIsUpperCase(string input)
             {
                 input = input.Trim();
-                char chars = input[0];
+                var chars = input.First();
                 return Char.IsUpper(chars);
             }
 
-            bool BeAValidCpf(string cpf)
+            bool IsValidCpf(string cpf)
             {
 
                 int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
@@ -49,7 +89,6 @@ namespace ApiFirst
 
                 if (cpf.Length != 11) return false;
                 if (cpf.All(x => x == cpf.First())) return false;
-
 
                 tempCpf = cpf.Substring(0, 9);
                 soma = 0;
