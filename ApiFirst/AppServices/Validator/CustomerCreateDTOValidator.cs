@@ -33,7 +33,6 @@ namespace AppServices.Validator
 
             bool FirstLetterUpperCase(string input)
             {
-
                 input = input.Trim();
                 char chars = input[0];
                 return Char.IsUpper(chars);
