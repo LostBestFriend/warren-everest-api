@@ -2,7 +2,9 @@
 {
     public class Customer : BaseModel
     {
-        public Customer(string fullName,
+        public Customer
+        (
+            string fullName,
             string email,
             string emailConfirmation,
             string cpf,
@@ -15,7 +17,7 @@
             string postalCode,
             string address,
             int number
-            )
+        )
         {
             FullName = fullName;
             Email = email;

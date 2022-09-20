@@ -2,7 +2,8 @@
 {
     public class CustomerCreateDTO
     {
-        public CustomerCreateDTO(
+        public CustomerCreateDTO
+        (
             string fullName,
             string email,
             string emailConfirmation,
@@ -16,7 +17,7 @@
             string postalCode,
             string address,
             int number
-            )
+        )
         {
             FullName = fullName;
             Email = email;
