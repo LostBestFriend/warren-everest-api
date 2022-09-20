@@ -10,7 +10,7 @@ namespace DomainServices.Interfaces
 
         bool Delete(int id);
 
-        IList<Customer> GetAll();
+        List<Customer> GetAll();
 
         Customer? GetById(int id);
 
