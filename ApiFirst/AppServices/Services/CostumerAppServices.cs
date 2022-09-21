@@ -19,16 +19,15 @@ namespace AppServices.Services
             return response;
         }
 
-        public bool Create(Customer model)
+        public long Create(Customer model)
         {
             var response = _customerServices.Create(model);
             return response;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
-            var response = _customerServices.Delete(id);
-            return response;
+            _customerServices.Delete(id);
         }
 
         public List<Customer> GetAll()
@@ -42,15 +41,13 @@ namespace AppServices.Services
             var response = _customerServices.GetById(id);
             return response;
         }
-        public int Update(int id, Customer model)
+        public void Update(int id, Customer model)
         {
-            var response = _customerServices.Update(id, model);
-            return response;
+            _customerServices.Update(id, model);
         }
-        public int Modify(int id, string email)
+        public void Modify(int id, string email)
         {
-            var response = _customerServices.Modify(id, email);
-            return response;
+            _customerServices.Modify(id, email);
         }
     }
 }

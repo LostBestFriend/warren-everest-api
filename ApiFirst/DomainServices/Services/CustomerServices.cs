@@ -7,14 +7,14 @@ namespace DomainServices.Repositories
     {
         private readonly List<Customer> _customers = new();
 
-        public bool Create(Customer model)
+        public long Create(Customer model)
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
 
-            if (Exists(model)) return false;
+            if (Exists(model)) throw new ArgumentException("O CPF ou Email já estão sendo usados.");
 
             _customers.Add(model);
-            return true;
+            return model.Id;
         }
 
         public bool ExistsUpdate(long id, Customer model)
@@ -29,14 +29,13 @@ namespace DomainServices.Repositories
             return response;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (index == -1) return false;
+            if (index == -1) throw new ArgumentNullException($"Cliente não encontrado para o id: {id}");
 
             _customers.RemoveAt(index);
-            return true;
         }
 
         public List<Customer> GetAll()
@@ -51,18 +50,17 @@ namespace DomainServices.Repositories
             return response;
         }
 
-        public int Update(int id, Customer model)
+        public void Update(int id, Customer model)
         {
 
             int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (index == -1) return -1;
+            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
 
-            if (ExistsUpdate(id, model)) return 0;
+            if (ExistsUpdate(id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
 
             model.Id = _customers[index].Id;
             _customers[index] = model;
-            return 1;
         }
 
         public Customer? GetById(int id)
@@ -71,17 +69,16 @@ namespace DomainServices.Repositories
             return response;
         }
 
-        public int Modify(int id, string email)
+        public void Modify(int id, string email)
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (index == -1) return -1;
+            if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
 
-            else if (_customers.Any(customer => customer.Email == email)) return 0;
+            else if (_customers.Any(customer => customer.Email == email)) throw new ArgumentException("Já existe usuário com o E-mail ou CPF digitados"); ;
 
             _customers[index].Id = id;
             _customers[index].Email = email;
-            return 1;
         }
     }
 }

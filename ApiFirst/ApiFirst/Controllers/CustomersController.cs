@@ -16,16 +16,18 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("cpf/{cpf}")]
-        public Customer? GetByCpf(string cpf)
+        public IActionResult GetByCpf(string cpf)
         {
             var response = _customerAppServices.GetByCpf(cpf);
-            return response;
+            return response is null
+                ? NotFound($"Não foi encontrado Customer para o CPF: {cpf}")
+                : Ok(response);
         }
         [HttpGet]
-        public List<Customer> GetAll()
+        public IActionResult GetAll()
         {
             var response = _customerAppServices.GetAll();
-            return response;
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -34,60 +36,88 @@ namespace WebApi.Controllers
             var response = _customerAppServices.GetById(id);
 
             return response is null
-                ? NotFound($"Não foi encontrado Customer para o Id: {id}")
+                ? NotFound($"Não foi encontrado Costumer para o Id: {id}")
                 : Ok(response);
         }
 
         [HttpPost]
         public IActionResult Create([FromBody] Customer model)
         {
-            var response = _customerAppServices.Create(model);
-
-            return response
-                ? Created("", model.Id)
-                : BadRequest("O Email ou CPF já existem.");
+            try
+            {
+                long id = _customerAppServices.Create(model);
+                return Created("", id);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var response = _customerAppServices.Delete(id);
-
-            return response
-                ? Ok()
-                : NotFound($"Usuário não encontrado para o id: {id}");
+            try
+            {
+                _customerAppServices.Delete(id);
+                return Ok();
+            }
+            catch (ArgumentNullException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, Customer model)
         {
-            int result = _customerAppServices.Update(id, model);
-
-            if (result == 1)
+            try
             {
+                _customerAppServices.Update(id, model);
                 return Ok();
             }
-            else if (result == 0)
+            catch (ArgumentNullException ex)
             {
-                return BadRequest("Já existe Customer com estes dados de CPF e Email.");
+                return NotFound(ex.Message);
             }
-            return NotFound($"Usuário não encontrado para o id: {id}");
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpPatch("{id}")]
         public IActionResult Modify(int id, string email)
         {
-            int result = _customerAppServices.Modify(id, email);
-
-            if (result == -1)
+            try
             {
-                return NotFound($"Usuário não encontrado para o id: {id}");
+                _customerAppServices.Modify(id, email);
+                return Ok();
             }
-            else if (result == 0)
+            catch (ArgumentNullException ex)
             {
-                return BadRequest("Já existe Customer com estes dados de Email.");
+                return NotFound(ex.Message);
             }
-            return Ok();
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
     }
 }
