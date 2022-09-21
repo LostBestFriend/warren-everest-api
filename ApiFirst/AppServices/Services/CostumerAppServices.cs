@@ -29,10 +29,9 @@ namespace AppServices.Services
             return _customerServices.Create(mapped).Id;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
-            var response = _customerServices.Delete(id);
-            return response;
+            _customerServices.Delete(id);
         }
 
         public List<CustomerResponseDTO> GetAll()

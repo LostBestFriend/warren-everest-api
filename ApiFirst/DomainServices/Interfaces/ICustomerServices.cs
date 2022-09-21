@@ -8,7 +8,7 @@ namespace DomainServices.Interfaces
 
         void Update(int id, Customer model);
 
-        bool Delete(int id);
+        void Delete(int id);
 
         List<Customer> GetAll();
 

@@ -16,14 +16,13 @@ namespace DomainServices.Repositories
             return model;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (index == -1) return false;
+            if (index == -1) throw new ArgumentNullException($"Cliente não encontrado para o id: {id}");
 
             _customers.RemoveAt(index);
-            return true;
         }
 
         public List<Customer> GetAll()
