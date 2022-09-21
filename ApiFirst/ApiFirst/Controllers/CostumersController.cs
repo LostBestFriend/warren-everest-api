@@ -18,10 +18,19 @@ namespace ApiFirst.Controllers
         [HttpGet("cpf/{cpf}")]
         public IActionResult GetByCpf(string cpf)
         {
-            var response = _customerAppServices.GetByCpf(cpf);
-            return response is null
-                ? NotFound($"Não foi encontrado Customer para o CPF: {cpf}")
-                : Ok(response);
+            try
+            {
+                var response = _customerAppServices.GetByCpf(cpf);
+                return Ok(response);
+            }
+            catch (ArgumentNullException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpGet]
@@ -34,10 +43,19 @@ namespace ApiFirst.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var response = _customerAppServices.GetById(id);
-            return response is null
-                ? NotFound($"Não foi encontrado Costumer para o Id: {id}")
-                : Ok(response);
+            try
+            {
+                var response = _customerAppServices.GetById(id);
+                return Ok(response);
+            }
+            catch (ArgumentNullException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpPost]
