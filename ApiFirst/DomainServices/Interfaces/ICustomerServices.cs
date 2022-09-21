@@ -4,11 +4,11 @@ namespace DomainServices.Interfaces
 {
     public interface ICustomerServices
     {
-        Customer Create(Customer model);
+        Customer? Create(Customer model);
 
         void Update(int id, Customer model);
 
-        bool Delete(int id);
+        void Delete(int id);
 
         List<Customer> GetAll();
 

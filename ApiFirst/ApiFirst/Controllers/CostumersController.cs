@@ -62,10 +62,19 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var response = _customerAppServices.Delete(id);
-            return response
-                ? Ok()
-                : NotFound($"Usuário não encontrado para o id: {id}");
+            try
+            {
+                _customerAppServices.Delete(id);
+                return Ok();
+            }
+            catch (ArgumentNullException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpPut("{id}")]
