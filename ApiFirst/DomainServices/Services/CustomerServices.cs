@@ -34,6 +34,7 @@ namespace DomainServices.Repositories
         {
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
+            if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o CPF: {cpf}");
             return response;
         }
 
@@ -63,6 +64,7 @@ namespace DomainServices.Repositories
         public Customer? GetById(int id)
         {
             var response = _customers.FirstOrDefault(x => x.Id == id);
+            if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
             return response;
         }
 
