@@ -76,7 +76,8 @@ namespace Infrastructure.Data.Mapping
 
             builder.Property(customer => customer.Number)
                 .IsRequired()
-                .HasColumnName("number");
+                .HasColumnName("number").
+                HasColumnType("int");
         }
     }
 }

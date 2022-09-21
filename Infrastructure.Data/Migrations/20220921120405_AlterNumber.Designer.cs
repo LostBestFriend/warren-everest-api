@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(WarrenContext))]
-    [Migration("20220921112208_CreateAll")]
-    partial class CreateAll
+    [Migration("20220921120405_AlterNumber")]
+    partial class AlterNumber
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
