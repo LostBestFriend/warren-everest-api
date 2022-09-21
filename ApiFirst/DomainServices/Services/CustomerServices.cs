@@ -18,7 +18,7 @@ namespace DomainServices.Services
 
         public long Create(Customer model)
         {
-            model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
+            model.Id = _customers.ToList().LastOrDefault()?.Id + 1 ?? 1;
             if (Exists(model)) throw new ArgumentException("O CPF ou Email já estão sendo usados.");
 
             _customers.Add(model);
@@ -36,9 +36,9 @@ namespace DomainServices.Services
             _context.SaveChanges();
         }
 
-        public IEnumerable<Customer> GetAll()
+        public List<Customer> GetAll()
         {
-            return _customers;
+            return _customers.ToList();
         }
 
         public Customer? GetByCpf(string cpf)

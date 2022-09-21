@@ -10,7 +10,7 @@ namespace DomainServices.Interfaces
 
         void Delete(int id);
 
-        IEnumerable<Customer> GetAll();
+        List<Customer> GetAll();
 
         Customer? GetById(int id);
 
