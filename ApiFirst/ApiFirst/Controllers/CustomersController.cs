@@ -1,4 +1,4 @@
-﻿using AppServices.Interfaces;
+using AppServices.Interfaces;
 using DomainModels.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +32,7 @@ namespace WebApi.Controllers
         public IActionResult GetById(int id)
         {
             var response = _customerAppServices.GetById(id);
+
             return response is null
                 ? NotFound($"Não foi encontrado Customer para o Id: {id}")
                 : Ok(response);
@@ -41,6 +42,7 @@ namespace WebApi.Controllers
         public IActionResult Create([FromBody] Customer model)
         {
             var response = _customerAppServices.Create(model);
+
             return response
                 ? Created("", model.Id)
                 : BadRequest("O Email ou CPF já existem.");
@@ -50,6 +52,7 @@ namespace WebApi.Controllers
         public IActionResult Delete(int id)
         {
             var response = _customerAppServices.Delete(id);
+
             return response
                 ? Ok()
                 : NotFound($"Usuário não encontrado para o id: {id}");

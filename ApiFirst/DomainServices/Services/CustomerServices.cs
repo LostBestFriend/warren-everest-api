@@ -35,6 +35,7 @@ namespace DomainServices.Repositories
 
             if (index == -1) return false;
 
+            _customers.RemoveAt(index);
             return true;
         }
 
