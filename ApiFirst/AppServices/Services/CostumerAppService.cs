@@ -6,12 +6,12 @@ using DomainServices.Interfaces;
 
 namespace AppServices.Services
 {
-    public class CustomerAppServices : ICustomerAppServices
+    public class CustomerAppServices : ICustomerAppService
     {
-        private readonly ICustomerServices _customerServices;
+        private readonly ICustomerService _customerServices;
         private readonly IMapper _mapper;
 
-        public CustomerAppServices(ICustomerServices customerServices, IMapper mapper)
+        public CustomerAppServices(ICustomerService customerServices, IMapper mapper)
         {
             _customerServices = customerServices;
             _mapper = mapper;
