@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DomainServices.Services
 {
-    public class CustomerServices : ICustomerServices
+    public class CustomerService : ICustomerService
     {
         private readonly WarrenContext _context;
         private readonly DbSet<Customer> _customers;
 
-        public CustomerServices(WarrenContext context)
+        public CustomerService(WarrenContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _customers = _context.Set<Customer>();
