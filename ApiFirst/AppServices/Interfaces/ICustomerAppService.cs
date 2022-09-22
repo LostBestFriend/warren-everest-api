@@ -2,7 +2,7 @@
 
 namespace AppServices.Interfaces
 {
-    public interface ICustomerAppServices
+    public interface ICustomerAppService
     {
         long Create(CustomerCreateDTO model);
 
