@@ -10,8 +10,8 @@ namespace DomainServices.Services
         public Customer Create(Customer model)
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
-            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
-            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
+
+            ExceptionVerifier(model);
 
             _customers.Add(model);
             return model;
@@ -45,10 +45,15 @@ namespace DomainServices.Services
 
             if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
 
-            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
-            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
+            ExceptionVerifier(model);
 
             _customers[index] = model;
+        }
+
+        public void ExceptionVerifier(Customer model)
+        {
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
         }
 
         public Customer GetById(int id)
