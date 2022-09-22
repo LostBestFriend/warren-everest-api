@@ -13,7 +13,7 @@ namespace AppServices.Services
             _customerServices = customerServices;
         }
 
-        public Customer? GetByCpf(string cpf)
+        public Customer GetByCpf(string cpf)
         {
             var response = _customerServices.GetByCpf(cpf);
             return response;
@@ -36,7 +36,7 @@ namespace AppServices.Services
             return response;
         }
 
-        public Customer? GetById(int id)
+        public Customer GetById(int id)
         {
             var response = _customerServices.GetById(id);
             return response;
