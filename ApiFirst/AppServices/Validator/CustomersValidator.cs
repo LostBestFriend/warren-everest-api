@@ -22,8 +22,9 @@ namespace AppServices.Validation
                 NotEmpty();
 
             RuleFor(x => x.DateOfBirth).
-                NotEmpty().
-                GreaterThan(DateTime.MinValue);
+                GreaterThan(DateTime.MinValue).
+                LessThan(DateTime.Now.AddYears(-18)).
+                NotEmpty();
 
             RuleFor(x => x.FullName).
                 NotEmpty().NotEqual(" ").
@@ -100,10 +101,7 @@ namespace AppServices.Validation
                 }
 
                 resto = soma % 11;
-                if (resto < 2)
-                {
-                    resto = 0;
-                }
+                if (resto < 2) resto = 0;
                 else
                 {
                     resto = 11 - resto;
@@ -119,16 +117,13 @@ namespace AppServices.Validation
                 }
 
                 resto = soma % 11;
-                if (resto < 2)
-                {
-                    resto = 0;
-                }
+                if (resto < 2) resto = 0;
                 else
                 {
                     resto = 11 - resto;
                 }
 
-                digito = digito + resto.ToString();
+                digito += resto.ToString();
 
                 return cpf.EndsWith(digito);
             }
