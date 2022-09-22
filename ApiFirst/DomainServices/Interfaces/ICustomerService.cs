@@ -2,7 +2,7 @@
 
 namespace DomainServices.Interfaces
 {
-    public interface ICustomerServices
+    public interface ICustomerService
     {
         Customer Create(Customer model);
 

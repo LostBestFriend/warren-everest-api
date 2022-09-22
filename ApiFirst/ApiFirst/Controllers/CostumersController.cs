@@ -8,9 +8,9 @@ namespace WebApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerAppServices _customerAppServices;
+        private readonly ICustomerAppService _customerAppServices;
 
-        public CustomersController(ICustomerAppServices customerAppServices)
+        public CustomersController(ICustomerAppService customerAppServices)
         {
             _customerAppServices = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
         }
