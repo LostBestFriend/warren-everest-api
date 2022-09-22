@@ -4,11 +4,11 @@ using DomainServices.Interfaces;
 
 namespace AppServices.Services
 {
-    public class CustomerAppServices : ICustomerAppServices
+    public class CustomerAppServices : ICustomerAppService
     {
-        private readonly ICustomerServices _customerServices;
+        private readonly ICustomerService _customerServices;
 
-        public CustomerAppServices(ICustomerServices customerServices)
+        public CustomerAppServices(ICustomerService customerServices)
         {
             _customerServices = customerServices;
         }

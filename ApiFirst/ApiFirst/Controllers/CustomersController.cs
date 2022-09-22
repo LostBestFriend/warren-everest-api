@@ -8,9 +8,9 @@ namespace WebApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerAppServices _customerAppServices;
+        private readonly ICustomerAppService _customerAppServices;
 
-        public CustomersController(ICustomerAppServices customerAppServices)
+        public CustomersController(ICustomerAppService customerAppServices)
         {
             _customerAppServices = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
         }
@@ -25,7 +25,7 @@ namespace WebApi.Controllers
             }
             catch (ArgumentNullException e)
             {
-                return BadRequest(e.Message);
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
             }
             catch (ArgumentNullException e)
             {
-                return BadRequest(e.Message);
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {

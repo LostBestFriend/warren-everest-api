@@ -1,8 +1,9 @@
 ﻿using DomainModels.Models;
 
-namespace AppServices.Interfaces
+namespace DomainServices.Interfaces
 {
-    public interface ICustomerAppServices
+    public interface ICustomerService
+
     {
         long Create(Customer model);
 

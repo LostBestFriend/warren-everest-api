@@ -3,7 +3,7 @@ using DomainServices.Interfaces;
 
 namespace DomainServices.Repositories
 {
-    public class CustomerServices : ICustomerServices
+    public class CustomerService : ICustomerService
     {
         private readonly List<Customer> _customers = new();
 
@@ -11,7 +11,9 @@ namespace DomainServices.Repositories
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
 
-            if (Exists(model)) throw new ArgumentException("O CPF ou Email já estão sendo usados.");
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
+
 
             _customers.Add(model);
             return model.Id;
@@ -58,7 +60,8 @@ namespace DomainServices.Repositories
 
             if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
 
-            if (ExistsUpdate(id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
 
             model.Id = _customers[index].Id;
             _customers[index] = model;
