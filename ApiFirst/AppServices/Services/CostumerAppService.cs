@@ -13,8 +13,8 @@ namespace AppServices.Services
 
         public CustomerAppServices(ICustomerService customerServices, IMapper mapper)
         {
-            _customerServices = customerServices;
-            _mapper = mapper;
+            _customerServices = customerServices ?? throw new ArgumentNullException(nameof(customerServices));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public CustomerResponseDTO GetByCpf(string cpf)
