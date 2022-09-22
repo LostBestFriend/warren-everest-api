@@ -23,7 +23,7 @@ namespace AppServices.Validation
 
             RuleFor(x => x.DateOfBirth).
                 GreaterThan(DateTime.MinValue).
-                LessThan(DateTime.Now.AddYears(-18)).
+                LessThanOrEqualTo(DateTime.Now.AddYears(-18)).
                 NotEmpty();
 
             RuleFor(x => x.FullName).

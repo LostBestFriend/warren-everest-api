@@ -3,7 +3,7 @@ using AppServices.Services;
 using AppServices.Validation;
 using DomainModels.Models;
 using DomainServices.Interfaces;
-using DomainServices.Repositories;
+using DomainServices.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
