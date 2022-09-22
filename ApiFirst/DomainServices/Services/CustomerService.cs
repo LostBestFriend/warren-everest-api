@@ -5,12 +5,12 @@ using Infrastructure.Data.Context;
 
 namespace DomainServices.Services
 {
-    public class CustomerServices : ICustomerServices
+    public class CustomerService : ICustomerService
     {
         private readonly IRepositoryFactory _repositoryFactory;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CustomerServices(IUnitOfWork<WarrenContext> unitOfWork, IRepositoryFactory<WarrenContext> repository)
+        public CustomerService(IUnitOfWork<WarrenContext> unitOfWork, IRepositoryFactory<WarrenContext> repository)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;

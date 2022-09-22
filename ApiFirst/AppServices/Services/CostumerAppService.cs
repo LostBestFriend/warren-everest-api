@@ -8,10 +8,10 @@ namespace AppServices.Services
 {
     public class CustomerAppServices : ICustomerAppService
     {
-        private readonly ICustomerServices _customerServices;
+        private readonly ICustomerService _customerServices;
         private readonly IMapper _mapper;
 
-        public CustomerAppServices(ICustomerServices customerServices, IMapper mapper)
+        public CustomerAppServices(ICustomerService customerServices, IMapper mapper)
         {
             _customerServices = customerServices ?? throw new ArgumentNullException(nameof(customerServices));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
