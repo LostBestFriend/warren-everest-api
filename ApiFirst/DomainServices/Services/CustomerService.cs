@@ -19,18 +19,6 @@ namespace DomainServices.Repositories
             return model.Id;
         }
 
-        public bool ExistsUpdate(long id, Customer model)
-        {
-            var response = _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
-            return response;
-        }
-
-        public bool Exists(Customer model)
-        {
-            var response = _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
-            return response;
-        }
-
         public void Delete(int id)
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
