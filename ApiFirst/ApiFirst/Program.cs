@@ -2,7 +2,6 @@ using AppModels.MapperModels;
 using AppServices.Interfaces;
 using AppServices.Services;
 using AppServices.Validation;
-using AppServices.Validator;
 using DomainServices.Interfaces;
 using DomainServices.Services;
 using FluentValidation;

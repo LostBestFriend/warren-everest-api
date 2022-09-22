@@ -1,7 +1,7 @@
-﻿using AppModels.MapperModels;
+using AppModels.MapperModels;
 using FluentValidation;
 
-namespace AppServices.Validator
+namespace AppServices.Validation
 {
     public class CustomerUpdateDTOValidator : AbstractValidator<CustomerUpdateDTO>
     {
@@ -21,8 +21,9 @@ namespace AppServices.Validator
                 NotEmpty();
 
             RuleFor(x => x.DateOfBirth).
-                NotEmpty().
-                GreaterThan(DateTime.MinValue);
+                GreaterThan(DateTime.MinValue).
+                LessThanOrEqualTo(DateTime.Now.AddYears(-18)).
+                NotEmpty();
 
             RuleFor(x => x.FullName).
                 NotEmpty().NotEqual(" ").
@@ -99,10 +100,7 @@ namespace AppServices.Validator
                 }
 
                 resto = soma % 11;
-                if (resto < 2)
-                {
-                    resto = 0;
-                }
+                if (resto < 2) resto = 0;
                 else
                 {
                     resto = 11 - resto;
@@ -118,16 +116,13 @@ namespace AppServices.Validator
                 }
 
                 resto = soma % 11;
-                if (resto < 2)
-                {
-                    resto = 0;
-                }
+                if (resto < 2) resto = 0;
                 else
                 {
                     resto = 11 - resto;
                 }
 
-                digito = digito + resto.ToString();
+                digito += resto.ToString();
 
                 return cpf.EndsWith(digito);
             }

@@ -1,4 +1,4 @@
-﻿using AppModels.MapperModels;
+using AppModels.MapperModels;
 
 namespace AppServices.Interfaces
 {
