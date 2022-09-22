@@ -36,10 +36,10 @@ namespace AppServices.Validation
                 Length(13);
 
             RuleFor(x => x.EmailSms).
-                NotEmpty();
+                NotNull();
 
             RuleFor(x => x.Whatsapp).
-                NotEmpty();
+                NotNull();
 
             RuleFor(x => x.Country).
                 NotEmpty().
