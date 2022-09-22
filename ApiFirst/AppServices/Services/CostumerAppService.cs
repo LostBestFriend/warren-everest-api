@@ -6,7 +6,7 @@ using DomainServices.Interfaces;
 
 namespace AppServices.Services
 {
-    public class CustomerAppServices : ICustomerAppServices
+    public class CustomerAppServices : ICustomerAppService
     {
         private readonly ICustomerServices _customerServices;
         private readonly IMapper _mapper;

@@ -23,7 +23,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICustomerServices, CustomerServices>();
-builder.Services.AddTransient<ICustomerAppServices, CustomerAppServices>();
+builder.Services.AddTransient<ICustomerAppService, CustomerAppServices>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<IValidator<CustomerCreateDTO>, CustomerCreateDTOValidator>();
 builder.Services.AddScoped<IValidator<CustomerUpdateDTO>, CustomerUpdateDTOValidator>();
