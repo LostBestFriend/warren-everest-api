@@ -17,7 +17,7 @@ namespace AppServices.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public CustomerResponseDTO? GetByCpf(string cpf)
+        public CustomerResponseDTO GetByCpf(string cpf)
         {
             var result = _customerServices.GetByCpf(cpf);
             return _mapper.Map<CustomerResponseDTO>(result);
@@ -40,7 +40,7 @@ namespace AppServices.Services
             return _mapper.Map<List<CustomerResponseDTO>>(result);
         }
 
-        public CustomerResponseDTO? GetById(int id)
+        public CustomerResponseDTO GetById(int id)
         {
             var result = _customerServices.GetById(id);
             return _mapper.Map<CustomerResponseDTO>(result);

@@ -12,10 +12,10 @@ namespace AppServices.Interfaces
 
         List<CustomerResponseDTO> GetAll();
 
-        CustomerResponseDTO? GetById(int id);
+        CustomerResponseDTO GetById(int id);
 
         void Modify(int id, CustomerUpdateDTO model);
 
-        CustomerResponseDTO? GetByCpf(string cpf);
+        CustomerResponseDTO GetByCpf(string cpf);
     }
 }

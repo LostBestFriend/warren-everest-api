@@ -42,7 +42,7 @@ namespace DomainServices.Services
             return _customers.ToList();
         }
 
-        public Customer? GetByCpf(string cpf)
+        public Customer GetByCpf(string cpf)
         {
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
@@ -62,7 +62,7 @@ namespace DomainServices.Services
             _context.SaveChanges();
         }
 
-        public Customer? GetById(int id)
+        public Customer GetById(int id)
         {
             var response = _customers.FirstOrDefault(x => x.Id == id);
             if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
