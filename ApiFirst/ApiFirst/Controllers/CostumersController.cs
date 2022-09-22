@@ -25,7 +25,7 @@ namespace ApiFirst.Controllers
             }
             catch (ArgumentNullException e)
             {
-                return BadRequest(e.Message);
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -50,7 +50,7 @@ namespace ApiFirst.Controllers
             }
             catch (ArgumentNullException e)
             {
-                return BadRequest(e.Message);
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {

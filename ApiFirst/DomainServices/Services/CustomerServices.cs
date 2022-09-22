@@ -19,7 +19,8 @@ namespace DomainServices.Services
         public long Create(Customer model)
         {
             model.Id = _customers.ToList().LastOrDefault()?.Id + 1 ?? 1;
-            if (Exists(model)) throw new ArgumentException("O CPF ou Email já estão sendo usados.");
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
 
             _customers.Add(model);
             _context.SaveChanges();
@@ -54,22 +55,11 @@ namespace DomainServices.Services
 
             int index = _customers.ToList().FindIndex(customer => customer.Id == model.Id);
             if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
-            if (ExistsUpdate(_customers.ToList()[index].Id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
 
             _customers.Update(model);
             _context.SaveChanges();
-        }
-
-        public bool ExistsUpdate(long id, Customer model)
-        {
-            var response = _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
-            return response;
-        }
-
-        public bool Exists(Customer model)
-        {
-            var response = _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
-            return response;
         }
 
         public Customer? GetById(int id)
@@ -84,7 +74,8 @@ namespace DomainServices.Services
             int index = _customers.ToList().FindIndex(customer => customer.Id == model.Id);
             if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {model.Id}");
 
-            if (ExistsUpdate(_customers.ToList()[index].Id, model)) throw new ArgumentException("Já existe usuário com o E-mail ou CPF digitados");
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
 
             model.Id = _customers.ToList()[index].Id;
             _context.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
