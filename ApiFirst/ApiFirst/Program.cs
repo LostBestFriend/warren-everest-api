@@ -1,4 +1,9 @@
-using ApiFirst;
+using AppServices.Interfaces;
+using AppServices.Services;
+using AppServices.Validation;
+using DomainModels.Models;
+using DomainServices.Interfaces;
+using DomainServices.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
@@ -11,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ICustomerService, CustomerService>();
+builder.Services.AddTransient<ICustomerAppService, CustomerAppServices>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<IValidator<Customer>, CustomersValidator>();
 

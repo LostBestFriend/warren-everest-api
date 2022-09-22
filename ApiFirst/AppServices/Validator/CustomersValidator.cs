@@ -1,6 +1,7 @@
-﻿using FluentValidation;
+﻿using DomainModels.Models;
+using FluentValidation;
 
-namespace ApiFirst
+namespace AppServices.Validation
 {
     public class CustomersValidator : AbstractValidator<Customer>
     {
@@ -21,8 +22,9 @@ namespace ApiFirst
                 NotEmpty();
 
             RuleFor(x => x.DateOfBirth).
-                NotEmpty().
-                GreaterThan(DateTime.MinValue);
+                GreaterThan(DateTime.MinValue).
+                LessThanOrEqualTo(DateTime.Now.AddYears(-18)).
+                NotEmpty();
 
             RuleFor(x => x.FullName).
                 NotEmpty().NotEqual(" ").
@@ -35,10 +37,10 @@ namespace ApiFirst
                 Length(13);
 
             RuleFor(x => x.EmailSms).
-                NotEmpty();
+                NotNull();
 
             RuleFor(x => x.Whatsapp).
-                NotEmpty();
+                NotNull();
 
             RuleFor(x => x.Country).
                 NotEmpty().
@@ -99,10 +101,7 @@ namespace ApiFirst
                 }
 
                 resto = soma % 11;
-                if (resto < 2)
-                {
-                    resto = 0;
-                }
+                if (resto < 2) resto = 0;
                 else
                 {
                     resto = 11 - resto;
@@ -118,21 +117,16 @@ namespace ApiFirst
                 }
 
                 resto = soma % 11;
-                if (resto < 2)
-                {
-                    resto = 0;
-                }
+                if (resto < 2) resto = 0;
                 else
                 {
                     resto = 11 - resto;
                 }
 
-                digito = digito + resto.ToString();
+                digito += resto.ToString();
 
                 return cpf.EndsWith(digito);
             }
         }
     }
 }
-
-

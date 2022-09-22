@@ -1,4 +1,5 @@
-﻿using ApiFirst;
+using AppServices.Interfaces;
+using DomainModels.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -7,88 +8,134 @@ namespace WebApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerService _customerService;
+        private readonly ICustomerAppService _customerAppServices;
 
-        public CustomersController(ICustomerService customerService)
+        public CustomersController(ICustomerAppService customerAppServices)
         {
-            _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
+            _customerAppServices = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
         }
 
         [HttpGet("cpf/{cpf}")]
-        public Customer? GetByCpf(string cpf)
+        public IActionResult GetByCpf(string cpf)
         {
-            var response = _customerService.GetByCpf(cpf);
-            return response;
+            try
+            {
+                var response = _customerAppServices.GetByCpf(cpf);
+                return Ok(response);
+            }
+            catch (ArgumentNullException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+
         }
-
-
         [HttpGet]
-        public IList<Customer> GetAll()
+        public IActionResult GetAll()
         {
-            var response = _customerService.GetAll();
-            return response;
+            var response = _customerAppServices.GetAll();
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var response = _customerService.GetById(id);
-
-            return response is null
-                ? NotFound($"Não foi encontrado Customer para o Id: {id}")
-                : Ok(response);
+            try
+            {
+                var response = _customerAppServices.GetById(id);
+                return Ok(response);
+            }
+            catch (ArgumentNullException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpPost]
         public IActionResult Create([FromBody] Customer model)
         {
-            var response = _customerService.Create(model);
-
-            return response
-                ? Created("", model.Id)
-                : BadRequest("O Email ou CPF já existem.");
+            try
+            {
+                long id = _customerAppServices.Create(model);
+                return Created("", id);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var response = _customerService.Delete(id);
-
-            return response
-                ? Ok()
-                : NotFound($"Usuário não encontrado para o id: {id}");
+            try
+            {
+                _customerAppServices.Delete(id);
+                return NoContent();
+            }
+            catch (ArgumentNullException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, Customer model)
         {
-            var result = _customerService.Update(id, model);
-
-            if (result == 1)
+            try
             {
+                _customerAppServices.Update(id, model);
                 return Ok();
             }
-            else if (result == 0)
+            catch (ArgumentNullException ex)
             {
-                return BadRequest("Já existe Customer com estes dados de CPF e Email.");
+                return NotFound(ex.Message);
             }
-            return NotFound($"Não foi encontrado Customer para os valores do campo CPF: {model.Cpf}.");
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
         [HttpPatch("{id}")]
         public IActionResult Modify(int id, string email)
         {
-            var result = _customerService.Modify(id, email);
-
-            if (result == -1)
+            try
             {
-                return NotFound($"Não foi encontrado Customer para os valores do campo id: {id}.");
+                _customerAppServices.Modify(id, email);
+                return Ok();
             }
-            else if (result == 0)
+            catch (ArgumentNullException ex)
             {
-                return BadRequest("Já existe Customer com estes dados de Email.");
+                return NotFound(ex.Message);
             }
-            return Ok();
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
     }
 }
