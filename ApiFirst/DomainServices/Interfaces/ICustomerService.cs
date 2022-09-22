@@ -4,7 +4,7 @@ namespace DomainServices.Interfaces
 {
     public interface ICustomerService
     {
-        Customer? Create(Customer model);
+        Customer Create(Customer model);
 
         void Update(int id, Customer model);
 
@@ -12,10 +12,10 @@ namespace DomainServices.Interfaces
 
         List<Customer> GetAll();
 
-        Customer? GetById(int id);
+        Customer GetById(int id);
 
         void Modify(int id, string email);
 
-        Customer? GetByCpf(string cpf);
+        Customer GetByCpf(string cpf);
     }
 }

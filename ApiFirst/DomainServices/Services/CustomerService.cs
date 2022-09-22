@@ -7,7 +7,7 @@ namespace DomainServices.Repositories
     {
         private readonly List<Customer> _customers = new();
 
-        public Customer? Create(Customer model)
+        public Customer Create(Customer model)
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
             if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
@@ -31,7 +31,7 @@ namespace DomainServices.Repositories
             return _customers;
         }
 
-        public Customer? GetByCpf(string cpf)
+        public Customer GetByCpf(string cpf)
         {
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
@@ -51,7 +51,7 @@ namespace DomainServices.Repositories
             _customers[index] = model;
         }
 
-        public Customer? GetById(int id)
+        public Customer GetById(int id)
         {
             var response = _customers.FirstOrDefault(x => x.Id == id);
             if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
