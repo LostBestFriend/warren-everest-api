@@ -12,9 +12,9 @@ namespace DomainServices.Interfaces
 
         List<Customer> GetAll();
 
-        Customer? GetById(int id);
+        Customer GetById(int id);
 
         void Modify(int id, string email);
-        Customer? GetByCpf(string cpf);
+        Customer GetByCpf(string cpf);
     }
 }
