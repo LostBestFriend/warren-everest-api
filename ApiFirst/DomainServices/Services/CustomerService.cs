@@ -1,7 +1,7 @@
 ﻿using DomainModels.Models;
 using DomainServices.Interfaces;
 
-namespace DomainServices.Repositories
+namespace DomainServices.Services
 {
     public class CustomerService : ICustomerService
     {
