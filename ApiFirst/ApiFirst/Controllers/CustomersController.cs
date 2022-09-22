@@ -82,7 +82,7 @@ namespace WebApi.Controllers
             try
             {
                 _customerAppServices.Delete(id);
-                return Ok();
+                return NoContent();
             }
             catch (ArgumentNullException e)
             {
