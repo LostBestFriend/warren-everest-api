@@ -17,7 +17,7 @@ namespace AppServices.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<CustomerResponseDTO>? GetByCpfAsync(string cpf)
+        public async Task<CustomerResponseDTO> GetByCpfAsync(string cpf)
         {
             var result = await _customerServices.GetByCpfAsync(cpf);
             return _mapper.Map<CustomerResponseDTO>(result);
@@ -40,7 +40,7 @@ namespace AppServices.Services
             return _mapper.Map<List<CustomerResponseDTO>>(result);
         }
 
-        public async Task<CustomerResponseDTO>? GetByIdAsync(int id)
+        public async Task<CustomerResponseDTO> GetByIdAsync(int id)
         {
             var result = await _customerServices.GetByIdAsync(id);
             return _mapper.Map<CustomerResponseDTO>(result);

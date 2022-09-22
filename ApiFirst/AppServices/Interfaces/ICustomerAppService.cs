@@ -12,10 +12,10 @@ namespace AppServices.Interfaces
 
         IEnumerable<CustomerResponseDTO> GetAll();
 
-        Task<CustomerResponseDTO>? GetByIdAsync(int id);
+        Task<CustomerResponseDTO> GetByIdAsync(int id);
 
         void Modify(int id, CustomerUpdateDTO model);
 
-        Task<CustomerResponseDTO>? GetByCpfAsync(string cpf);
+        Task<CustomerResponseDTO> GetByCpfAsync(string cpf);
     }
 }

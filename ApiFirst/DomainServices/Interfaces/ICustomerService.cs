@@ -12,10 +12,10 @@ namespace DomainServices.Interfaces
 
         IEnumerable<Customer> GetAll();
 
-        Task<Customer>? GetByIdAsync(int id);
+        Task<Customer> GetByIdAsync(int id);
 
         void Modify(Customer model);
 
-        Task<Customer>? GetByCpfAsync(string cpf);
+        Task<Customer> GetByCpfAsync(string cpf);
     }
 }

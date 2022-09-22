@@ -48,7 +48,7 @@ namespace DomainServices.Services
             return repo.Search(query);
         }
 
-        public async Task<Customer>? GetByCpfAsync(string cpf)
+        public async Task<Customer> GetByCpfAsync(string cpf)
         {
             var repo = _repositoryFactory.Repository<Customer>();
             var query = repo.SingleResultQuery().AndFilter(customer => customer.Cpf == cpf);
@@ -69,7 +69,7 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public async Task<Customer>? GetByIdAsync(int id)
+        public async Task<Customer> GetByIdAsync(int id)
         {
             var repo = _repositoryFactory.Repository<Customer>();
             var query = repo.SingleResultQuery().AndFilter(customer => customer.Id == id);
