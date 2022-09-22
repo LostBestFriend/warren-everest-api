@@ -10,7 +10,8 @@ namespace DomainServices.Repositories
         public Customer? Create(Customer model)
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
-            if (Exists(model)) throw new ArgumentException("O CPF ou Email já estão sendo usados.");
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
 
             _customers.Add(model);
             return model;
@@ -44,20 +45,10 @@ namespace DomainServices.Repositories
 
             if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
 
-            if (ExistsUpdate(_customers[index].Id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
+
             _customers[index] = model;
-        }
-
-        public bool ExistsUpdate(long id, Customer model)
-        {
-            var response = _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
-            return response;
-        }
-
-        public bool Exists(Customer model)
-        {
-            var response = _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
-            return response;
         }
 
         public Customer? GetById(int id)
