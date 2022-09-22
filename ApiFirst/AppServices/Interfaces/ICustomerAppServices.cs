@@ -4,18 +4,18 @@ namespace AppServices.Interfaces
 {
     public interface ICustomerAppServices
     {
-        long Create(CustomerCreateDTO model);
+        Task<long> CreateAsync(CustomerCreateDTO model);
 
         void Update(int id, CustomerUpdateDTO model);
 
         void Delete(int id);
 
-        List<CustomerResponseDTO> GetAll();
+        IEnumerable<CustomerResponseDTO> GetAll();
 
-        CustomerResponseDTO? GetById(int id);
+        Task<CustomerResponseDTO>? GetByIdAsync(int id);
 
         void Modify(int id, CustomerUpdateDTO model);
 
-        CustomerResponseDTO? GetByCpf(string cpf);
+        Task<CustomerResponseDTO>? GetByCpfAsync(string cpf);
     }
 }

@@ -1,94 +1,93 @@
 ﻿using DomainModels.Models;
 using DomainServices.Interfaces;
+using EntityFrameworkCore.UnitOfWork.Interfaces;
 using Infrastructure.Data.Context;
-using Microsoft.EntityFrameworkCore;
 
 namespace DomainServices.Services
 {
     public class CustomerServices : ICustomerServices
     {
-        private readonly WarrenContext _context;
-        private readonly DbSet<Customer> _customers;
+        private readonly IRepositoryFactory _repositoryFactory;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CustomerServices(WarrenContext context)
+        public CustomerServices(IUnitOfWork<WarrenContext> unitOfWork, IRepositoryFactory<WarrenContext> repository)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _customers = _context.Set<Customer>();
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
-        public long Create(Customer model)
+        public async Task<long> CreateAsync(Customer model)
         {
-            model.Id = _customers.ToList().LastOrDefault()?.Id + 1 ?? 1;
-            if (Exists(model)) throw new ArgumentException("O CPF ou Email já estão sendo usados.");
+            var repo = _unitOfWork.Repository<Customer>();
 
-            _customers.Add(model);
-            _context.SaveChanges();
+            if (repo.Any(customer => customer.Email == model.Email)) throw new ArgumentException("Email já está sendo usado.");
+            if (repo.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException("O CPF já está sendo usado.");
+
+            await repo.AddAsync(model).ConfigureAwait(false);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             return model.Id;
         }
 
         public void Delete(int id)
         {
-            Customer? customer = _customers.FirstOrDefault(customer => customer.Id == id);
+            var repository = _unitOfWork.Repository<Customer>();
 
-            if (customer is null) throw new ArgumentNullException($"Cliente não encontrado para o id: {id}");
+            if (!repository.Any(customr => customr.Id == id))
+            {
+                throw new ArgumentNullException($"Cliente não encontrado para o id: {id}");
+            }
 
-            _customers.Remove(customer).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
-            _context.SaveChanges();
+            repository.Remove(customertoRemove => customertoRemove.Id == id);
         }
 
-        public List<Customer> GetAll()
+        public IEnumerable<Customer> GetAll()
         {
-            return _customers.ToList();
+            var repo = _repositoryFactory.Repository<Customer>();
+            var query = repo.MultipleResultQuery();
+
+            return repo.Search(query);
         }
 
-        public Customer? GetByCpf(string cpf)
+        public async Task<Customer>? GetByCpfAsync(string cpf)
         {
-            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
-            var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
+            var repo = _repositoryFactory.Repository<Customer>();
+            var query = repo.SingleResultQuery().AndFilter(customer => customer.Cpf == cpf);
+            var response = await repo.FirstOrDefaultAsync(query).ConfigureAwait(false);
+
             if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o CPF: {cpf}");
             return response;
         }
 
         public void Update(Customer model)
         {
+            var repo = _unitOfWork.Repository<Customer>();
+            if (!repo.Any(customer => customer.Id == model.Id)) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
+            if (repo.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
+            if (repo.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF digitado");
 
-            int index = _customers.ToList().FindIndex(customer => customer.Id == model.Id);
-            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
-            if (ExistsUpdate(_customers.ToList()[index].Id, model)) throw new ArgumentException($"Já existe usuário com o E-mail ou CPF digitados");
-
-            _customers.Update(model);
-            _context.SaveChanges();
+            repo.Update(model);
+            _unitOfWork.SaveChanges();
         }
 
-        public bool ExistsUpdate(long id, Customer model)
+        public async Task<Customer>? GetByIdAsync(int id)
         {
-            var response = _customers.Any(customer => (customer.Cpf == model.Cpf || customer.Email == model.Email) && customer.Id != id);
-            return response;
-        }
+            var repo = _repositoryFactory.Repository<Customer>();
+            var query = repo.SingleResultQuery().AndFilter(customer => customer.Id == id);
+            var response = await repo.FirstOrDefaultAsync(query).ConfigureAwait(false);
 
-        public bool Exists(Customer model)
-        {
-            var response = _customers.Any(customer => customer.Cpf == model.Cpf || customer.Email == model.Email);
-            return response;
-        }
-
-        public Customer? GetById(int id)
-        {
-            var response = _customers.FirstOrDefault(x => x.Id == id);
             if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
             return response;
         }
 
         public void Modify(Customer model)
         {
-            int index = _customers.ToList().FindIndex(customer => customer.Id == model.Id);
-            if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {model.Id}");
+            var repo = _unitOfWork.Repository<Customer>();
+            if (!repo.Any(customer => customer.Id == model.Id)) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
+            if (repo.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
+            if (repo.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF digitado");
 
-            if (ExistsUpdate(_customers.ToList()[index].Id, model)) throw new ArgumentException("Já existe usuário com o E-mail ou CPF digitados");
-
-            model.Id = _customers.ToList()[index].Id;
-            _context.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
+            repo.Update(model);
+            _unitOfWork.SaveChanges();
         }
     }
 }

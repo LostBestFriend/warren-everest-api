@@ -4,6 +4,7 @@ using AppServices.Services;
 using AppServices.Validator;
 using DomainServices.Interfaces;
 using DomainServices.Services;
+using EntityFrameworkCore.UnitOfWork.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure.Data.Context;
@@ -27,6 +28,7 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<IValidator<CustomerCreateDTO>, CustomerCreateDTOValidator>();
 builder.Services.AddScoped<IValidator<CustomerUpdateDTO>, CustomerUpdateDTOValidator>();
 builder.Services.AddAutoMapper(Assembly.Load("AppServices"));
+builder.Services.AddUnitOfWork<WarrenContext>();
 
 var app = builder.Build();
 

@@ -4,18 +4,18 @@ namespace DomainServices.Interfaces
 {
     public interface ICustomerServices
     {
-        long Create(Customer model);
+        Task<long> CreateAsync(Customer model);
 
         void Update(Customer model);
 
         void Delete(int id);
 
-        List<Customer> GetAll();
+        IEnumerable<Customer> GetAll();
 
-        Customer? GetById(int id);
+        Task<Customer>? GetByIdAsync(int id);
 
         void Modify(Customer model);
 
-        Customer? GetByCpf(string cpf);
+        Task<Customer>? GetByCpfAsync(string cpf);
     }
 }

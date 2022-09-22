@@ -17,16 +17,16 @@ namespace AppServices.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public CustomerResponseDTO? GetByCpf(string cpf)
+        public async Task<CustomerResponseDTO>? GetByCpfAsync(string cpf)
         {
-            var result = _customerServices.GetByCpf(cpf);
+            var result = await _customerServices.GetByCpfAsync(cpf);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
 
-        public long Create(CustomerCreateDTO model)
+        public async Task<long> CreateAsync(CustomerCreateDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
-            return _customerServices.Create(mapped);
+            return await _customerServices.CreateAsync(mapped);
         }
 
         public void Delete(int id)
@@ -34,15 +34,15 @@ namespace AppServices.Services
             _customerServices.Delete(id);
         }
 
-        public List<CustomerResponseDTO> GetAll()
+        public IEnumerable<CustomerResponseDTO> GetAll()
         {
             var result = _customerServices.GetAll();
             return _mapper.Map<List<CustomerResponseDTO>>(result);
         }
 
-        public CustomerResponseDTO? GetById(int id)
+        public async Task<CustomerResponseDTO>? GetByIdAsync(int id)
         {
-            var result = _customerServices.GetById(id);
+            var result = await _customerServices.GetByIdAsync(id);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
         public void Update(int id, CustomerUpdateDTO model)
