@@ -1,11 +1,11 @@
-using AppModels.MapperModels;
+using AppModels.AppModels;
 
 namespace AppServices.Interfaces
 {
     public interface ICustomerAppService
     {
-        long Create(CustomerCreateDTO model);
-        void Update(int id, CustomerUpdateDTO model);
+        long Create(CreateCustomerDTO model);
+        void Update(int id, UpdateCustomerDTO model);
         void Delete(int id);
         List<CustomerResponseDTO> GetAll();
         CustomerResponseDTO GetById(int id);

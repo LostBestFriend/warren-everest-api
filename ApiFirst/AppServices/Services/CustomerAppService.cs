@@ -1,4 +1,4 @@
-using AppModels.MapperModels;
+using AppModels.AppModels;
 using AppServices.Interfaces;
 using AutoMapper;
 using DomainModels.Models;
@@ -23,7 +23,7 @@ namespace AppServices.Services
             return _mapper.Map<CustomerResponseDTO>(result);
         }
 
-        public long Create(CustomerCreateDTO model)
+        public long Create(CreateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
             return _customerServices.Create(mapped).Id;
@@ -46,7 +46,7 @@ namespace AppServices.Services
             return _mapper.Map<CustomerResponseDTO>(result);
         }
 
-        public void Update(int id, CustomerUpdateDTO model)
+        public void Update(int id, UpdateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
             _customerServices.Update(id, mapped);

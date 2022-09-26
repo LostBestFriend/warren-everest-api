@@ -1,4 +1,4 @@
-﻿using AppModels.MapperModels;
+﻿using AppModels.AppModels;
 using AutoMapper;
 using DomainModels.Models;
 
@@ -8,8 +8,8 @@ namespace AppServices.Profiles
     {
         public CustomerProfile()
         {
-            CreateMap<CustomerUpdateDTO, Customer>();
-            CreateMap<CustomerCreateDTO, Customer>();
+            CreateMap<UpdateCustomerDTO, Customer>();
+            CreateMap<CreateCustomerDTO, Customer>();
             CreateMap<Customer, CustomerResponseDTO>();
         }
     }
