@@ -1,4 +1,4 @@
-﻿using AppModels.MapperModels;
+﻿using AppModels.AppModels;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -59,7 +59,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] CustomerCreateDTO model)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCustomerDTO model)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, CustomerUpdateDTO model)
+        public IActionResult Update(int id, UpdateCustomerDTO model)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(int id, CustomerUpdateDTO model)
+        public IActionResult Modify(int id, UpdateCustomerDTO model)
         {
             try
             {

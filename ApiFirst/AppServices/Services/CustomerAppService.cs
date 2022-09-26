@@ -1,4 +1,4 @@
-﻿using AppModels.MapperModels;
+﻿using AppModels.AppModels;
 using AppServices.Interfaces;
 using AutoMapper;
 using DomainModels.Models;
@@ -23,7 +23,7 @@ namespace AppServices.Services
             return _mapper.Map<CustomerResponseDTO>(result);
         }
 
-        public async Task<long> CreateAsync(CustomerCreateDTO model)
+        public async Task<long> CreateAsync(CreateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
             return await _customerServices.CreateAsync(mapped);
@@ -45,13 +45,13 @@ namespace AppServices.Services
             var result = await _customerServices.GetByIdAsync(id);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
-        public void Update(int id, CustomerUpdateDTO model)
+        public void Update(int id, UpdateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
             mapped.Id = id;
             _customerServices.Update(mapped);
         }
-        public void Modify(int id, CustomerUpdateDTO model)
+        public void Modify(int id, UpdateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
             mapped.Id = id;
