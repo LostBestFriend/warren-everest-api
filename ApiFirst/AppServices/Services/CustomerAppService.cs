@@ -52,9 +52,9 @@ namespace AppServices.Services
             _customerServices.Update(id, mapped);
         }
 
-        public void Modify(int id, string email)
+        public void ChangeEmail(int id, string email)
         {
-            _customerServices.Modify(id, email);
+            _customerServices.ChangeEmail(id, email);
         }
     }
 }

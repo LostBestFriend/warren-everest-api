@@ -122,7 +122,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                _customerAppServices.Modify(id, email);
+                _customerAppServices.ChangeEmail(id, email);
                 return Ok();
             }
             catch (ArgumentNullException ex)
