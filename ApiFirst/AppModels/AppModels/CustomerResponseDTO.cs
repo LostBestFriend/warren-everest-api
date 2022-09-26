@@ -1,4 +1,4 @@
-﻿namespace AppModels.MapperModels
+﻿namespace AppModels.AppModels
 {
     public class CustomerResponseDTO
     {

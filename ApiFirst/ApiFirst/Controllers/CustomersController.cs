@@ -1,4 +1,4 @@
-﻿using AppModels.MapperModels;
+﻿using AppModels.AppModels;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +33,6 @@ namespace WebApi.Controllers
             }
         }
 
-
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -59,7 +58,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CustomerCreateDTO model)
+        public IActionResult Create([FromBody] CreateCustomerDTO model)
         {
             try
             {
@@ -95,7 +94,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, CustomerUpdateDTO model)
+        public IActionResult Update(int id, UpdateCustomerDTO model)
         {
             try
             {
