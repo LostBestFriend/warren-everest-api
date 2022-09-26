@@ -2,8 +2,7 @@
 {
     public class Customer : BaseModel
     {
-        public Customer
-        (
+        public Customer(
             string fullName,
             string email,
             string cpf,
@@ -31,6 +30,7 @@
             Address = address;
             Number = number;
         }
+
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Cpf { get; set; }

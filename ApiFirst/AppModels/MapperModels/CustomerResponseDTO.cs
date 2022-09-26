@@ -2,8 +2,7 @@
 {
     public class CustomerResponseDTO
     {
-        public CustomerResponseDTO
-        (
+        public CustomerResponseDTO(
             long id,
             string fullName,
             string email,

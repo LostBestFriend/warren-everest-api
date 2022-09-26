@@ -2,8 +2,7 @@
 {
     public class CustomerUpdateDTO
     {
-        public CustomerUpdateDTO
-        (
+        public CustomerUpdateDTO(
             string fullName,
             string email,
             string cpf,
