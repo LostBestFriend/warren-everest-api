@@ -3,7 +3,6 @@ using AppServices.Services;
 using DomainServices.Interfaces;
 using DomainServices.Services;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +15,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ICustomerService, CustomerService>();
 builder.Services.AddTransient<ICustomerAppService, CustomerAppServices>();
-builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddAutoMapper(Assembly.Load("AppServices"));
 builder.Services.AddValidatorsFromAssembly(Assembly.Load(nameof(AppServices)));
 
