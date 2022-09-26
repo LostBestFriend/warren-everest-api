@@ -2,8 +2,7 @@
 {
     public class CustomerResponseDTO
     {
-        public CustomerResponseDTO
-        (
+        public CustomerResponseDTO(
             long id,
             string fullName,
             string email,
@@ -35,6 +34,7 @@
             Address = address;
             Number = number;
         }
+
         public long Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
