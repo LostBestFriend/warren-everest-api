@@ -63,7 +63,7 @@ namespace DomainServices.Services
             return response;
         }
 
-        public void Modify(int id, string email)
+        public void ChangeEmail(int id, string email)
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
