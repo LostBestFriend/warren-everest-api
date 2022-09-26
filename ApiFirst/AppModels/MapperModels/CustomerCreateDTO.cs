@@ -2,8 +2,7 @@
 {
     public class CustomerCreateDTO
     {
-        public CustomerCreateDTO
-        (
+        public CustomerCreateDTO(
             string fullName,
             string email,
             string emailConfirmation,
