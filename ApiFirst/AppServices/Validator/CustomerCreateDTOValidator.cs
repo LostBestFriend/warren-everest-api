@@ -1,9 +1,9 @@
-﻿using AppModels.MapperModels;
+﻿using AppModels.AppModels;
 using FluentValidation;
 
 namespace AppServices.Validator
 {
-    public class CustomerCreateDTOValidator : AbstractValidator<CustomerCreateDTO>
+    public class CustomerCreateDTOValidator : AbstractValidator<CreateCustomerDTO>
     {
         public CustomerCreateDTOValidator()
         {

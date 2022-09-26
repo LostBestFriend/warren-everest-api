@@ -1,11 +1,11 @@
-﻿namespace AppModels.MapperModels
+﻿namespace AppModels.AppModels
 {
-    public class CustomerCreateDTO
+    public class CustomerResponseDTO
     {
-        public CustomerCreateDTO(
+        public CustomerResponseDTO(
+            long id,
             string fullName,
             string email,
-            string emailConfirmation,
             string cpf,
             string cellphone,
             DateTime dateOfBirth,
@@ -18,9 +18,9 @@
             int number
         )
         {
+            Id = id;
             FullName = fullName;
             Email = email;
-            EmailConfirmation = emailConfirmation;
             Cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
@@ -33,6 +33,7 @@
             Number = number;
         }
 
+        public long Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
         public string EmailConfirmation { get; set; }
