@@ -63,7 +63,7 @@ namespace DomainServices.Services
             var repo = _unitOfWork.Repository<Customer>();
             if (!repo.Any(customer => customer.Id == model.Id)) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
 
-            ExceptionVerifier(model);
+            if (repo.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
 
             repo.Update(model);
             _unitOfWork.SaveChanges();
@@ -79,19 +79,15 @@ namespace DomainServices.Services
             return response;
         }
 
-        public void ExceptionVerifier(Customer model)
-        {
-            var repo = _unitOfWork.Repository<Customer>();
-            if (repo.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
-            if (repo.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
-        }
-
         public void Modify(Customer model)
         {
             var repo = _unitOfWork.Repository<Customer>();
+
             if (!repo.Any(customer => customer.Id == model.Id)) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
 
-            ExceptionVerifier(model);
+            if (repo.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (repo.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
+
 
             repo.Update(model);
             _unitOfWork.SaveChanges();
