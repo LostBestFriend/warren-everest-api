@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,11 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="FluentValidation" Version="11.2.2" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AppModels\AppModels.csproj" />
+    <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
     <ProjectReference Include="..\DomainServices\DomainServices.csproj" />
   </ItemGroup>
 
