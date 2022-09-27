@@ -113,7 +113,6 @@ namespace WebApi.Controllers
             {
                 return Problem(e.Message);
             }
-
         }
 
         [HttpPatch("{id}")]
@@ -121,7 +120,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                _customerAppServices.ChangeEmail(id, email);
+                _customerAppServices.UpdateEmail(id, email);
                 return Ok();
             }
             catch (ArgumentNullException ex)

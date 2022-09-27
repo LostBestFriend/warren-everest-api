@@ -11,7 +11,8 @@ namespace DomainServices.Services
         {
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
 
-            ExceptionVerifier(model);
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
 
             _customers.Add(model);
             return model;
@@ -26,15 +27,9 @@ namespace DomainServices.Services
             _customers.RemoveAt(index);
         }
 
-        public List<Customer> GetAll()
+        public IEnumerable<Customer> GetAll()
         {
             return _customers;
-        }
-
-        public void ExceptionVerifier(Customer model)
-        {
-            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
-            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
         }
 
         public Customer GetByCpf(string cpf)
@@ -51,7 +46,7 @@ namespace DomainServices.Services
 
             if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {id}");
 
-            ExceptionVerifier(model);
+            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
 
             _customers[index] = model;
         }
@@ -63,7 +58,7 @@ namespace DomainServices.Services
             return response;
         }
 
-        public void ChangeEmail(int id, string email)
+        public void UpdateEmail(int id, string email)
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
