@@ -7,9 +7,9 @@ namespace AppServices.Interfaces
         long Create(CreateCustomerDTO model);
         void Update(int id, UpdateCustomerDTO model);
         void Delete(int id);
-        List<CustomerResponseDTO> GetAll();
+        IEnumerable<CustomerResponseDTO> GetAll();
         CustomerResponseDTO GetById(int id);
-        void ChangeEmail(int id, string email);
+        void UpdateEmail(int id, string email);
         CustomerResponseDTO GetByCpf(string cpf);
     }
 }

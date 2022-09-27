@@ -34,10 +34,10 @@ namespace AppServices.Services
             _customerServices.Delete(id);
         }
 
-        public List<CustomerResponseDTO> GetAll()
+        public IEnumerable<CustomerResponseDTO> GetAll()
         {
             var result = _customerServices.GetAll();
-            return _mapper.Map<List<CustomerResponseDTO>>(result);
+            return _mapper.Map<IEnumerable<CustomerResponseDTO>>(result);
         }
 
         public CustomerResponseDTO GetById(int id)
@@ -52,9 +52,9 @@ namespace AppServices.Services
             _customerServices.Update(id, mapped);
         }
 
-        public void ChangeEmail(int id, string email)
+        public void UpdateEmail(int id, string email)
         {
-            _customerServices.ChangeEmail(id, email);
+            _customerServices.UpdateEmail(id, email);
         }
     }
 }
