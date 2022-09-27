@@ -20,7 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
-builder.Services.AddTransient<ICustomerAppService, CustomerAppServices>();
+builder.Services.AddTransient<ICustomerAppService, CustomerAppService>();
 builder.Services.AddAutoMapper(Assembly.Load("AppServices"));
 builder.Services.AddValidatorsFromAssembly(Assembly.Load(nameof(AppServices)));
 builder.Services.AddUnitOfWork<WarrenContext>();
