@@ -2,12 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-<<<<<<< HEAD
     <UserSecretsId>4e5f37ea-54dd-48e7-b363-30eb8326f686</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-=======
->>>>>>> origin/main
   </PropertyGroup>
 
   <ItemGroup>
