@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels;
+using AppModels.AppModels;
 using System.Collections.Generic;
 
 namespace AppServices.Interfaces
