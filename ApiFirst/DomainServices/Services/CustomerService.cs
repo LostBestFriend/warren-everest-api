@@ -48,14 +48,14 @@ namespace DomainServices.Services
         {
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
-            if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o CPF: {cpf}");
+            if (response is null) throw new ArgumentNullException($"Não foi encontrado Customer para o CPF: {cpf}");
             return response;
         }
 
         public void Update(Customer model)
         {
             int index = _customers.ToList().FindIndex(customer => customer.Id == model.Id);
-            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
+            if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {model.Id}");
 
             if (_customers.Any(customer => customer.Cpf == model.Cpf && customer.Id != model.Id)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
             if (_customers.Any(customer => customer.Email == model.Email && customer.Id != model.Id)) throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
@@ -66,9 +66,9 @@ namespace DomainServices.Services
 
         public Customer GetById(long id)
         {
-            var response = _customers.FirstOrDefault(x => x.Id == id);
+            var response = _customers.FirstOrDefault(customer => customer.Id == id);
 
-            if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
+            if (response is null) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
             return response;
         }
 
