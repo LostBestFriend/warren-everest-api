@@ -50,6 +50,7 @@ namespace DomainServices.Services
 
         public async Task<Customer> GetByCpfAsync(string cpf)
         {
+            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var repo = _repositoryFactory.Repository<Customer>();
             var query = repo.SingleResultQuery().AndFilter(customer => customer.Cpf == cpf);
             var response = await repo.FirstOrDefaultAsync(query).ConfigureAwait(false);
