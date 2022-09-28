@@ -15,7 +15,7 @@ namespace DomainServices.Services
             model.Id = _customers.LastOrDefault()?.Id + 1 ?? 1;
 
             if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
-            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
 
             _customers.Add(model);
             return model;
@@ -37,7 +37,7 @@ namespace DomainServices.Services
         {
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
-            if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o CPF: {cpf}");
+            if (response is null) throw new ArgumentNullException($"Não foi encontrado Customer para o CPF: {cpf}");
             return response;
         }
 
@@ -67,7 +67,7 @@ namespace DomainServices.Services
 
             if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
 
-            else if (_customers.Any(customer => customer.Email == email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
+            if (_customers.Any(customer => customer.Email == email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
 
             _customers[index].Id = id;
             _customers[index].Email = email;
