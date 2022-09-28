@@ -89,7 +89,6 @@ namespace DomainServices.Services
             if (repo.Any(customer => customer.Cpf == model.Cpf && customer.Id != model.Id)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
             if (repo.Any(customer => customer.Email == model.Email && customer.Id != model.Id)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
 
-
             repo.Update(model);
             _unitOfWork.SaveChanges();
         }

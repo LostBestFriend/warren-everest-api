@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels;
+using AppModels.AppModels;
 using AppServices.Interfaces;
 using AutoMapper;
 using DomainModels.Models;

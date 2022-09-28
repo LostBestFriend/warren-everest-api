@@ -1,9 +1,9 @@
-﻿using AppModels.AppModels;
+using AppModels.AppModels;
 using FluentValidation;
 using System;
 using System.Linq;
 
-namespace AppServices.Validator
+namespace AppServices.Validation
 {
     public class CustomerUpdateDTOValidator : AbstractValidator<UpdateCustomerDTO>
     {
@@ -98,10 +98,7 @@ namespace AppServices.Validator
                 }
 
                 resto = soma % 11;
-                if (resto < 2)
-                {
-                    resto = 0;
-                }
+                if (resto < 2) resto = 0;
                 else
                 {
                     resto = 11 - resto;
@@ -117,16 +114,13 @@ namespace AppServices.Validator
                 }
 
                 resto = soma % 11;
-                if (resto < 2)
-                {
-                    resto = 0;
-                }
+                if (resto < 2) resto = 0;
                 else
                 {
                     resto = 11 - resto;
                 }
 
-                digito = digito + resto.ToString();
+                digito += resto.ToString();
 
                 return cpf.EndsWith(digito);
             }
