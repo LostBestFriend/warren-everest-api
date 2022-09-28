@@ -117,7 +117,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(int id, string email)
+        public IActionResult UpdateEmail(int id, string email)
         {
             try
             {
