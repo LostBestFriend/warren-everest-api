@@ -46,7 +46,10 @@ namespace DomainServices.Services
 
             if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
 
+            if (_customers.Any(customer => customer.Id == id)) throw new ArgumentException($"Já existe usuário com o Id {id}");
+
             if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
 
             _customers[index] = model;
         }
