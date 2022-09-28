@@ -42,11 +42,10 @@ namespace DomainServices.Services
 
         public void Update(int id, Customer model)
         {
-            int index = _customers.FindIndex(customer => customer.Id == model.Id);
+            int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
+            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
 
-            if (_customers.Any(customer => customer.Id == id)) throw new ArgumentException($"Já existe usuário com o Id {id}");
             if (_customers.Any(customer => customer.Email == model.Email && customer.Id != id)) throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
             if (_customers.Any(customer => customer.Cpf == model.Cpf && customer.Id != id)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
 
