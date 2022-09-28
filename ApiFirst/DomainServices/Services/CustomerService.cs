@@ -44,7 +44,7 @@ namespace DomainServices.Services
         {
             int index = _customers.FindIndex(customer => customer.Id == model.Id);
 
-            if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {model.Id}");
+            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
 
             if (_customers.Any(customer => customer.Id == id)) throw new ArgumentException($"Já existe usuário com o Id {id}");
             if (_customers.Any(customer => customer.Email == model.Email && customer.Id != id)) throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
@@ -65,7 +65,7 @@ namespace DomainServices.Services
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (index == -1) throw new ArgumentException($"$Não foi encontrado Customer para o Id: {id}");
+            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
 
             else if (_customers.Any(customer => customer.Email == email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
 
