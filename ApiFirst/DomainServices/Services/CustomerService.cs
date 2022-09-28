@@ -1,5 +1,8 @@
 ﻿using DomainModels.Models;
 using DomainServices.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DomainServices.Services
 {
@@ -7,28 +10,25 @@ namespace DomainServices.Services
     {
         private readonly List<Customer> _customers = new();
 
-        public long Create(Customer model)
+        public Customer Create(Customer model)
         {
-            model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
+            model.Id = _customers.LastOrDefault()?.Id + 1 ?? 1;
 
             if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
-            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
-
+            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
 
             _customers.Add(model);
-            return model.Id;
+            return model;
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
-            int index = _customers.FindIndex(customer => customer.Id == id);
+            Customer customer = GetById(id);
 
-            if (index == -1) throw new ArgumentNullException($"Cliente não encontrado para o id: {id}");
-
-            _customers.RemoveAt(index);
+            _customers.Remove(customer);
         }
 
-        public List<Customer> GetAll()
+        public IEnumerable<Customer> GetAll()
         {
             return _customers;
         }
@@ -41,34 +41,33 @@ namespace DomainServices.Services
             return response;
         }
 
-        public void Update(int id, Customer model)
+        public void Update(Customer model)
         {
+            int index = _customers.FindIndex(customer => customer.Id == model.Id);
 
-            int index = _customers.FindIndex(customer => customer.Id == id);
+            if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {model.Id}");
 
-            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
+            if (_customers.Any(customer => customer.Email == model.Email && customer.Id != model.Id)) throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
+            if (_customers.Any(customer => customer.Cpf == model.Cpf && customer.Id != model.Id)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
 
-            if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
-            if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
-
-            model.Id = _customers[index].Id;
             _customers[index] = model;
         }
 
-        public Customer GetById(int id)
+        public Customer GetById(long id)
         {
             var response = _customers.FirstOrDefault(customer => customer.Id == id);
-            if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
+
+            if (response is null) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
             return response;
         }
 
-        public void Modify(int id, string email)
+        public void UpdateEmail(long id, string email)
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
             if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
 
-            else if (_customers.Any(customer => customer.Email == email)) throw new ArgumentException("Já existe usuário com o E-mail ou CPF digitados"); ;
+            else if (_customers.Any(customer => customer.Email == email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
 
             _customers[index].Id = id;
             _customers[index].Email = email;

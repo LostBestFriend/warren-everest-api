@@ -1,12 +1,13 @@
 ﻿using System;
 
-namespace DomainModels.Models
+namespace AppModels.AppModels
 {
-    public class Customer : BaseModel
+    public class CreateCustomerDTO
     {
-        public Customer(
+        public CreateCustomerDTO(
             string fullName,
             string email,
+            string emailConfirmation,
             string cpf,
             string cellphone,
             DateTime dateOfBirth,
@@ -21,6 +22,7 @@ namespace DomainModels.Models
         {
             FullName = fullName;
             Email = email;
+            EmailConfirmation = emailConfirmation;
             Cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
@@ -35,6 +37,7 @@ namespace DomainModels.Models
 
         public string FullName { get; set; }
         public string Email { get; set; }
+        public string EmailConfirmation { get; set; }
         public string Cpf { get; set; }
         public string Cellphone { get; set; }
         public DateTime DateOfBirth { get; set; }

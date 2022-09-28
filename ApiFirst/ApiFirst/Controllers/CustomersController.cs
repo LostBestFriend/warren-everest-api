@@ -1,6 +1,7 @@
+﻿using AppModels.AppModels;
 using AppServices.Interfaces;
-using DomainModels.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace WebApi.Controllers
 {
@@ -31,17 +32,17 @@ namespace WebApi.Controllers
             {
                 return Problem(e.Message);
             }
-
         }
+
         [HttpGet]
         public IActionResult GetAll()
         {
-            var response = _customerAppServices.GetAll();
-            return Ok(response);
+            var result = _customerAppServices.GetAll();
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(long id)
         {
             try
             {
@@ -59,7 +60,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Customer model)
+        public IActionResult Create([FromBody] CreateCustomerDTO model)
         {
             try
             {
@@ -77,7 +78,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
             try
             {
@@ -95,7 +96,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Customer model)
+        public IActionResult Update(long id, UpdateCustomerDTO model)
         {
             try
             {
@@ -117,11 +118,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(int id, string email)
+        public IActionResult UpdateEmail(long id, string email)
         {
             try
             {
-                _customerAppServices.Modify(id, email);
+                _customerAppServices.UpdateEmail(id, email);
                 return Ok();
             }
             catch (ArgumentNullException ex)

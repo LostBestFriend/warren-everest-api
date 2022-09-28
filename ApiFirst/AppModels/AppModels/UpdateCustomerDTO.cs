@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace DomainModels.Models
+namespace AppModels.AppModels
 {
-    public class Customer : BaseModel
+    public class UpdateCustomerDTO
     {
-        public Customer(
+        public UpdateCustomerDTO(
             string fullName,
             string email,
             string cpf,

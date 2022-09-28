@@ -1,21 +1,16 @@
-﻿using DomainModels.Models;
+using AppModels.AppModels;
+using System.Collections.Generic;
 
 namespace AppServices.Interfaces
 {
     public interface ICustomerAppService
     {
-        long Create(Customer model);
-
-        void Update(int id, Customer model);
-
-        void Delete(int id);
-
-        List<Customer> GetAll();
-
-        Customer GetById(int id);
-
-        void Modify(int id, string email);
-
-        Customer GetByCpf(string cpf);
+        long Create(CreateCustomerDTO model);
+        void Update(long id, UpdateCustomerDTO model);
+        void Delete(long id);
+        IEnumerable<CustomerResponseDTO> GetAll();
+        CustomerResponseDTO GetById(long id);
+        void UpdateEmail(long id, string email);
+        CustomerResponseDTO GetByCpf(string cpf);
     }
 }

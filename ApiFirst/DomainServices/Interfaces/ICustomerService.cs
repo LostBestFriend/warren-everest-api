@@ -1,22 +1,16 @@
 ﻿using DomainModels.Models;
+using System.Collections.Generic;
 
 namespace DomainServices.Interfaces
 {
     public interface ICustomerService
-
     {
-        long Create(Customer model);
-
-        void Update(int id, Customer model);
-
-        void Delete(int id);
-
-        List<Customer> GetAll();
-
-        Customer GetById(int id);
-
-        void Modify(int id, string email);
-
+        Customer Create(Customer model);
+        void Update(Customer model);
+        void Delete(long id);
+        IEnumerable<Customer> GetAll();
+        Customer GetById(long id);
+        void UpdateEmail(long id, string email);
         Customer GetByCpf(string cpf);
     }
 }
