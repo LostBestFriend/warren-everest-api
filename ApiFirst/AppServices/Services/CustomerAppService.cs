@@ -3,6 +3,9 @@ using AppServices.Interfaces;
 using AutoMapper;
 using DomainModels.Models;
 using DomainServices.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AppServices.Services
 {
@@ -29,29 +32,29 @@ namespace AppServices.Services
             return await _customerServices.CreateAsync(mapped);
         }
 
-        public void Delete(int id)
+        public void DeleteAsync(long id)
         {
-            _customerServices.Delete(id);
+            _customerServices.DeleteAsync(id);
         }
 
         public IEnumerable<CustomerResponseDTO> GetAll()
         {
             var result = _customerServices.GetAll();
-            return _mapper.Map<List<CustomerResponseDTO>>(result);
+            return _mapper.Map<IEnumerable<CustomerResponseDTO>>(result);
         }
 
-        public async Task<CustomerResponseDTO> GetByIdAsync(int id)
+        public async Task<CustomerResponseDTO> GetByIdAsync(long id)
         {
             var result = await _customerServices.GetByIdAsync(id);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
-        public void Update(int id, UpdateCustomerDTO model)
+        public void Update(long id, UpdateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
             mapped.Id = id;
             _customerServices.Update(mapped);
         }
-        public void Modify(int id, UpdateCustomerDTO model)
+        public void Modify(long id, UpdateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
             mapped.Id = id;

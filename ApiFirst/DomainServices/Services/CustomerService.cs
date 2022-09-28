@@ -2,6 +2,9 @@
 using DomainServices.Interfaces;
 using EntityFrameworkCore.UnitOfWork.Interfaces;
 using Infrastructure.Data.Context;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DomainServices.Services
 {
@@ -28,16 +31,13 @@ namespace DomainServices.Services
             return model.Id;
         }
 
-        public void Delete(int id)
+        public async void DeleteAsync(long id)
         {
             var repository = _unitOfWork.Repository<Customer>();
 
-            if (!repository.Any(customr => customr.Id == id))
-            {
-                throw new ArgumentNullException($"Cliente não encontrado para o id: {id}");
-            }
+            Customer customer = await GetByIdAsync(id);
 
-            repository.Remove(customertoRemove => customertoRemove.Id == id);
+            repository.Remove(customer);
         }
 
         public IEnumerable<Customer> GetAll()
@@ -70,7 +70,7 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public async Task<Customer> GetByIdAsync(int id)
+        public async Task<Customer> GetByIdAsync(long id)
         {
             var repo = _repositoryFactory.Repository<Customer>();
             var query = repo.SingleResultQuery().AndFilter(customer => customer.Id == id);

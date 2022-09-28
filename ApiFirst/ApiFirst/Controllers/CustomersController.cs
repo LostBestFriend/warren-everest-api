@@ -1,6 +1,8 @@
 ﻿using AppModels.AppModels;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace ApiFirst.Controllers
 {
@@ -36,12 +38,12 @@ namespace ApiFirst.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var response = _customerAppServices.GetAll();
-            return Ok(response);
+            var result = _customerAppServices.GetAll();
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
             try
             {
@@ -77,11 +79,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteAsync(long id)
         {
             try
             {
-                _customerAppServices.Delete(id);
+                _customerAppServices.DeleteAsync(id);
                 return NoContent();
             }
             catch (ArgumentNullException e)
@@ -95,7 +97,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, UpdateCustomerDTO model)
+        public IActionResult Update(long id, UpdateCustomerDTO model)
         {
             try
             {
@@ -117,7 +119,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(int id, UpdateCustomerDTO model)
+        public IActionResult Modify(long id, UpdateCustomerDTO model)
         {
             try
             {

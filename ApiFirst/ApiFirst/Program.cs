@@ -5,7 +5,11 @@ using DomainServices.Services;
 using EntityFrameworkCore.UnitOfWork.Extensions;
 using FluentValidation;
 using Infrastructure.Data.Context;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

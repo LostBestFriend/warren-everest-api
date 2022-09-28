@@ -1,4 +1,6 @@
 ﻿using DomainModels.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DomainServices.Interfaces
 {
@@ -6,9 +8,9 @@ namespace DomainServices.Interfaces
     {
         Task<long> CreateAsync(Customer model);
         void Update(Customer model);
-        void Delete(int id);
+        void DeleteAsync(long id);
         IEnumerable<Customer> GetAll();
-        Task<Customer> GetByIdAsync(int id);
+        Task<Customer> GetByIdAsync(long id);
         void Modify(Customer model);
         Task<Customer> GetByCpfAsync(string cpf);
     }
