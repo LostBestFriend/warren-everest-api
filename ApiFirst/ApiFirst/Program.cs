@@ -3,6 +3,7 @@ using AppServices.Services;
 using DomainServices.Interfaces;
 using DomainServices.Services;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Infrastructure.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<ICustomerAppService, CustomerAppServices>();
 builder.Services.AddAutoMapper(Assembly.Load("AppServices"));
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(Assembly.Load(nameof(AppServices)));
 
 var app = builder.Build();
