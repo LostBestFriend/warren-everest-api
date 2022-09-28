@@ -1,4 +1,6 @@
-﻿namespace DomainModels.Models
+﻿using System;
+
+namespace DomainModels.Models
 {
     public class Customer : BaseModel
     {

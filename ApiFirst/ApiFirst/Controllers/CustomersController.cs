@@ -1,6 +1,7 @@
 ﻿using AppModels.AppModels;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace WebApi.Controllers
 {
@@ -36,12 +37,12 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var response = _customerAppServices.GetAll();
-            return Ok(response);
+            var result = _customerAppServices.GetAll();
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(long id)
         {
             try
             {
@@ -77,7 +78,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
             try
             {
@@ -95,7 +96,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, UpdateCustomerDTO model)
+        public IActionResult Update(long id, UpdateCustomerDTO model)
         {
             try
             {
@@ -117,7 +118,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult UpdateEmail(int id, string email)
+        public IActionResult UpdateEmail(long id, string email)
         {
             try
             {

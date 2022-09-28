@@ -3,6 +3,8 @@ using AppServices.Interfaces;
 using AutoMapper;
 using DomainModels.Models;
 using DomainServices.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace AppServices.Services
 {
@@ -29,7 +31,7 @@ namespace AppServices.Services
             return _customerServices.Create(mapped).Id;
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
             _customerServices.Delete(id);
         }
@@ -40,19 +42,19 @@ namespace AppServices.Services
             return _mapper.Map<IEnumerable<CustomerResponseDTO>>(result);
         }
 
-        public CustomerResponseDTO GetById(int id)
+        public CustomerResponseDTO GetById(long id)
         {
             var result = _customerServices.GetById(id);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
 
-        public void Update(int id, UpdateCustomerDTO model)
+        public void Update(long id, UpdateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
             _customerServices.Update(id, mapped);
         }
 
-        public void UpdateEmail(int id, string email)
+        public void UpdateEmail(long id, string email)
         {
             _customerServices.UpdateEmail(id, email);
         }

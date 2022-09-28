@@ -1,4 +1,6 @@
-﻿namespace AppModels.AppModels
+﻿using System;
+
+namespace AppModels.AppModels
 {
     public class CustomerResponseDTO
     {
@@ -21,7 +23,7 @@
             Id = id;
             FullName = fullName;
             Email = email;
-            Cpf = cpf.Trim().Replace(".", "").Replace("-", "");
+            Cpf = cpf;
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
