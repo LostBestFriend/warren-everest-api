@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels;
+using AppModels.AppModels;
 using FluentValidation;
 using System;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels;
+using AppModels.AppModels;
 using AppServices.Interfaces;
 using AutoMapper;
 using DomainModels.Models;
@@ -47,11 +47,13 @@ namespace AppServices.Services
             var result = _customerServices.GetById(id);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
+
         public void Update(long id, UpdateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
             _customerServices.Update(mapped);
         }
+
         public void UpdateEmail(long id, string email)
         {
             _customerServices.UpdateEmail(id, email);

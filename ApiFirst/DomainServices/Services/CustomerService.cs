@@ -56,6 +56,7 @@ namespace DomainServices.Services
         public Customer GetById(long id)
         {
             var response = _customers.FirstOrDefault(customer => customer.Id == id);
+
             if (response is null) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
             return response;
         }
