@@ -37,7 +37,7 @@ namespace DomainServices.Services
         {
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
-            if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o CPF: {cpf}");
+            if (response is null) throw new ArgumentNullException($"Não foi encontrado Customer para o CPF: {cpf}");
             return response;
         }
 
@@ -45,7 +45,7 @@ namespace DomainServices.Services
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
+            if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
 
             if (_customers.Any(customer => customer.Email == model.Email && customer.Id != id)) throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
             if (_customers.Any(customer => customer.Cpf == model.Cpf && customer.Id != id)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
@@ -55,8 +55,8 @@ namespace DomainServices.Services
 
         public Customer GetById(long id)
         {
-            var response = _customers.FirstOrDefault(x => x.Id == id);
-            if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
+            var response = _customers.FirstOrDefault(customer => customer.Id == id);
+            if (response is null) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
             return response;
         }
 
@@ -64,7 +64,7 @@ namespace DomainServices.Services
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
-            if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
+            if (index == -1) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
 
             if (_customers.Any(customer => customer.Email == email)) throw new ArgumentException($"Já existe usuário com o E-mail digitado");
 
