@@ -1,4 +1,6 @@
-﻿namespace AppModels.AppModels
+﻿using System;
+
+namespace AppModels.AppModels
 {
     public class UpdateCustomerDTO
     {

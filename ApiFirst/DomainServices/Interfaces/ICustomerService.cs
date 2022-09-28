@@ -1,4 +1,5 @@
 ﻿using DomainModels.Models;
+using System.Collections.Generic;
 
 namespace DomainServices.Interfaces
 {
@@ -6,9 +7,9 @@ namespace DomainServices.Interfaces
     {
         long Create(Customer model);
         void Update(Customer model);
-        void Delete(int id);
-        List<Customer> GetAll();
-        Customer GetById(int id);
+        void Delete(long id);
+        IEnumerable<Customer> GetAll();
+        Customer GetById(long id);
         void Modify(Customer model);
         Customer GetByCpf(string cpf);
     }

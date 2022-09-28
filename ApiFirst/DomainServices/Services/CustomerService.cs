@@ -2,6 +2,9 @@
 using DomainServices.Interfaces;
 using Infrastructure.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DomainServices.Services
 {
@@ -28,17 +31,15 @@ namespace DomainServices.Services
             return model.Id;
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
-            Customer? customer = _customers.FirstOrDefault(customer => customer.Id == id);
-
-            if (customer is null) throw new ArgumentNullException($"Cliente não encontrado para o id: {id}");
+            Customer customer = GetById(id);
 
             _customers.Remove(customer).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             _context.SaveChanges();
         }
 
-        public List<Customer> GetAll()
+        public IEnumerable<Customer> GetAll()
         {
             return _customers.ToList();
         }
@@ -53,7 +54,6 @@ namespace DomainServices.Services
 
         public void Update(Customer model)
         {
-
             int index = _customers.ToList().FindIndex(customer => customer.Id == model.Id);
             if (index == -1) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {model.Id}");
 
@@ -64,7 +64,7 @@ namespace DomainServices.Services
             _context.SaveChanges();
         }
 
-        public Customer GetById(int id)
+        public Customer GetById(long id)
         {
             var response = _customers.FirstOrDefault(x => x.Id == id);
             if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");

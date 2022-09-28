@@ -1,5 +1,7 @@
 ﻿using AppModels.AppModels;
 using FluentValidation;
+using System;
+using System.Linq;
 
 namespace AppServices.Validator
 {
@@ -26,12 +28,13 @@ namespace AppServices.Validator
                 .GreaterThan(DateTime.MinValue);
 
             RuleFor(x => x.FullName)
-                .MinimumLength(2)
+                .NotEmpty()
+                .MinimumLength(5)
                 .MaximumLength(50);
 
             RuleFor(x => x.Cellphone)
                 .NotEmpty()
-                .Length(13);
+                .MinimumLength(10);
 
             RuleFor(x => x.EmailSms)
                 .NotNull();
