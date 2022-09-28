@@ -38,7 +38,6 @@ namespace AppModels.AppModels
         public long Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-        public string EmailConfirmation { get; set; }
         public string Cpf { get; set; }
         public string Cellphone { get; set; }
         public DateTime DateOfBirth { get; set; }

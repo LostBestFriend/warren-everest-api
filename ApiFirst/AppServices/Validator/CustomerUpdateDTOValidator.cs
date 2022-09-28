@@ -1,9 +1,9 @@
-﻿using AppModels.AppModels;
+using AppModels.AppModels;
 using FluentValidation;
 using System;
 using System.Linq;
 
-namespace AppServices.Validator
+namespace AppServices.Validation
 {
     public class CustomerUpdateDTOValidator : AbstractValidator<UpdateCustomerDTO>
     {

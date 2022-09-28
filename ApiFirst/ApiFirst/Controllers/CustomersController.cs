@@ -37,12 +37,12 @@ namespace ApiFirst.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var response = _customerAppServices.GetAll();
-            return Ok(response);
+            var result = _customerAppServices.GetAll();
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(long id)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
             try
             {
