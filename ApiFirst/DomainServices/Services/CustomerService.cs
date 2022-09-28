@@ -1,5 +1,8 @@
 ﻿using DomainModels.Models;
 using DomainServices.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DomainServices.Services
 {
@@ -9,7 +12,7 @@ namespace DomainServices.Services
 
         public Customer Create(Customer model)
         {
-            model.Id = _customers.LastOrDefault()?.Id + 1 ?? 0;
+            model.Id = _customers.LastOrDefault()?.Id + 1 ?? 1;
 
             if (_customers.Any(customer => customer.Cpf == model.Cpf)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
             if (_customers.Any(customer => customer.Email == model.Email)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
@@ -18,13 +21,11 @@ namespace DomainServices.Services
             return model;
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
-            int index = _customers.FindIndex(customer => customer.Id == id);
+            Customer customer = GetById(id);
 
-            if (index == -1) throw new ArgumentNullException($"Cliente não encontrado para o id: {id}");
-
-            _customers.RemoveAt(index);
+            _customers.Remove(customer);
         }
 
         public IEnumerable<Customer> GetAll()
@@ -40,7 +41,7 @@ namespace DomainServices.Services
             return response;
         }
 
-        public void Update(int id, Customer model)
+        public void Update(long id, Customer model)
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 
@@ -52,14 +53,14 @@ namespace DomainServices.Services
             _customers[index] = model;
         }
 
-        public Customer GetById(int id)
+        public Customer GetById(long id)
         {
             var response = _customers.FirstOrDefault(x => x.Id == id);
             if (response is null) throw new ArgumentNullException($"$Não foi encontrado Customer para o Id: {id}");
             return response;
         }
 
-        public void UpdateEmail(int id, string email)
+        public void UpdateEmail(long id, string email)
         {
             int index = _customers.FindIndex(customer => customer.Id == id);
 

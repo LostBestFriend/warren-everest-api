@@ -1,5 +1,7 @@
 ﻿using AppModels.AppModels;
 using FluentValidation;
+using System;
+using System.Linq;
 
 namespace AppServices.Validation
 {
@@ -26,12 +28,12 @@ namespace AppServices.Validation
 
             RuleFor(x => x.FullName)
                 .NotEmpty()
-                .MinimumLength(2)
+                .MinimumLength(5)
                 .MaximumLength(50);
 
             RuleFor(x => x.Cellphone)
                 .NotEmpty()
-                .Length(13);
+                .MinimumLength(10);
 
             RuleFor(x => x.EmailSms)
                 .NotNull();
