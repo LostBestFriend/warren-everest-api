@@ -48,17 +48,15 @@ namespace AppServices.Services
             return _mapper.Map<CustomerResponseDTO>(result);
         }
 
-        public void Update(long id, UpdateCustomerDTO model)
+        public void Update(UpdateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
-            mapped.Id = id;
             _customerServices.Update(mapped);
         }
 
-        public void Modify(long id, UpdateCustomerDTO model)
+        public void Modify(UpdateCustomerDTO model)
         {
             var mapped = _mapper.Map<Customer>(model);
-            mapped.Id = id;
             _customerServices.Modify(mapped);
         }
     }
