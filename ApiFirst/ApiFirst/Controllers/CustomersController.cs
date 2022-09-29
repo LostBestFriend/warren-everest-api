@@ -97,11 +97,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(long id, UpdateCustomerDTO model)
+        public IActionResult Update(UpdateCustomerDTO model)
         {
             try
             {
-                _customerAppServices.Update(id, model);
+                _customerAppServices.Update(model);
                 return Ok();
             }
             catch (ArgumentNullException ex)
@@ -119,11 +119,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(long id, UpdateCustomerDTO model)
+        public IActionResult Modify(UpdateCustomerDTO model)
         {
             try
             {
-                _customerAppServices.Modify(id, model);
+                _customerAppServices.Modify(model);
                 return Ok();
             }
             catch (ArgumentNullException ex)
