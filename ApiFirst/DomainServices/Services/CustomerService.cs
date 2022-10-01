@@ -31,11 +31,10 @@ namespace DomainServices.Services
             return model.Id;
         }
 
-        public async void DeleteAsync(long id)
+        public async void Delete(long id)
         {
             var repository = _unitOfWork.Repository<Customer>();
-
-            Customer customer = await GetByIdAsync(id);
+            var customer = await GetByIdAsync(id);
 
             repository.Remove(customer);
         }
@@ -50,7 +49,6 @@ namespace DomainServices.Services
 
         public async Task<Customer> GetByCpfAsync(string cpf)
         {
-            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var repo = _repositoryFactory.Repository<Customer>();
             var query = repo.SingleResultQuery().AndFilter(customer => customer.Cpf == cpf);
             var response = await repo.FirstOrDefaultAsync(query).ConfigureAwait(false);

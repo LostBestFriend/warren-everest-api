@@ -8,7 +8,7 @@ namespace AppServices.Interfaces
     {
         Task<long> CreateAsync(CreateCustomerDTO model);
         void Update(UpdateCustomerDTO model);
-        void DeleteAsync(long id);
+        void Delete(long id);
         IEnumerable<CustomerResponseDTO> GetAll();
         Task<CustomerResponseDTO> GetByIdAsync(long id);
         void Modify(UpdateCustomerDTO model);

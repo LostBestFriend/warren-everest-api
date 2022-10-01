@@ -79,11 +79,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteAsync(long id)
+        public IActionResult Delete(long id)
         {
             try
             {
-                _customerAppServices.DeleteAsync(id);
+                _customerAppServices.Delete(id);
                 return NoContent();
             }
             catch (ArgumentNullException e)

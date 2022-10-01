@@ -22,6 +22,7 @@ namespace AppServices.Services
 
         public async Task<CustomerResponseDTO> GetByCpfAsync(string cpf)
         {
+            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var result = await _customerServices.GetByCpfAsync(cpf);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
@@ -32,9 +33,9 @@ namespace AppServices.Services
             return await _customerServices.CreateAsync(mapped);
         }
 
-        public void DeleteAsync(long id)
+        public void Delete(long id)
         {
-            _customerServices.DeleteAsync(id);
+            _customerServices.Delete(id);
         }
 
         public IEnumerable<CustomerResponseDTO> GetAll()
