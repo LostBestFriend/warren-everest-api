@@ -1,6 +1,7 @@
 using AppModels.AppModels;
 using AppServices.Interfaces;
 using AutoMapper;
+using DomainModels.ExtensionMethods;
 using DomainModels.Models;
 using DomainServices.Interfaces;
 using System;
@@ -22,7 +23,7 @@ namespace AppServices.Services
 
         public async Task<CustomerResponseDTO> GetByCpfAsync(string cpf)
         {
-            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
+            cpf = MyExtensions.FormatString(cpf);
             var result = await _customerServices.GetByCpfAsync(cpf);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
