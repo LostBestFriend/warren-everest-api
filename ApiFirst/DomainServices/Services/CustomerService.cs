@@ -44,7 +44,6 @@ namespace DomainServices.Services
 
         public Customer GetByCpf(string cpf)
         {
-            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
             var response = _customers.FirstOrDefault(customer => customer.Cpf == cpf);
             if (response is null) throw new ArgumentNullException($"Não foi encontrado Customer para o CPF: {cpf}");
             return response;

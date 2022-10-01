@@ -1,6 +1,7 @@
 using AppModels.AppModels;
 using AppServices.Interfaces;
 using AutoMapper;
+using DomainModels.ExtensionMethods;
 using DomainModels.Models;
 using DomainServices.Interfaces;
 using System;
@@ -21,6 +22,7 @@ namespace AppServices.Services
 
         public CustomerResponseDTO GetByCpf(string cpf)
         {
+            cpf = MyExtension.FormatString(cpf);
             var result = _customerServices.GetByCpf(cpf);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
