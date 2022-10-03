@@ -1,6 +1,6 @@
 ﻿namespace DomainModels.ExtensionMethods
 {
-    public static class MyExtensions
+    public static class FormatStringExtension
     {
         public static string FormatString(this string str)
         {

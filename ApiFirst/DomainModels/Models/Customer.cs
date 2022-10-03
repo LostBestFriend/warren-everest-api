@@ -22,14 +22,14 @@ namespace DomainModels.Models
         {
             FullName = fullName;
             Email = email;
-            Cpf = MyExtensions.FormatString(cpf);
+            Cpf = FormatStringExtension.FormatString(cpf);
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = MyExtensions.FormatString(postalCode);
+            PostalCode = FormatStringExtension.FormatString(postalCode);
             Address = address;
             Number = number;
         }

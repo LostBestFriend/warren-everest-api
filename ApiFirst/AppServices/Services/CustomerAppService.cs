@@ -23,7 +23,7 @@ namespace AppServices.Services
 
         public async Task<CustomerResponseDTO> GetByCpfAsync(string cpf)
         {
-            cpf = MyExtensions.FormatString(cpf);
+            cpf = FormatStringExtension.FormatString(cpf);
             var result = await _customerServices.GetByCpfAsync(cpf);
             return _mapper.Map<CustomerResponseDTO>(result);
         }
