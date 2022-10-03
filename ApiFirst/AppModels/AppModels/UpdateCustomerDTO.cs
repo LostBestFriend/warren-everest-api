@@ -1,5 +1,4 @@
-﻿using DomainModels.ExtensionMethods;
-using System;
+﻿using System;
 
 namespace AppModels.AppModels
 {
@@ -22,14 +21,14 @@ namespace AppModels.AppModels
         {
             FullName = fullName;
             Email = email;
-            Cpf = MyExtension.FormatString(cpf);
+            Cpf = cpf.Replace(".", "").Replace("-", "").Replace(",", "").Trim();
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = MyExtension.FormatString(postalCode);
+            PostalCode = postalCode.Replace(".", "").Replace("-", "").Replace(",", "").Trim();
             Address = address;
             Number = number;
         }

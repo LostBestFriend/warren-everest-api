@@ -22,7 +22,7 @@ namespace AppServices.Services
 
         public CustomerResponseDTO GetByCpf(string cpf)
         {
-            cpf = MyExtension.FormatString(cpf);
+            cpf = FormatStringExtension.FormatString(cpf);
             var result = _customerServices.GetByCpf(cpf);
             return _mapper.Map<CustomerResponseDTO>(result);
         }

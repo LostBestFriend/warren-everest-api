@@ -39,7 +39,7 @@ namespace DomainServices.Services
 
         public IEnumerable<Customer> GetAll()
         {
-            return _customers.ToList();
+            return _customers;
         }
 
         public Customer GetByCpf(string cpf)
