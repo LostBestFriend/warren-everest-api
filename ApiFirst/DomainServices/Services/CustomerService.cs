@@ -1,4 +1,4 @@
-﻿using DomainModels.Models;
+using DomainModels.Models;
 using DomainServices.Interfaces;
 using Infrastructure.Data.Context;
 using Microsoft.EntityFrameworkCore;
