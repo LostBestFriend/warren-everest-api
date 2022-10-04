@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(WarrenContext))]
-    [Migration("20220921120405_AlterNumber")]
-    partial class AlterNumber
+    [Migration("20221004183404_AlterAll")]
+    partial class AlterAll
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasColumnName("id");
+                        .HasColumnName("Id");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -73,7 +73,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("Number")
                         .HasColumnType("int")
-                        .HasColumnName("number");
+                        .HasColumnName("Number");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()

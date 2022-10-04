@@ -24,7 +24,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasColumnName("id");
+                        .HasColumnName("Id");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -71,7 +71,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("Number")
                         .HasColumnType("int")
-                        .HasColumnName("number");
+                        .HasColumnName("Number");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
