@@ -71,7 +71,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("Number")
                         .HasColumnType("int")
-                        .HasColumnName("number");
+                        .HasColumnName("Number");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()

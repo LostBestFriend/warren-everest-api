@@ -14,7 +14,8 @@ namespace Infrastructure.Data.Mapping
 
             builder.Property(customer => customer.Id)
                 .IsRequired()
-                .HasColumnName("id");
+                .ValueGeneratedOnAdd()
+                .HasColumnName("Id");
 
             builder.Property(customer => customer.FullName)
                 .IsRequired()
@@ -76,7 +77,7 @@ namespace Infrastructure.Data.Mapping
 
             builder.Property(customer => customer.Number)
                 .IsRequired()
-                .HasColumnName("number").
+                .HasColumnName("Number").
                 HasColumnType("int");
         }
     }
