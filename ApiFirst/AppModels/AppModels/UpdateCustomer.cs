@@ -22,14 +22,14 @@ namespace AppModels.AppModels
         {
             FullName = fullName;
             Email = email;
-            Cpf = FormatStringExtension.FormatString(cpf);
+            Cpf = cpf.FormatString();
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = FormatStringExtension.FormatString(postalCode);
+            PostalCode = postalCode.FormatString();
             Address = address;
             Number = number;
         }
