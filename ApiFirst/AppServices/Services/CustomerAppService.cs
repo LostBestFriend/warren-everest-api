@@ -1,9 +1,9 @@
 using AppModels.AppModels;
 using AppServices.Interfaces;
 using AutoMapper;
-using DomainModels.ExtensionMethods;
 using DomainModels.Models;
 using DomainServices.Interfaces;
+using Infrastructure.CrossCutting.ExtensionMethods;
 using System;
 using System.Collections.Generic;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infrastructure.CrossCutting.ExtensionMethods;
+using System;
 
 namespace AppModels.AppModels
 {
@@ -21,14 +22,14 @@ namespace AppModels.AppModels
         {
             FullName = fullName;
             Email = email;
-            Cpf = cpf.Replace(".", "").Replace("-", "").Replace(",", "").Trim();
+            Cpf = FormatStringExtension.FormatString(cpf);
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = postalCode.Replace(".", "").Replace("-", "").Replace(",", "").Trim();
+            PostalCode = FormatStringExtension.FormatString(postalCode);
             Address = address;
             Number = number;
         }
