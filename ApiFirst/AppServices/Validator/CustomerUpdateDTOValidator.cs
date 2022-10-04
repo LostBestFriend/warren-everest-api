@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AppServices.Validation
 {
-    public class CustomerUpdateDTOValidator : AbstractValidator<UpdateCustomerDTO>
+    public class CustomerUpdateDTOValidator : AbstractValidator<UpdateCustomer>
     {
         public CustomerUpdateDTOValidator()
         {

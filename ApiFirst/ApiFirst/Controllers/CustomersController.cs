@@ -60,7 +60,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateCustomerDTO model)
+        public IActionResult Create([FromBody] CreateCustomer model)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(UpdateCustomerDTO model)
+        public IActionResult Update(UpdateCustomer model)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Modify(UpdateCustomerDTO model)
+        public IActionResult Modify(UpdateCustomer model)
         {
             try
             {

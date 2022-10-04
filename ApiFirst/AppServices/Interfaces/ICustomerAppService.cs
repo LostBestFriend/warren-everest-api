@@ -5,12 +5,12 @@ namespace AppServices.Interfaces
 {
     public interface ICustomerAppService
     {
-        long Create(CreateCustomerDTO model);
-        void Update(UpdateCustomerDTO model);
+        long Create(CreateCustomer model);
+        void Update(UpdateCustomer model);
         void Delete(long id);
-        IEnumerable<CustomerResponseDTO> GetAll();
-        CustomerResponseDTO GetById(long id);
-        void Modify(UpdateCustomerDTO model);
-        CustomerResponseDTO GetByCpf(string cpf);
+        IEnumerable<CustomerResponse> GetAll();
+        CustomerResponse GetById(long id);
+        void Modify(UpdateCustomer model);
+        CustomerResponse GetByCpf(string cpf);
     }
 }

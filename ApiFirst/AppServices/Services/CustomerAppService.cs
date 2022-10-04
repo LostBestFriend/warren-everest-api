@@ -20,14 +20,14 @@ namespace AppServices.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public CustomerResponseDTO GetByCpf(string cpf)
+        public CustomerResponse GetByCpf(string cpf)
         {
             cpf = FormatStringExtension.FormatString(cpf);
             var result = _customerServices.GetByCpf(cpf);
-            return _mapper.Map<CustomerResponseDTO>(result);
+            return _mapper.Map<CustomerResponse>(result);
         }
 
-        public long Create(CreateCustomerDTO model)
+        public long Create(CreateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
             return _customerServices.Create(mapped);
@@ -38,25 +38,25 @@ namespace AppServices.Services
             _customerServices.Delete(id);
         }
 
-        public IEnumerable<CustomerResponseDTO> GetAll()
+        public IEnumerable<CustomerResponse> GetAll()
         {
             var result = _customerServices.GetAll();
-            return _mapper.Map<IEnumerable<CustomerResponseDTO>>(result);
+            return _mapper.Map<IEnumerable<CustomerResponse>>(result);
         }
 
-        public CustomerResponseDTO GetById(long id)
+        public CustomerResponse GetById(long id)
         {
             var result = _customerServices.GetById(id);
-            return _mapper.Map<CustomerResponseDTO>(result);
+            return _mapper.Map<CustomerResponse>(result);
         }
 
-        public void Update(UpdateCustomerDTO model)
+        public void Update(UpdateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
             _customerServices.Update(mapped);
         }
 
-        public void Modify(UpdateCustomerDTO model)
+        public void Modify(UpdateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
             _customerServices.Modify(mapped);

@@ -1,11 +1,11 @@
-﻿using Infrastructure.CrossCutting.ExtensionMethods;
-using System;
+﻿using System;
 
 namespace AppModels.AppModels
 {
-    public class UpdateCustomerDTO
+    public class CustomerResponse
     {
-        public UpdateCustomerDTO(
+        public CustomerResponse(
+            long id,
             string fullName,
             string email,
             string cpf,
@@ -20,20 +20,22 @@ namespace AppModels.AppModels
             int number
         )
         {
+            Id = id;
             FullName = fullName;
             Email = email;
-            Cpf = FormatStringExtension.FormatString(cpf);
+            Cpf = cpf;
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = FormatStringExtension.FormatString(postalCode);
+            PostalCode = postalCode;
             Address = address;
             Number = number;
         }
 
+        public long Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Cpf { get; set; }
