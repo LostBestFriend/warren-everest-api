@@ -37,6 +37,7 @@ namespace DomainServices.Services
             var customer = await GetByIdAsync(id);
 
             repository.Remove(customer);
+            _unitOfWork.SaveChanges();
         }
 
         public IEnumerable<Customer> GetAll()
