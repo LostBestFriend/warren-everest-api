@@ -1,4 +1,4 @@
-﻿namespace DomainModels.ExtensionMethods
+﻿namespace Infrastructure.CrossCutting.ExtensionMethods
 {
     public static class FormatStringExtension
     {

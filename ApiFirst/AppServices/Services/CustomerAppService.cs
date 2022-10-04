@@ -1,9 +1,9 @@
 using AppModels.AppModels;
 using AppServices.Interfaces;
 using AutoMapper;
-using DomainModels.ExtensionMethods;
 using DomainModels.Models;
 using DomainServices.Interfaces;
+using Infrastructure.CrossCutting.ExtensionMethods;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,14 +21,14 @@ namespace AppServices.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<CustomerResponseDTO> GetByCpfAsync(string cpf)
+        public async Task<CustomerResponse> GetByCpfAsync(string cpf)
         {
             cpf = FormatStringExtension.FormatString(cpf);
             var result = await _customerServices.GetByCpfAsync(cpf);
-            return _mapper.Map<CustomerResponseDTO>(result);
+            return _mapper.Map<CustomerResponse>(result);
         }
 
-        public async Task<long> CreateAsync(CreateCustomerDTO model)
+        public async Task<long> CreateAsync(CreateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
             return await _customerServices.CreateAsync(mapped);
@@ -39,23 +39,23 @@ namespace AppServices.Services
             _customerServices.Delete(id);
         }
 
-        public IEnumerable<CustomerResponseDTO> GetAll()
+        public IEnumerable<CustomerResponse> GetAll()
         {
             var result = _customerServices.GetAll();
-            return _mapper.Map<IEnumerable<CustomerResponseDTO>>(result);
+            return _mapper.Map<IEnumerable<CustomerResponse>>(result);
         }
 
-        public async Task<CustomerResponseDTO> GetByIdAsync(long id)
+        public async Task<CustomerResponse> GetByIdAsync(long id)
         {
             var result = await _customerServices.GetByIdAsync(id);
-            return _mapper.Map<CustomerResponseDTO>(result);
+            return _mapper.Map<CustomerResponse>(result);
         }
-        public void Update(UpdateCustomerDTO model)
+        public void Update(UpdateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
             _customerServices.Update(mapped);
         }
-        public void Modify(UpdateCustomerDTO model)
+        public void Modify(UpdateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
             _customerServices.Modify(mapped);

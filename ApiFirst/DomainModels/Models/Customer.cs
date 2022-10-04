@@ -1,4 +1,4 @@
-using DomainModels.ExtensionMethods;
+using Infrastructure.CrossCutting.ExtensionMethods;
 using System;
 
 namespace DomainModels.Models

@@ -6,12 +6,12 @@ namespace AppServices.Interfaces
 {
     public interface ICustomerAppService
     {
-        Task<long> CreateAsync(CreateCustomerDTO model);
-        void Update(UpdateCustomerDTO model);
+        Task<long> CreateAsync(CreateCustomer model);
+        void Update(UpdateCustomer model);
         void Delete(long id);
-        IEnumerable<CustomerResponseDTO> GetAll();
-        Task<CustomerResponseDTO> GetByIdAsync(long id);
-        void Modify(UpdateCustomerDTO model);
-        Task<CustomerResponseDTO> GetByCpfAsync(string cpf);
+        IEnumerable<CustomerResponse> GetAll();
+        Task<CustomerResponse> GetByIdAsync(long id);
+        void Modify(UpdateCustomer model);
+        Task<CustomerResponse> GetByCpfAsync(string cpf);
     }
 }
