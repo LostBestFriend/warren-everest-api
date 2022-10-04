@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace AppServices.Validator
 {
-    public class CustomerCreateDTOValidator : AbstractValidator<CreateCustomer>
+    public class CustomerCreateValidator : AbstractValidator<CreateCustomer>
     {
-        public CustomerCreateDTOValidator()
+        public CustomerCreateValidator()
         {
             RuleFor(x => x.Cpf)
                 .NotEmpty()
