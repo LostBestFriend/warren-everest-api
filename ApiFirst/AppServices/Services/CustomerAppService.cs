@@ -22,7 +22,7 @@ namespace AppServices.Services
 
         public CustomerResponse GetByCpf(string cpf)
         {
-            cpf = FormatStringExtension.FormatString(cpf);
+            cpf = cpf.FormatString();
             var result = _customerServices.GetByCpf(cpf);
             return _mapper.Map<CustomerResponse>(result);
         }
