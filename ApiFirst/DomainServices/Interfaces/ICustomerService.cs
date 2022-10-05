@@ -10,7 +10,6 @@ namespace DomainServices.Interfaces
         void Delete(long id);
         IEnumerable<Customer> GetAll();
         Customer GetById(long id);
-        void Modify(Customer model);
         Customer GetByCpf(string cpf);
     }
 }

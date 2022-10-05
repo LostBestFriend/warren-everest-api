@@ -10,7 +10,6 @@ namespace AppServices.Interfaces
         void Delete(long id);
         IEnumerable<CustomerResponse> GetAll();
         CustomerResponse GetById(long id);
-        void Modify(UpdateCustomer model);
         CustomerResponse GetByCpf(string cpf);
     }
 }

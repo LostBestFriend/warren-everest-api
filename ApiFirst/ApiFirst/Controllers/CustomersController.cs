@@ -116,27 +116,5 @@ namespace ApiFirst.Controllers
                 return Problem(e.Message);
             }
         }
-
-        [HttpPatch("{id}")]
-        public IActionResult Modify(UpdateCustomer model)
-        {
-            try
-            {
-                _customerAppServices.Modify(model);
-                return Ok();
-            }
-            catch (ArgumentNullException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message);
-            }
-        }
     }
 }

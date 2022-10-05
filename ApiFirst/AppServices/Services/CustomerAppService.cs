@@ -55,11 +55,5 @@ namespace AppServices.Services
             var mapped = _mapper.Map<Customer>(model);
             _customerServices.Update(mapped);
         }
-
-        public void Modify(UpdateCustomer model)
-        {
-            var mapped = _mapper.Map<Customer>(model);
-            _customerServices.Modify(mapped);
-        }
     }
 }
