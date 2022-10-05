@@ -79,18 +79,5 @@ namespace DomainServices.Services
             if (response is null) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
             return response;
         }
-
-        public void Modify(Customer model)
-        {
-            var repo = _unitOfWork.Repository<Customer>();
-
-            if (!repo.Any(customer => customer.Id == model.Id)) throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {model.Id}");
-
-            if (repo.Any(customer => customer.Cpf == model.Cpf && customer.Id != model.Id)) throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
-            if (repo.Any(customer => customer.Email == model.Email && customer.Id != model.Id)) throw new ArgumentException($"Já existe usuário com o CPF {model.Email}");
-
-            repo.Update(model);
-            _unitOfWork.SaveChanges();
-        }
     }
 }

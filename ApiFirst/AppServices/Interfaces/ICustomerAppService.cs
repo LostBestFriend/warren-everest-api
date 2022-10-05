@@ -11,7 +11,6 @@ namespace AppServices.Interfaces
         void Delete(long id);
         IEnumerable<CustomerResponse> GetAll();
         Task<CustomerResponse> GetByIdAsync(long id);
-        void Modify(UpdateCustomer model);
         Task<CustomerResponse> GetByCpfAsync(string cpf);
     }
 }
