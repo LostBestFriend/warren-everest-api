@@ -9,9 +9,8 @@ namespace Infrastructure.Data.Context
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.Load("Infrastructure.Data"));
         }
-        public WarrenContext(DbContextOptions<WarrenContext> options) : base(options)
-        {
 
-        }
+        public WarrenContext(DbContextOptions<WarrenContext> options) : base(options)
+        { }
     }
 }
