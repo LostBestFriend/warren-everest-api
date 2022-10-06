@@ -1,11 +1,11 @@
-﻿using Infrastructure.CrossCutting.ExtensionMethods;
-using System;
+﻿using System;
 
-namespace AppModels.AppModels
+namespace AppModels.AppModels.Customer
 {
-    public class UpdateCustomer
+    public class CustomerResponse
     {
-        public UpdateCustomer(
+        public CustomerResponse(
+            long id,
             string fullName,
             string email,
             string cpf,
@@ -20,20 +20,22 @@ namespace AppModels.AppModels
             int number
         )
         {
+            Id = id;
             FullName = fullName;
             Email = email;
-            Cpf = cpf.FormatString();
+            Cpf = cpf;
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = postalCode.FormatString();
+            PostalCode = postalCode;
             Address = address;
             Number = number;
         }
 
+        public long Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Cpf { get; set; }

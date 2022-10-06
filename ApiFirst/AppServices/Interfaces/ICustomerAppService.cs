@@ -1,4 +1,4 @@
-using AppModels.AppModels;
+using AppModels.AppModels.Customer;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
