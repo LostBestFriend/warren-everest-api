@@ -2,7 +2,7 @@
 
 namespace AppModels.AppModels.PortfolioProduct
 {
-    public class PortfolioProductResult
+    public class PortfolioProductResponse
     {
         public ProductResponse Product { get; set; }
     }

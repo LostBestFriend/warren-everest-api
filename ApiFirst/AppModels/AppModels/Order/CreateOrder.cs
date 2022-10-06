@@ -3,7 +3,7 @@ using System;
 
 namespace AppModels.AppModels.Order
 {
-    internal class CreateOrder
+    public class CreateOrder
     {
         public CreateOrder(int quotes, decimal unitPrice, DateTime liquidateAt, OrderEnum direction, long productId, long portfolioId)
         {

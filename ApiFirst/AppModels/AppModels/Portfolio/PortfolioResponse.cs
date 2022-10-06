@@ -13,7 +13,7 @@ namespace AppModels.AppModels.Portfolio
         public decimal TotalBalance { get; set; }
         public decimal AccountBalance { get; set; }
         public CustomerResponse Customer { get; set; }
-        public IEnumerable<PortfolioProductResult> Products { get; set; }
+        public IEnumerable<PortfolioProductResponse> Products { get; set; }
         public IEnumerable<OrderResponse> Orders { get; set; }
     }
 }

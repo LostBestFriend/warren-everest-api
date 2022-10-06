@@ -14,24 +14,31 @@ namespace AppServices.Services
     {
         private readonly ICustomerService _customerServices;
         private readonly IMapper _mapper;
+        private readonly ICustomerBankInfoService _customerBankInfoAppService;
 
-        public CustomerAppService(ICustomerService customerServices, IMapper mapper)
+        public CustomerAppService(ICustomerBankInfoService bankInfoAppServices, ICustomerService customerServices, IMapper mapper)
         {
-            _customerServices = customerServices ?? throw new ArgumentNullException(nameof(customerServices));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _customerServices = customerServices ??
+                throw new ArgumentNullException(nameof(customerServices));
+            _mapper = mapper ??
+                throw new ArgumentNullException(nameof(mapper));
+            _customerBankInfoAppService = bankInfoAppServices ??
+                throw new ArgumentNullException(nameof(bankInfoAppServices));
         }
 
         public async Task<CustomerResponse> GetByCpfAsync(string cpf)
         {
             cpf = cpf.FormatString();
-            var result = await _customerServices.GetByCpfAsync(cpf);
+            var result = await _customerServices.GetByCpfAsync(cpf).ConfigureAwait(false);
             return _mapper.Map<CustomerResponse>(result);
         }
 
         public async Task<long> CreateAsync(CreateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
-            return await _customerServices.CreateAsync(mapped);
+            long customerId = await _customerServices.CreateAsync(mapped).ConfigureAwait(false);
+            _customerBankInfoAppService.Create(customerId);
+            return customerId;
         }
 
         public void Delete(long id)
@@ -47,7 +54,7 @@ namespace AppServices.Services
 
         public async Task<CustomerResponse> GetByIdAsync(long id)
         {
-            var result = await _customerServices.GetByIdAsync(id);
+            var result = await _customerServices.GetByIdAsync(id).ConfigureAwait(false);
             return _mapper.Map<CustomerResponse>(result);
         }
         public void Update(UpdateCustomer model)

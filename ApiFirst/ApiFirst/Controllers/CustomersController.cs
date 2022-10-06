@@ -10,11 +10,11 @@ namespace ApiFirst.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerAppService _customerAppServices;
+        private readonly ICustomerAppService _customerAppService;
 
         public CustomersController(ICustomerAppService customerAppServices)
         {
-            _customerAppServices = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
+            _customerAppService = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
         }
 
         [HttpGet("cpf/{cpf}")]
@@ -22,7 +22,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                var response = await _customerAppServices.GetByCpfAsync(cpf).ConfigureAwait(false);
+                var response = await _customerAppService.GetByCpfAsync(cpf).ConfigureAwait(false);
                 return Ok(response);
             }
             catch (ArgumentNullException e)
@@ -38,7 +38,7 @@ namespace ApiFirst.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var result = _customerAppServices.GetAll();
+            var result = _customerAppService.GetAll();
             return Ok(result);
         }
 
@@ -47,7 +47,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                var response = await _customerAppServices.GetByIdAsync(id).ConfigureAwait(false);
+                var response = await _customerAppService.GetByIdAsync(id).ConfigureAwait(false);
                 return Ok(response);
             }
             catch (ArgumentNullException e)
@@ -65,7 +65,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                long id = await _customerAppServices.CreateAsync(model).ConfigureAwait(false);
+                long id = await _customerAppService.CreateAsync(model).ConfigureAwait(false);
                 return Created("", id);
             }
             catch (ArgumentException e)
@@ -83,7 +83,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                _customerAppServices.Delete(id);
+                _customerAppService.Delete(id);
                 return NoContent();
             }
             catch (ArgumentNullException e)
@@ -101,7 +101,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                _customerAppServices.Update(model);
+                _customerAppService.Update(model);
                 return Ok();
             }
             catch (ArgumentNullException ex)
