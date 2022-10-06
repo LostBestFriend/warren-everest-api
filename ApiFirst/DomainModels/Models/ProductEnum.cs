@@ -1,0 +1,11 @@
+﻿namespace DomainModels.Models
+{
+    public enum ProductEnum
+    {
+        FixedIncome = 1,
+        Trade = 2,
+        Funds = 3,
+        Fii = 4,
+        Crypto = 5,
+    }
+}
