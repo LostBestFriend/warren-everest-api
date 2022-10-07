@@ -1,16 +1,19 @@
 ﻿using AppServices.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace AAaa
+namespace HostedServices
 {
-    public class ExecuteOrders : CronService
+    public class OrdersCronJob : CronService
     {
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly ILogger<ExecuteOrders> _logger;
-        public ExecuteOrders(IScheduleConfig<ExecuteOrders> config,
+        private readonly ILogger<OrdersCronJob> _logger;
+        public OrdersCronJob(IScheduleConfig<OrdersCronJob> config,
                              IServiceScopeFactory scopeFactory,
-                             ILogger<ExecuteOrders> logger)
+                             ILogger<OrdersCronJob> logger)
             : base(config.CronExpression, config.TimeZoneInfo)
         {
             if (config is null)

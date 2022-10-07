@@ -1,7 +1,10 @@
 ﻿using Cronos;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace AAaa
+namespace HostedServices
 {
     public class CronService : IHostedService, IDisposable
     {

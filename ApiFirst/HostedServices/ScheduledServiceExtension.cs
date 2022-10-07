@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 
-namespace AAaa
+namespace HostedServices
 {
     public static class ScheduledServiceExtension
     {

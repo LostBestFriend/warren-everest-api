@@ -1,4 +1,6 @@
-﻿namespace AAaa
+﻿using System;
+
+namespace HostedServices
 {
     public interface IScheduleConfig<T>
     {
