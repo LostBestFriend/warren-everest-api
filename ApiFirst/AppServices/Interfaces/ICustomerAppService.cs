@@ -1,15 +1,16 @@
 using AppModels.AppModels;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AppServices.Interfaces
 {
     public interface ICustomerAppService
     {
-        long Create(CreateCustomer model);
+        Task<long> CreateAsync(CreateCustomer model);
         void Update(UpdateCustomer model);
         void Delete(long id);
         IEnumerable<CustomerResponse> GetAll();
-        CustomerResponse GetById(long id);
-        CustomerResponse GetByCpf(string cpf);
+        Task<CustomerResponse> GetByIdAsync(long id);
+        Task<CustomerResponse> GetByCpfAsync(string cpf);
     }
 }

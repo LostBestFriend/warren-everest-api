@@ -14,6 +14,7 @@ namespace Infrastructure.Data.Mapping
 
             builder.Property(customer => customer.Id)
                 .IsRequired()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("Id");
 
             builder.Property(customer => customer.FullName)

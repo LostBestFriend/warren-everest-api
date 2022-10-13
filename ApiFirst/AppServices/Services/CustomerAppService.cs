@@ -6,31 +6,32 @@ using DomainServices.Interfaces;
 using Infrastructure.CrossCutting.ExtensionMethods;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AppServices.Services
 {
-    public class CustomerAppServices : ICustomerAppService
+    public class CustomerAppService : ICustomerAppService
     {
         private readonly ICustomerService _customerServices;
         private readonly IMapper _mapper;
 
-        public CustomerAppServices(ICustomerService customerServices, IMapper mapper)
+        public CustomerAppService(ICustomerService customerServices, IMapper mapper)
         {
             _customerServices = customerServices ?? throw new ArgumentNullException(nameof(customerServices));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public CustomerResponse GetByCpf(string cpf)
+        public async Task<CustomerResponse> GetByCpfAsync(string cpf)
         {
             cpf = cpf.FormatString();
-            var result = _customerServices.GetByCpf(cpf);
+            var result = await _customerServices.GetByCpfAsync(cpf);
             return _mapper.Map<CustomerResponse>(result);
         }
 
-        public long Create(CreateCustomer model)
+        public async Task<long> CreateAsync(CreateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
-            return _customerServices.Create(mapped);
+            return await _customerServices.CreateAsync(mapped);
         }
 
         public void Delete(long id)
@@ -44,12 +45,11 @@ namespace AppServices.Services
             return _mapper.Map<IEnumerable<CustomerResponse>>(result);
         }
 
-        public CustomerResponse GetById(long id)
+        public async Task<CustomerResponse> GetByIdAsync(long id)
         {
-            var result = _customerServices.GetById(id);
+            var result = await _customerServices.GetByIdAsync(id);
             return _mapper.Map<CustomerResponse>(result);
         }
-
         public void Update(UpdateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);

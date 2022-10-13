@@ -2,6 +2,7 @@ using AppServices.Interfaces;
 using AppServices.Services;
 using DomainServices.Interfaces;
 using DomainServices.Services;
+using EntityFrameworkCore.UnitOfWork.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure.Data.Context;
@@ -18,16 +19,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<WarrenContext>(
-    options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)), optionsLifetime: ServiceLifetime.Transient);
+    options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)), ServiceLifetime.Transient);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
-builder.Services.AddTransient<ICustomerAppService, CustomerAppServices>();
+builder.Services.AddTransient<ICustomerAppService, CustomerAppService>();
 builder.Services.AddAutoMapper(Assembly.Load("AppServices"));
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(Assembly.Load(nameof(AppServices)));
+builder.Services.AddUnitOfWork<WarrenContext>();
 
 var app = builder.Build();
 

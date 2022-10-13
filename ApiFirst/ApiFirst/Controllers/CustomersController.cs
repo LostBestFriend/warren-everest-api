@@ -2,6 +2,7 @@ using AppModels.AppModels;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace ApiFirst.Controllers
 {
@@ -17,11 +18,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet("cpf/{cpf}")]
-        public IActionResult GetByCpf(string cpf)
+        public async Task<IActionResult> GetByCpfAsync(string cpf)
         {
             try
             {
-                var response = _customerAppServices.GetByCpf(cpf);
+                var response = await _customerAppServices.GetByCpfAsync(cpf).ConfigureAwait(false);
                 return Ok(response);
             }
             catch (ArgumentNullException e)
@@ -42,11 +43,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(long id)
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
             try
             {
-                var response = _customerAppServices.GetById(id);
+                var response = await _customerAppServices.GetByIdAsync(id).ConfigureAwait(false);
                 return Ok(response);
             }
             catch (ArgumentNullException e)
@@ -60,11 +61,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateCustomer model)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCustomer model)
         {
             try
             {
-                long id = _customerAppServices.Create(model);
+                long id = await _customerAppServices.CreateAsync(model).ConfigureAwait(false);
                 return Created("", id);
             }
             catch (ArgumentException e)
