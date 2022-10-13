@@ -29,12 +29,18 @@ namespace AppServices.Services
             IOrderAppService orderAppServices,
             IPortfolioProductService portfolioProductServices)
         {
-            _portfolioService = portfolio ?? throw new ArgumentNullException(nameof(portfolio));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _customerBankInfoAppService = customerBankInfoAppServices ?? throw new ArgumentNullException(nameof(customerBankInfoAppServices));
-            _productAppService = productAppServices ?? throw new ArgumentNullException(nameof(productAppServices));
-            _orderAppService = orderAppServices ?? throw new ArgumentNullException(nameof(orderAppServices));
-            _portfolioProductService = portfolioProductServices ?? throw new ArgumentNullException(nameof(portfolioProductServices));
+            _portfolioService = portfolio ??
+                throw new ArgumentNullException(nameof(portfolio));
+            _mapper = mapper ??
+                throw new ArgumentNullException(nameof(mapper));
+            _customerBankInfoAppService = customerBankInfoAppServices ??
+                throw new ArgumentNullException(nameof(customerBankInfoAppServices));
+            _productAppService = productAppServices ??
+                throw new ArgumentNullException(nameof(productAppServices));
+            _orderAppService = orderAppServices ??
+                throw new ArgumentNullException(nameof(orderAppServices));
+            _portfolioProductService = portfolioProductServices ??
+                throw new ArgumentNullException(nameof(portfolioProductServices));
         }
 
         public async Task<long> CreateAsync(CreatePortfolio model)
@@ -63,9 +69,7 @@ namespace AppServices.Services
         public void Deposit(decimal amount, long customerId, long portfolioId)
         {
             if (_customerBankInfoAppService.GetBalance(customerId) < amount)
-            {
                 throw new ArgumentException("Não há saldo suficiente na conta corrente para realizar este depósito");
-            }
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
             _customerBankInfoAppService.Withdraw(customerId, amount);
@@ -76,9 +80,7 @@ namespace AppServices.Services
         public void Withdraw(decimal amount, long customerId, long portfolioId)
         {
             if (_portfolioService.GetAccountBalance(portfolioId) < amount)
-            {
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar o saque requerido");
-            }
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
             _portfolioService.Withdraw(amount, portfolioId);
@@ -95,9 +97,7 @@ namespace AppServices.Services
             var orderId = await _orderAppService.CreateAsync(order).ConfigureAwait(false);
 
             if (GetAccountBalance(portfolioId) < order.NetValue)
-            {
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar este investimento");
-            }
 
             if (DateTime.Now.Date >= liquidateAt.Date)
             {
@@ -115,9 +115,7 @@ namespace AppServices.Services
             int availableQuotes = _orderAppService.GetQuotesAvaliable(portfolioId, productId);
 
             if (quotes > availableQuotes)
-            {
                 throw new ArgumentException("A quantidade de cotas informada é maior do que as cotas existentes na carteira");
-            }
 
             var createOrder = new CreateOrder(quotes, product.UnitPrice,
                                         liquidateAt, AppModels.EnumModels.OrderEnum.Sell, productId, portfolioId);

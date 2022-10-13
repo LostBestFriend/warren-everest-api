@@ -10,7 +10,8 @@ namespace AppServices.Services
 
         public CustomerBankInfoAppService(ICustomerBankInfoService customerBankInfoServices)
         {
-            _customerBankInfoServices = customerBankInfoServices ?? throw new ArgumentNullException(nameof(customerBankInfoServices));
+            _customerBankInfoServices = customerBankInfoServices ??
+                throw new ArgumentNullException(nameof(customerBankInfoServices));
         }
 
         public void Create(long customerId)

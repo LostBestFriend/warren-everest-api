@@ -26,9 +26,11 @@ namespace HostedServices
         protected virtual async Task ScheduleJob(CancellationToken stoppingToken)
         {
             var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
+
             if (next.HasValue)
             {
                 var delay = next.Value - DateTimeOffset.Now;
+
                 if (delay.TotalMilliseconds <= 0)
                 {
                     await ScheduleJob(stoppingToken);

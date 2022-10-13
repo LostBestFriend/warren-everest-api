@@ -19,7 +19,9 @@ namespace HostedServices
             if (config is null)
                 throw new ArgumentNullException(nameof(config));
 
-            _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+            _scopeFactory = scopeFactory ??
+                throw new ArgumentNullException(nameof(scopeFactory));
+
             _logger = logger;
         }
         public override Task StartAsync(CancellationToken cancellationToken)

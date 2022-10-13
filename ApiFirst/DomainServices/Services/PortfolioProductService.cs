@@ -14,15 +14,16 @@ namespace DomainServices.Services
 
         public PortfolioProductService(IUnitOfWork<WarrenContext> unitOfWork, IRepositoryFactory<WarrenContext> repository)
         {
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _unitOfWork = unitOfWork ??
+                throw new ArgumentNullException(nameof(unitOfWork));
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
         public async Task InitRelationAsync(Portfolio portfolio, Product product)
         {
             var repository = _unitOfWork.Repository<PortfolioProduct>();
-
             var relation = new PortfolioProduct(portfolio.Id, product.Id);
+
             await repository.AddAsync(relation).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
@@ -30,7 +31,6 @@ namespace DomainServices.Services
         public async Task DisposeRelationAsync(Portfolio portfolio, Product product)
         {
             var repository = _unitOfWork.Repository<PortfolioProduct>();
-
             var relationToRemove = await GetByRelationAsync(portfolio.Id, product.Id);
 
             repository.Remove(relationToRemove);
@@ -40,16 +40,13 @@ namespace DomainServices.Services
         public async Task<PortfolioProduct> GetByRelationAsync(long portfolioId, long productId)
         {
             var repository = _repositoryFactory.Repository<PortfolioProduct>();
-
             var query = repository.SingleResultQuery()
                         .AndFilter(portfolioproduct => portfolioproduct.ProductId == productId && portfolioproduct.PortfolioId == portfolioId);
-
             var relation = await repository.FirstOrDefaultAsync(query);
 
             if (relation is null)
-            {
                 throw new ArgumentNullException($"Nenhuma relação encontrada para ProductId: {productId} e PortfolioId: {portfolioId}");
-            }
+
             return relation;
         }
 

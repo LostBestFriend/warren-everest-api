@@ -16,8 +16,10 @@ namespace AppServices.Services
 
         public OrderAppService(IMapper mapper, IOrderService orderServices)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _orderServices = orderServices ?? throw new ArgumentNullException(nameof(orderServices));
+            _mapper = mapper ??
+                throw new ArgumentNullException(nameof(mapper));
+            _orderServices = orderServices ??
+                throw new ArgumentNullException(nameof(orderServices));
         }
 
         public Task<long> CreateAsync(CreateOrder model)

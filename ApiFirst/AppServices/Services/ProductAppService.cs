@@ -16,8 +16,10 @@ namespace AppServices.Services
 
         public ProductAppService(IMapper mapper, IProductService productServices)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _productService = productServices ?? throw new ArgumentNullException(nameof(productServices));
+            _mapper = mapper ??
+                throw new ArgumentNullException(nameof(mapper));
+            _productService = productServices ??
+                throw new ArgumentNullException(nameof(productServices));
         }
         public IEnumerable<ProductResponse> GetAll()
         {

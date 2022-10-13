@@ -11,7 +11,8 @@ namespace AppServices.Services
 
         public PortfolioProductAppService(IPortfolioProductService portfolioProductServices)
         {
-            _portfolioProductService = portfolioProductServices ?? throw new ArgumentNullException(nameof(portfolioProductServices));
+            _portfolioProductService = portfolioProductServices ??
+                throw new ArgumentNullException(nameof(portfolioProductServices));
         }
 
         public void InitRelation(Portfolio portfolio, Product product)
