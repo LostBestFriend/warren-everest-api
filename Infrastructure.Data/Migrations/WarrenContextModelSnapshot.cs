@@ -26,7 +26,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("Id");
 
-
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("varchar(60)")
