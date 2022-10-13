@@ -20,15 +20,8 @@ namespace ApiFirst.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            try
-            {
-                var portolios = _portfolioAppService.GetAll();
-                return Ok(portolios);
-            }
-            catch (Exception exception)
-            {
-                return Problem(exception.Message);
-            }
+            var portolios = _portfolioAppService.GetAll();
+            return Ok(portolios);
         }
 
         [HttpGet("{id}")]
@@ -129,8 +122,8 @@ namespace ApiFirst.Controllers
             }
         }
 
-        [HttpPatch("withdraw/{productid}")]
-        public async Task<IActionResult> UninvestAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId)
+        [HttpPatch("withdraw/{productId}")]
+        public async Task<IActionResult> RemoveMoneyAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId)
         {
             try
             {

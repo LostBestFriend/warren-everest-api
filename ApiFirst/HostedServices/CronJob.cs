@@ -4,15 +4,15 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AAaa
+namespace HostedServices
 {
-    public class CronService : IHostedService, IDisposable
+    public class CronJob : IHostedService, IDisposable
     {
-        private System.Timers.Timer? _timer;
+        private System.Timers.Timer _timer;
         private readonly CronExpression _expression;
         private readonly TimeZoneInfo _timeZoneInfo;
 
-        public CronService(string cronExpression, TimeZoneInfo timeZoneInfo)
+        public CronJob(string cronExpression, TimeZoneInfo timeZoneInfo)
         {
             _expression = CronExpression.Parse(cronExpression);
             _timeZoneInfo = timeZoneInfo;
@@ -26,9 +26,11 @@ namespace AAaa
         protected virtual async Task ScheduleJob(CancellationToken stoppingToken)
         {
             var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
+
             if (next.HasValue)
             {
                 var delay = next.Value - DateTimeOffset.Now;
+
                 if (delay.TotalMilliseconds <= 0)
                 {
                     await ScheduleJob(stoppingToken);

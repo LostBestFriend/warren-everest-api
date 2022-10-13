@@ -11,22 +11,23 @@ namespace AppServices.Services
 
         public PortfolioProductAppService(IPortfolioProductService portfolioProductServices)
         {
-            _portfolioProductService = portfolioProductServices ?? throw new ArgumentNullException(nameof(portfolioProductServices));
+            _portfolioProductService = portfolioProductServices ??
+                throw new ArgumentNullException(nameof(portfolioProductServices));
         }
 
-        public void CreateRelation(Portfolio portfolio, Product product)
+        public void InitRelation(Portfolio portfolio, Product product)
         {
-            _portfolioProductService.CreateRelationAsync(portfolio, product);
+            _portfolioProductService.InitRelationAsync(portfolio, product);
         }
 
-        public void DeleteRelation(Portfolio portfolio, Product product)
+        public void DisposeRelation(Portfolio portfolio, Product product)
         {
-            _portfolioProductService.DeleteRelationAsync(portfolio, product);
+            _portfolioProductService.DisposeRelationAsync(portfolio, product);
         }
 
-        public bool RelationExists(long portfolioId, long productId)
+        public bool RelationAlreadyExists(long portfolioId, long productId)
         {
-            return _portfolioProductService.RelationExists(portfolioId, productId);
+            return _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
         }
     }
 }

@@ -16,8 +16,10 @@ namespace AppServices.Services
 
         public OrderAppService(IMapper mapper, IOrderService orderServices)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _orderServices = orderServices ?? throw new ArgumentNullException(nameof(orderServices));
+            _mapper = mapper ??
+                throw new ArgumentNullException(nameof(mapper));
+            _orderServices = orderServices ??
+                throw new ArgumentNullException(nameof(orderServices));
         }
 
         public Task<long> CreateAsync(CreateOrder model)
@@ -38,14 +40,14 @@ namespace AppServices.Services
             return _mapper.Map<OrderResponse>(result);
         }
 
-        public int GetAvailableQuotes(long portfolioId, long productId)
+        public int GetQuotesAvaliable(long portfolioId, long productId)
         {
-            return _orderServices.GetAvailableQuotes(portfolioId, productId);
+            return _orderServices.GetQuotesAvaliable(portfolioId, productId);
         }
 
-        public IEnumerable<OrderResponse> GetOrdersToExecute()
+        public IEnumerable<OrderResponse> GetExecutableOrders()
         {
-            var orders = _orderServices.GetOrdersToExecute();
+            var orders = _orderServices.GetExecutableOrders();
 
             return _mapper.Map<IEnumerable<OrderResponse>>(orders);
 

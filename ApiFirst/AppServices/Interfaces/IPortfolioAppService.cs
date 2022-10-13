@@ -14,7 +14,7 @@ namespace AppServices.Interfaces
         decimal GetAccountBalance(long portfolioId);
         void Deposit(decimal amount, long customerId, long portfolioId);
         void Withdraw(decimal amount, long customerId, long portfolioId);
-        Task ExecuteTodaysOrdersAsync();
+        Task ExecuteNowOrdersAsync();
         Task ExecuteBuyOrderAsync(OrderResponse order);
         Task ExecuteSellOrderAsync(OrderResponse order);
         Task InvestAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId);

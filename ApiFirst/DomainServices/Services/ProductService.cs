@@ -15,7 +15,8 @@ namespace DomainServices.Services
 
         public ProductService(IUnitOfWork<WarrenContext> unitOfWork, IRepositoryFactory<WarrenContext> repository)
         {
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _unitOfWork = unitOfWork ??
+                throw new ArgumentNullException(nameof(unitOfWork));
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
@@ -31,12 +32,11 @@ namespace DomainServices.Services
         public async Task<Product> GetByIdAsync(long id)
         {
             var repository = _repositoryFactory.Repository<Product>();
-
             var query = repository.SingleResultQuery().AndFilter(product => product.Id == id);
-
             var product = await repository.FirstOrDefaultAsync(query).ConfigureAwait(false);
 
-            if (product is null) throw new ArgumentNullException($"Produto não encontrado para o Id: {id}");
+            if (product is null)
+                throw new ArgumentNullException($"Produto não encontrado para o Id: {id}");
 
             return product;
         }
@@ -45,7 +45,6 @@ namespace DomainServices.Services
         public IEnumerable<Product> GetAll()
         {
             var repository = _repositoryFactory.Repository<Product>();
-
             var query = repository.MultipleResultQuery();
 
             return repository.Search(query);
@@ -64,18 +63,15 @@ namespace DomainServices.Services
             var repository = _unitOfWork.Repository<Product>();
 
             if (!repository.Any(product => product.Id == id))
-            {
                 throw new ArgumentNullException($"Produto não encontrado para o id: {id}");
-            }
+
             repository.Remove(product => product.Id == id);
         }
 
         public void AddPortfolio(long productId, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Product>();
-
             var query = repository.SingleResultQuery().AndFilter(product => product.Id == productId);
-
             var product = repository.SingleOrDefault(query);
         }
     }

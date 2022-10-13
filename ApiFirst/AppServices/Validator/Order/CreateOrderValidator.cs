@@ -12,6 +12,7 @@ namespace AppServices.Validator.Order
                 .GreaterThan(0);
 
             RuleFor(order => order.NetValue)
+                .Equal(p => p.Quotes * p.UnitPrice)
                 .NotEmpty();
 
             RuleFor(order => order.UnitPrice)

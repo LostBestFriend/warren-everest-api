@@ -15,7 +15,8 @@ namespace DomainServices.Services
 
         public CustomerService(IUnitOfWork<WarrenContext> unitOfWork, IRepositoryFactory<WarrenContext> repository)
         {
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _unitOfWork = unitOfWork ??
+                throw new ArgumentNullException(nameof(unitOfWork));
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
@@ -44,10 +45,10 @@ namespace DomainServices.Services
 
         public IEnumerable<Customer> GetAll()
         {
-            var repo = _repositoryFactory.Repository<Customer>();
-            var query = repo.MultipleResultQuery();
+            var repository = _repositoryFactory.Repository<Customer>();
+            var query = repository.MultipleResultQuery();
 
-            return repo.Search(query);
+            return repository.Search(query);
         }
 
         public async Task<Customer> GetByCpfAsync(string cpf)

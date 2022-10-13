@@ -13,7 +13,8 @@ namespace DomainServices.Services
 
         public CustomerBankInfoService(IUnitOfWork<WarrenContext> unitOfWork, IRepositoryFactory<WarrenContext> repository)
         {
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _unitOfWork = unitOfWork ??
+                throw new ArgumentNullException(nameof(unitOfWork));
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
@@ -30,12 +31,9 @@ namespace DomainServices.Services
             var repository = _repositoryFactory.Repository<CustomerBankInfo>();
 
             if (!repository.Any(bankinfo => bankinfo.CustomerId == customerId))
-            {
                 throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");
-            }
 
             var query = repository.SingleResultQuery().AndFilter(bankinfo => bankinfo.CustomerId == customerId).Select(bankinfo => bankinfo.AccountBalance);
-
             var accountBalance = repository.FirstOrDefault(query);
 
             return accountBalance;
@@ -44,15 +42,11 @@ namespace DomainServices.Services
         public void Deposit(long customerId, decimal amount)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
-
             var query = repository.SingleResultQuery().AndFilter(bankinfo => bankinfo.CustomerId == customerId);
-
             var bankInfo = repository.FirstOrDefault(query);
 
             if (bankInfo is null)
-            {
                 throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");
-            }
 
             bankInfo.AccountBalance += amount;
             repository.Update(bankInfo, bankinfo => bankinfo.AccountBalance);
@@ -62,19 +56,13 @@ namespace DomainServices.Services
         public void Withdraw(long customerId, decimal amount)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
-
             var query = repository.SingleResultQuery().AndFilter(bankinfo => bankinfo.CustomerId == customerId);
-
             var bankInfo = repository.FirstOrDefault(query);
 
             if (bankInfo is null)
-            {
                 throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");
-            }
             if (bankInfo.AccountBalance < amount)
-            {
                 throw new ArgumentException($"Não é possível sacar o valor informado pois não há saldo suficiente");
-            }
 
             bankInfo.AccountBalance -= amount;
             repository.Update(bankInfo, bankinfo => bankinfo.AccountBalance);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HostedServices
 {
-    public class OrdersCronJob : CronService
+    public class OrdersCronJob : CronJob
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<OrdersCronJob> _logger;
@@ -17,11 +17,11 @@ namespace HostedServices
             : base(config.CronExpression, config.TimeZoneInfo)
         {
             if (config is null)
-            {
                 throw new ArgumentNullException(nameof(config));
-            }
 
-            _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+            _scopeFactory = scopeFactory ??
+                throw new ArgumentNullException(nameof(scopeFactory));
+
             _logger = logger;
         }
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ namespace HostedServices
             {
                 using var scope = _scopeFactory.CreateScope();
                 var repository = scope.ServiceProvider.GetRequiredService<IPortfolioAppService>();
-                repository.ExecuteTodaysOrdersAsync().ConfigureAwait(false);
+                repository.ExecuteNowOrdersAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

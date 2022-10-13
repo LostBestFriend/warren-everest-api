@@ -4,8 +4,8 @@ namespace AppServices.Interfaces
 {
     public interface IPortfolioProductAppService
     {
-        void CreateRelation(Portfolio portfolio, Product product);
-        void DeleteRelation(Portfolio portfolio, Product product);
-        bool RelationExists(long portfolioId, long productId);
+        void InitRelation(Portfolio portfolio, Product product);
+        void DisposeRelation(Portfolio portfolio, Product product);
+        bool RelationAlreadyExists(long portfolioId, long productId);
     }
 }
