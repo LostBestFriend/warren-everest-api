@@ -55,7 +55,7 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<Order>();
 
-            var query = repository.MultipleResultQuery().AndFilter(order => order.LiquidateAt.Date == DateTime.Now.Date);
+            var query = repository.MultipleResultQuery().AndFilter(order => order.LiquidateAt.Date <= DateTime.Now.Date);
 
             var orders = repository.Search(query);
 

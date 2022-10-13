@@ -129,7 +129,7 @@ namespace ApiFirst.Controllers
             }
         }
 
-        [HttpPatch("withdraw/{productid}")]
+        [HttpPatch("withdraw/{productId}")]
         public async Task<IActionResult> UninvestAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId)
         {
             try

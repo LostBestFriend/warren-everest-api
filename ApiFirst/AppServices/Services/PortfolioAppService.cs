@@ -99,7 +99,7 @@ namespace AppServices.Services
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar este investimento");
             }
 
-            if (DateTime.Now.Date >= liquidateAt.Date && DateTime.Now.TimeOfDay > new TimeSpan(10, 0, 0))
+            if (DateTime.Now.Date >= liquidateAt.Date)
             {
                 var orderResult = await _orderAppService.GetByIdAsync(orderId);
                 await ExecuteBuyOrderAsync(orderResult);
@@ -122,7 +122,6 @@ namespace AppServices.Services
             var createOrder = new CreateOrder(quotes, product.UnitPrice,
                                         liquidateAt, AppModels.EnumModels.OrderEnum.Sell, productId, portfolioId);
             var orderId = await _orderAppService.CreateAsync(createOrder).ConfigureAwait(false);
-
 
             if (DateTime.Now.Date >= liquidateAt.Date)
             {

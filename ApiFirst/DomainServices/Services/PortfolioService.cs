@@ -74,7 +74,7 @@ namespace DomainServices.Services
 
             if (portfolio is null)
             {
-                throw new ArgumentNullException($"Carteirar não encontrada para o id: {id}");
+                throw new ArgumentNullException($"Carteira não encontrada para o id: {id}");
             }
             return portfolio;
         }
@@ -206,7 +206,7 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == portfolio.Id);
+            var query = repository.SingleResultQuery().AndFilter(p => p.Id == portfolioId);
 
             var portfolio = repository.SingleOrDefault(query);
 
@@ -217,7 +217,7 @@ namespace DomainServices.Services
 
             if (portfolio.AccountBalance > 0) throw new ArgumentException($"Não é possível excluir a carteira enquanto houver saldo");
 
-            if (portfolio.Products.Count > 0) throw new ArgumentException($"Não é possível exluir a carteira enquanto houver produtos nela investidos");
+            if (portfolio.Products is not null) throw new ArgumentException($"Não é possível excluir a carteira enquanto houver produtos nela investidos");
 
             repository.Remove(portfolio);
             _unitOfWork.SaveChanges();

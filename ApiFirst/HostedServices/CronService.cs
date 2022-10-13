@@ -8,7 +8,7 @@ namespace HostedServices
 {
     public class CronService : IHostedService, IDisposable
     {
-        private System.Timers.Timer? _timer;
+        private System.Timers.Timer _timer;
         private readonly CronExpression _expression;
         private readonly TimeZoneInfo _timeZoneInfo;
 
