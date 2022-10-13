@@ -5,9 +5,9 @@ namespace DomainServices.Interfaces
 {
     public interface IPortfolioProductService
     {
-        Task CreateRelationAsync(Portfolio portfolio, Product product);
-        Task DeleteRelationAsync(Portfolio portfolio, Product product);
+        Task InitRelationAsync(Portfolio portfolio, Product product);
+        Task DisposeRelationAsync(Portfolio portfolio, Product product);
         Task<PortfolioProduct> GetByRelationAsync(long portfolioId, long productId);
-        bool RelationExists(long portfolioId, long productId);
+        bool RelationAlreadyExists(long portfolioId, long productId);
     }
 }

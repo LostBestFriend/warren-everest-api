@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace HostedServices
 {
-    public class CronService : IHostedService, IDisposable
+    public class CronJob : IHostedService, IDisposable
     {
         private System.Timers.Timer _timer;
         private readonly CronExpression _expression;
         private readonly TimeZoneInfo _timeZoneInfo;
 
-        public CronService(string cronExpression, TimeZoneInfo timeZoneInfo)
+        public CronJob(string cronExpression, TimeZoneInfo timeZoneInfo)
         {
             _expression = CronExpression.Parse(cronExpression);
             _timeZoneInfo = timeZoneInfo;

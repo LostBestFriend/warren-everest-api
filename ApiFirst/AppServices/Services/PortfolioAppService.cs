@@ -112,7 +112,7 @@ namespace AppServices.Services
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var product = await _productAppService.GetByIdAsync(productId).ConfigureAwait(false);
             var portfolio = await _portfolioService.GetByIdAsync(portfolioId).ConfigureAwait(false);
-            int availableQuotes = _orderAppService.GetAvailableQuotes(portfolioId, productId);
+            int availableQuotes = _orderAppService.GetQuotesAvaliable(portfolioId, productId);
 
             if (quotes > availableQuotes)
             {
@@ -131,9 +131,9 @@ namespace AppServices.Services
             transactionScope.Complete();
         }
 
-        public async Task ExecuteTodaysOrdersAsync()
+        public async Task ExecuteNowOrdersAsync()
         {
-            var orders = _orderAppService.GetOrdersToExecute();
+            var orders = _orderAppService.GetExecutableOrders();
 
             foreach (var order in orders)
             {
@@ -158,9 +158,9 @@ namespace AppServices.Services
             _portfolioService.ExecuteBuyOrder(order.NetValue, order.PortfolioId);
 
 
-            if (!_portfolioProductService.RelationExists(order.PortfolioId, order.ProductId))
+            if (!_portfolioProductService.RelationAlreadyExists(order.PortfolioId, order.ProductId))
             {
-                await _portfolioProductService.CreateRelationAsync(portfolio, product);
+                await _portfolioProductService.InitRelationAsync(portfolio, product);
             }
             transactionScope.Complete();
         }
@@ -174,11 +174,11 @@ namespace AppServices.Services
 
             _portfolioService.ExecuteSellOrder(order.NetValue, order.PortfolioId);
 
-            int availableQuotes = _orderAppService.GetAvailableQuotes(order.PortfolioId, order.ProductId);
+            int availableQuotes = _orderAppService.GetQuotesAvaliable(order.PortfolioId, order.ProductId);
 
             if (availableQuotes == 0)
             {
-                await _portfolioProductService.DeleteRelationAsync(portfolio, product);
+                await _portfolioProductService.DisposeRelationAsync(portfolio, product);
 
             }
             transactionScope.Complete();

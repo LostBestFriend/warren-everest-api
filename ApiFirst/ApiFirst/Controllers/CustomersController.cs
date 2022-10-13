@@ -96,7 +96,7 @@ namespace ApiFirst.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult Update(UpdateCustomer model)
         {
             try

@@ -51,7 +51,7 @@ namespace DomainServices.Services
             return order;
         }
 
-        public IList<Order> GetOrdersToExecute()
+        public IList<Order> GetExecutableOrders()
         {
             var repository = _unitOfWork.Repository<Order>();
 
@@ -82,7 +82,7 @@ namespace DomainServices.Services
             repository.Remove(order => order.Id == id);
         }
 
-        public int GetAvailableQuotes(long portfolioId, long productId)
+        public int GetQuotesAvaliable(long portfolioId, long productId)
         {
             var repository = _repositoryFactory.Repository<Order>();
 

@@ -18,7 +18,7 @@ namespace DomainServices.Services
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
-        public async Task CreateRelationAsync(Portfolio portfolio, Product product)
+        public async Task InitRelationAsync(Portfolio portfolio, Product product)
         {
             var repository = _unitOfWork.Repository<PortfolioProduct>();
 
@@ -27,7 +27,7 @@ namespace DomainServices.Services
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task DeleteRelationAsync(Portfolio portfolio, Product product)
+        public async Task DisposeRelationAsync(Portfolio portfolio, Product product)
         {
             var repository = _unitOfWork.Repository<PortfolioProduct>();
 
@@ -53,7 +53,7 @@ namespace DomainServices.Services
             return relation;
         }
 
-        public bool RelationExists(long portfolioId, long productId)
+        public bool RelationAlreadyExists(long portfolioId, long productId)
         {
             var repository = _repositoryFactory.Repository<PortfolioProduct>();
 
