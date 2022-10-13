@@ -3,7 +3,7 @@ using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace WebApi.Controllers
+namespace ApiFirst.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -60,7 +60,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateCustomerDTO model)
+        public IActionResult Create([FromBody] CreateCustomer model)
         {
             try
             {
@@ -96,33 +96,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(long id, UpdateCustomerDTO model)
+        public IActionResult Update(UpdateCustomer model)
         {
             try
             {
-                _customerAppServices.Update(id, model);
-                return Ok();
-            }
-            catch (ArgumentNullException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message);
-            }
-        }
-
-        [HttpPatch("{id}")]
-        public IActionResult UpdateEmail(long id, string email)
-        {
-            try
-            {
-                _customerAppServices.UpdateEmail(id, email);
+                _customerAppServices.Update(model);
                 return Ok();
             }
             catch (ArgumentNullException ex)

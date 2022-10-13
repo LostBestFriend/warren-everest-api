@@ -2,9 +2,9 @@
 
 namespace AppModels.AppModels
 {
-    public class CustomerResponseDTO
+    public class CustomerResponse
     {
-        public CustomerResponseDTO(
+        public CustomerResponse(
             long id,
             string fullName,
             string email,

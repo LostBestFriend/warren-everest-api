@@ -1,13 +1,13 @@
-﻿using AppModels.AppModels;
+using AppModels.AppModels;
 using FluentValidation;
 using System;
 using System.Linq;
 
 namespace AppServices.Validation
 {
-    public class CustomerCreateDTOValidator : AbstractValidator<CreateCustomerDTO>
+    public class CustomerUpdateValidator : AbstractValidator<UpdateCustomer>
     {
-        public CustomerCreateDTOValidator()
+        public CustomerUpdateValidator()
         {
             RuleFor(x => x.Cpf)
                 .NotEmpty()
@@ -17,7 +17,6 @@ namespace AppServices.Validation
 
             RuleFor(x => x.Email)
                 .EmailAddress()
-                .Equal(x => x.EmailConfirmation)
                 .MinimumLength(12)
                 .MaximumLength(50)
                 .NotEmpty();

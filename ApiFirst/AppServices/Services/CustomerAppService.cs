@@ -3,6 +3,7 @@ using AppServices.Interfaces;
 using AutoMapper;
 using DomainModels.Models;
 using DomainServices.Interfaces;
+using Infrastructure.CrossCutting.ExtensionMethods;
 using System;
 using System.Collections.Generic;
 
@@ -19,16 +20,17 @@ namespace AppServices.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public CustomerResponseDTO GetByCpf(string cpf)
+        public CustomerResponse GetByCpf(string cpf)
         {
+            cpf = cpf.FormatString();
             var result = _customerServices.GetByCpf(cpf);
-            return _mapper.Map<CustomerResponseDTO>(result);
+            return _mapper.Map<CustomerResponse>(result);
         }
 
-        public long Create(CreateCustomerDTO model)
+        public long Create(CreateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
-            return _customerServices.Create(mapped).Id;
+            return _customerServices.Create(mapped);
         }
 
         public void Delete(long id)
@@ -36,27 +38,22 @@ namespace AppServices.Services
             _customerServices.Delete(id);
         }
 
-        public IEnumerable<CustomerResponseDTO> GetAll()
+        public IEnumerable<CustomerResponse> GetAll()
         {
             var result = _customerServices.GetAll();
-            return _mapper.Map<IEnumerable<CustomerResponseDTO>>(result);
+            return _mapper.Map<IEnumerable<CustomerResponse>>(result);
         }
 
-        public CustomerResponseDTO GetById(long id)
+        public CustomerResponse GetById(long id)
         {
             var result = _customerServices.GetById(id);
-            return _mapper.Map<CustomerResponseDTO>(result);
+            return _mapper.Map<CustomerResponse>(result);
         }
 
-        public void Update(long id, UpdateCustomerDTO model)
+        public void Update(UpdateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);
             _customerServices.Update(mapped);
-        }
-
-        public void UpdateEmail(long id, string email)
-        {
-            _customerServices.UpdateEmail(id, email);
         }
     }
 }

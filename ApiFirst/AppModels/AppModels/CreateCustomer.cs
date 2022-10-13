@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Infrastructure.CrossCutting.ExtensionMethods;
+using System;
 
 namespace AppModels.AppModels
 {
-    public class UpdateCustomerDTO
+    public class CreateCustomer
     {
-        public UpdateCustomerDTO(
+        public CreateCustomer(
             string fullName,
             string email,
+            string emailConfirmation,
             string cpf,
             string cellphone,
             DateTime dateOfBirth,
@@ -21,20 +23,22 @@ namespace AppModels.AppModels
         {
             FullName = fullName;
             Email = email;
-            Cpf = cpf.Trim().Replace(".", "").Replace("-", "");
+            EmailConfirmation = emailConfirmation;
+            Cpf = cpf.FormatString();
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = postalCode;
+            PostalCode = postalCode.FormatString();
             Address = address;
             Number = number;
         }
 
         public string FullName { get; set; }
         public string Email { get; set; }
+        public string EmailConfirmation { get; set; }
         public string Cpf { get; set; }
         public string Cellphone { get; set; }
         public DateTime DateOfBirth { get; set; }

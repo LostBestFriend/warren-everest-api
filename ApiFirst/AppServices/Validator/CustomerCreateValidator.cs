@@ -1,13 +1,13 @@
-using AppModels.AppModels;
+﻿using AppModels.AppModels;
 using FluentValidation;
 using System;
 using System.Linq;
 
-namespace AppServices.Validation
+namespace AppServices.Validator
 {
-    public class CustomerUpdateDTOValidator : AbstractValidator<UpdateCustomerDTO>
+    public class CustomerCreateValidator : AbstractValidator<CreateCustomer>
     {
-        public CustomerUpdateDTOValidator()
+        public CustomerCreateValidator()
         {
             RuleFor(x => x.Cpf)
                 .NotEmpty()
@@ -17,14 +17,15 @@ namespace AppServices.Validation
 
             RuleFor(x => x.Email)
                 .EmailAddress()
+                .Equal(x => x.EmailConfirmation)
                 .MinimumLength(12)
                 .MaximumLength(50)
                 .NotEmpty();
 
             RuleFor(x => x.DateOfBirth)
-                .GreaterThan(DateTime.MinValue)
-                .LessThanOrEqualTo(DateTime.Now.AddYears(-18))
-                .NotEmpty();
+                .NotEmpty()
+                .LessThan(DateTime.Now.AddYears(-18))
+                .GreaterThan(DateTime.MinValue);
 
             RuleFor(x => x.FullName)
                 .NotEmpty()

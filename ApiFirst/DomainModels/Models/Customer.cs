@@ -1,3 +1,4 @@
+using Infrastructure.CrossCutting.ExtensionMethods;
 using System;
 
 namespace DomainModels.Models
@@ -21,14 +22,14 @@ namespace DomainModels.Models
         {
             FullName = fullName;
             Email = email;
-            Cpf = cpf.Trim().Replace(".", "").Replace("-", "");
+            Cpf = cpf.FormatString();
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = postalCode;
+            PostalCode = postalCode.FormatString();
             Address = address;
             Number = number;
         }
