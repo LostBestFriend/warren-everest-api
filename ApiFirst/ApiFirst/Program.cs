@@ -2,6 +2,7 @@ using AppServices.Interfaces;
 using AppServices.Services;
 using DomainServices.Interfaces;
 using DomainServices.Services;
+using DomainServices.Tests.Services;
 using EntityFrameworkCore.UnitOfWork.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -25,6 +26,7 @@ builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNa
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
+builder.Services.AddTransient<CustomerServiceTest>();
 builder.Services.AddTransient<ICustomerAppService, CustomerAppService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductAppService, ProductAppService>();
