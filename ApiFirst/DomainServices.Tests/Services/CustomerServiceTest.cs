@@ -1,7 +1,9 @@
 ﻿using DomainModels.Models;
-using DomainServices.Interfaces;
+using DomainServices.Services;
 using DomainServices.Tests.Fixtures;
+using EntityFrameworkCore.UnitOfWork.Interfaces;
 using FluentAssertions;
+using Infrastructure.Data.Context;
 using Moq;
 using System;
 using Xunit;
@@ -10,86 +12,104 @@ namespace DomainServices.Tests.Services
 {
     public class CustomerServiceTest
     {
-        readonly Mock<ICustomerService> _customerService;
+        readonly CustomerService _customerService;
+        readonly IUnitOfWork<WarrenContext> _unitOfWork;
+        readonly IRepositoryFactory<WarrenContext> _repositoryFactory;
+        readonly Mock<IRepositoryFactory<WarrenContext>> _repositoryFactoryMock;
+        readonly Mock<CustomerService> _customerServiceMock;
+        readonly Mock<IUnitOfWork<WarrenContext>> _unitOfWorkMock;
 
         public CustomerServiceTest()
         {
-            _customerService = new Mock<ICustomerService>();
+            _unitOfWorkMock = new Mock<IUnitOfWork<WarrenContext>>();
+            _unitOfWork = _unitOfWorkMock.Object;
+            _repositoryFactoryMock = new Mock<IRepositoryFactory<WarrenContext>>();
+            _repositoryFactory = _repositoryFactoryMock.Object;
+
+            _customerService = new CustomerService(_unitOfWork, _repositoryFactory);
+            _customerServiceMock = new Mock<CustomerService>();
         }
 
         [Fact]
         public async void Should_Create_SucessFully()
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
-            _customerService.Setup(p => p.CreateAsync(It.IsAny<Customer>())).ReturnsAsync(It.IsAny<long>());
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(custom => custom.Email == customer.Email)).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(custom => custom.Cpf == customer.Cpf)).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default));
+            _unitOfWorkMock.Setup(p => p.SaveChangesAsync(true, false, default));
 
-            var result = await _customerService.Object.CreateAsync(customer);
+
+            var result = await _customerService.CreateAsync(customer);
 
             result.Should().BeGreaterThanOrEqualTo(0);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Email == customer.Email), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Cpf == customer.Cpf), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChangesAsync(true, false, default), Times.Once);
         }
 
         [Fact]
         public async void Should_Not_Create_When_Cpf_Already_Exists()
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
-            customer.Cpf = "42713070848";
-            customer.Id = 0;
-            await _customerService.Object.CreateAsync(customer);
-
-            var customer2 = CustomerFixture.GenerateCustomerFixture();
-            customer2.Cpf = "";
-            customer2.Id = 1;
-            await _customerService.Object.CreateAsync(customer2);
-
-            customer2.Cpf = "42713070848";
-
-            ArgumentException e = new();
-            _customerService.Setup(p => p.CreateAsync(It.IsAny<Customer>())).Throws(e);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(custom => custom.Email == customer.Email)).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(custom => custom.Cpf == customer.Cpf)).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default));
+            _unitOfWorkMock.Setup(p => p.SaveChangesAsync(true, false, default));
 
             try
             {
-                await _customerService.Object.CreateAsync(customer2);
+                var result = await _customerService.CreateAsync(customer);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException e)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(e.Message);
             }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Email == customer.Email), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Cpf == customer.Cpf), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChangesAsync(true, false, default), Times.Never);
         }
 
         [Fact]
         public async void Should_Not_Create_When_Email_Already_Exists()
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
-            customer.Email = "a@g";
-            customer.Id = 0;
-            await _customerService.Object.CreateAsync(customer);
-
-            var customer2 = CustomerFixture.GenerateCustomerFixture();
-            customer2.Email = "";
-            customer2.Id = 1;
-            await _customerService.Object.CreateAsync(customer2);
-
-            customer2.Email = "a@g";
-            ArgumentException e = new();
-            _customerService.Setup(p => p.CreateAsync(It.IsAny<Customer>())).Throws(e);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(custom => custom.Email == customer.Email)).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(custom => custom.Cpf == customer.Cpf)).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default));
+            _unitOfWorkMock.Setup(p => p.SaveChangesAsync(true, false, default));
 
             try
             {
-                await _customerService.Object.CreateAsync(customer2);
+                var result = await _customerService.CreateAsync(customer);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException e)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(e.Message);
             }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Email == customer.Email), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Cpf == customer.Cpf), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChangesAsync(true, false, default), Times.Never);
         }
 
         [Fact]
         public void Should_Delete_SucessFully()
         {
-            long id = 1;
-            _customerService.Setup(p => p.Delete(It.IsAny<long>()));
+            var customer = CustomerFixture.GenerateCustomerFixture();
+            customer.Id = 1;
+            _customerService.CreateAsync(customer);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Remove(It.IsAny<Customer>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            _customerService.Object.Delete(id);
+            _customerService.Delete(customer.Id);
+
+            _unitOfWorkMock.Verify(P => P.Repository<Customer>().Remove(It.IsAny<Customer>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
         }
 
         [Fact]
@@ -97,11 +117,11 @@ namespace DomainServices.Tests.Services
         {
             long id = -1;
             ArgumentNullException e = new();
-            _customerService.Setup(p => p.Delete(It.IsAny<long>())).Throws(e);
+            _customerServiceMock.Setup(p => p.Delete(It.IsAny<long>())).Throws(e);
 
             try
             {
-                _customerService.Object.Delete(id);
+                _customerService.Delete(id);
             }
             catch (ArgumentNullException ex)
             {
@@ -113,9 +133,9 @@ namespace DomainServices.Tests.Services
         public void Should_GetAll_SucessFully()
         {
             var customer = CustomerFixture.GenerateCustomerFixture(It.IsAny<int>());
-            _customerService.Setup(p => p.GetAll()).Returns(customer);
+            _customerServiceMock.Setup(p => p.GetAll()).Returns(customer);
 
-            var customers = _customerService.Object.GetAll();
+            var customers = _customerService.GetAll();
 
             customers.Should().HaveCountGreaterThanOrEqualTo(0);
         }
@@ -124,11 +144,11 @@ namespace DomainServices.Tests.Services
         public async void Should_GetByCpf_SucessFully()
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
-            await _customerService.Object.CreateAsync(customer);
+            await _customerService.CreateAsync(customer);
             string cpf = "42713070848";
-            _customerService.Setup(p => p.GetByCpfAsync(It.IsAny<string>())).ReturnsAsync(It.IsAny<Customer>());
+            _customerServiceMock.Setup(p => p.GetByCpfAsync(It.IsAny<string>())).ReturnsAsync(It.IsAny<Customer>());
 
-            var customers = _customerService.Object.GetByCpfAsync(cpf);
+            var customers = _customerService.GetByCpfAsync(cpf);
 
             customers.Should().NotBeNull();
         }
@@ -138,11 +158,11 @@ namespace DomainServices.Tests.Services
         {
             string cpf = "";
             ArgumentException e = new();
-            _customerService.Setup(p => p.GetByCpfAsync(It.IsAny<string>())).Throws(e);
+            _customerServiceMock.Setup(p => p.GetByCpfAsync(It.IsAny<string>())).Throws(e);
 
             try
             {
-                await _customerService.Object.GetByCpfAsync(cpf);
+                await _customerService.GetByCpfAsync(cpf);
             }
             catch (ArgumentException ex)
             {
@@ -154,9 +174,9 @@ namespace DomainServices.Tests.Services
         public void Should_Update_Sucessfully()
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
-            _customerService.Setup(p => p.Update(It.IsAny<Customer>()));
+            _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>()));
 
-            _customerService.Object.Update(customer);
+            _customerService.Update(customer);
         }
 
         [Fact]
@@ -165,11 +185,11 @@ namespace DomainServices.Tests.Services
             var customer = CustomerFixture.GenerateCustomerFixture();
             customer.Id = -1;
             ArgumentNullException e = new();
-            _customerService.Setup(p => p.Update(It.IsAny<Customer>())).Throws(e);
+            _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>())).Throws(e);
 
             try
             {
-                _customerService.Object.Update(customer);
+                _customerService.Update(customer);
             }
             catch (ArgumentNullException ex)
             {
@@ -183,21 +203,21 @@ namespace DomainServices.Tests.Services
             var customer = CustomerFixture.GenerateCustomerFixture();
             customer.Cpf = "42713070848";
             customer.Id = 0;
-            await _customerService.Object.CreateAsync(customer);
+            await _customerService.CreateAsync(customer);
 
             var customer2 = CustomerFixture.GenerateCustomerFixture();
             customer2.Cpf = "";
             customer2.Id = 1;
-            await _customerService.Object.CreateAsync(customer2);
+            await _customerService.CreateAsync(customer2);
 
             customer2.Cpf = "42713070848";
 
             ArgumentException e = new();
-            _customerService.Setup(p => p.Update(It.IsAny<Customer>())).Throws(e);
+            _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>())).Throws(e);
 
             try
             {
-                _customerService.Object.Update(customer2);
+                _customerService.Update(customer2);
             }
             catch (ArgumentException ex)
             {
@@ -211,20 +231,20 @@ namespace DomainServices.Tests.Services
             var customer = CustomerFixture.GenerateCustomerFixture();
             customer.Email = "a@g";
             customer.Id = 0;
-            await _customerService.Object.CreateAsync(customer);
+            await _customerService.CreateAsync(customer);
 
             var customer2 = CustomerFixture.GenerateCustomerFixture();
             customer2.Email = "";
             customer2.Id = 1;
-            await _customerService.Object.CreateAsync(customer2);
+            await _customerService.CreateAsync(customer2);
 
             customer2.Email = "a@g";
             ArgumentException e = new();
-            _customerService.Setup(p => p.Update(It.IsAny<Customer>())).Throws(e);
+            _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>())).Throws(e);
 
             try
             {
-                _customerService.Object.Update(customer2);
+                _customerService.Update(customer2);
             }
             catch (ArgumentException ex)
             {
@@ -237,12 +257,12 @@ namespace DomainServices.Tests.Services
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
             customer.Id = 1;
-            await _customerService.Object.CreateAsync(customer);
+            await _customerService.CreateAsync(customer);
             long id = 1;
 
-            _customerService.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(It.IsAny<Customer>());
+            _customerServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(It.IsAny<Customer>());
 
-            var customers = _customerService.Object.GetByIdAsync(id);
+            var customers = _customerService.GetByIdAsync(id);
 
             customers.Should().NotBeNull();
         }
@@ -252,14 +272,14 @@ namespace DomainServices.Tests.Services
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
             customer.Id = 1;
-            await _customerService.Object.CreateAsync(customer);
+            await _customerService.CreateAsync(customer);
             long id = -1;
             ArgumentException e = new();
-            _customerService.Setup(p => p.GetByIdAsync(It.IsAny<long>())).Throws(e);
+            _customerServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).Throws(e);
 
             try
             {
-                await _customerService.Object.GetByIdAsync(id);
+                await _customerService.GetByIdAsync(id);
             }
             catch (ArgumentException ex)
             {
