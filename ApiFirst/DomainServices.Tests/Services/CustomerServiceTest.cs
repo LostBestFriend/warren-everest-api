@@ -261,37 +261,27 @@ namespace DomainServices.Tests.Services
         [Fact]
         public void Should_Not_Update_When_Cpf_Already_Exists()
         {
-            var customer = CustomerFixture.GenerateCustomerFixture();
-            customer.Cpf = "42713070848";
-            customer.Id = 0;
-            _customerService.CreateAsync(customer).Wait();
+            var custom = CustomerFixture.GenerateCustomerFixture();
 
-            var customer2 = CustomerFixture.GenerateCustomerFixture();
-            customer2.Cpf = "";
-            customer2.Id = 1;
-            _customerService.CreateAsync(customer2).Wait();
-
-            customer2.Cpf = "42713070848";
-
-            _unitOfWorkMock.Setup(p => !p.Repository<Customer>().Any(custom => custom.Id == It.IsAny<Customer>().Id)).Returns(false);
-            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(custom => custom.Email == It.IsAny<Customer>().Email && custom.Id != It.IsAny<Customer>().Id)).Returns(false);
-            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(custom => custom.Cpf == It.IsAny<Customer>().Cpf && It.IsAny<Customer>().Id != custom.Id)).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(customer => customer.Id == custom.Id)).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(customer => customer.Email == It.IsAny<Customer>().Email && customer.Id != It.IsAny<Customer>().Id)).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().Any(customer => customer.Cpf == It.IsAny<Customer>().Cpf && It.IsAny<Customer>().Id != customer.Id)).Returns(true);
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().Update(It.IsAny<Customer>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
             try
             {
-                _customerService.Update(customer2);
+                _customerService.Update(custom);
             }
             catch (ArgumentNullException e)
             {
                 Console.WriteLine(e.Message);
             }
 
-            _unitOfWorkMock.Verify(p => !p.Repository<Customer>().Any(custom => custom.Id == It.IsAny<Customer>().Id), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Email == It.IsAny<Customer>().Email && custom.Id != It.IsAny<Customer>().Id), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Cpf == It.IsAny<Customer>().Cpf && It.IsAny<Customer>().Id != custom.Id), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Update(It.IsAny<Customer>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(customer => customer.Id == custom.Id), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(customer => customer.Email == custom.Email && customer.Id != custom.Id), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(customer => customer.Cpf == It.IsAny<Customer>().Cpf && customer.Id != It.IsAny<Customer>().Id), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().Update(custom), Times.Never);
             _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
         }
 
