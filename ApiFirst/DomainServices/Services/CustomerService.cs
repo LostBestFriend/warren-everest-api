@@ -37,9 +37,13 @@ namespace DomainServices.Services
         public async void Delete(long id)
         {
             var repository = _unitOfWork.Repository<Customer>();
-            var customer = await GetByIdAsync(id);
+            var query = repository.SingleResultQuery().AndFilter(customer => customer.Id == id);
+            var response = await repository.FirstOrDefaultAsync(query).ConfigureAwait(false);
 
-            repository.Remove(customer);
+            if (response is null)
+                throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
+
+            repository.Remove(response);
             _unitOfWork.SaveChanges();
         }
 
@@ -79,8 +83,10 @@ namespace DomainServices.Services
         public async Task<Customer> GetByIdAsync(long id)
         {
             var repo = _repositoryFactory.Repository<Customer>();
-            var query = repo.SingleResultQuery().AndFilter(customer => customer.Id == id);
-            var response = await repo.FirstOrDefaultAsync(query).ConfigureAwait(false);
+            var query = repo.SingleResultQuery()
+                .AndFilter(customer => customer.Id == id);
+            var response = await repo.FirstOrDefaultAsync(query)
+                .ConfigureAwait(false);
 
             if (response is null)
                 throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");

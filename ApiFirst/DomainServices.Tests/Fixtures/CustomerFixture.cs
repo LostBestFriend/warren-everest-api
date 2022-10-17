@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using DomainModels.Models;
+using Moq;
 using System.Collections.Generic;
 
 namespace DomainServices.Tests.Fixtures
@@ -11,7 +12,7 @@ namespace DomainServices.Tests.Fixtures
             return new Faker<Customer>("en_US")
                 .CustomInstantiator(p => new Customer(cpf: "42713070848", country: "Los Angeles",
                 city: "America", cellphone: "1234566", whatsapp: false, emailSms: false, email:
-                "a@g", number: 123456789, address: "axes", fullName: "Rob",
+                "a@g", number: It.IsAny<int>(), address: "axes", fullName: "Rob",
                 dateOfBirth: System.DateTime.Now.AddYears(-18), postalCode: "89035360"))
                 .Generate(quantity);
         }
@@ -20,7 +21,7 @@ namespace DomainServices.Tests.Fixtures
             return new Faker<Customer>("en_US")
                 .CustomInstantiator(p => new Customer(cpf: "42713070848", country: "Los Angeles",
                 city: "America", cellphone: "1234566", whatsapp: false, emailSms: false, email:
-                "a@g", number: 123456789, address: "axes", fullName: "Rob",
+                "a@g", number: It.IsAny<int>(), address: "axes", fullName: "Rob",
                 dateOfBirth: System.DateTime.Now.AddYears(-18), postalCode: "89035360"))
                 .Generate();
         }
