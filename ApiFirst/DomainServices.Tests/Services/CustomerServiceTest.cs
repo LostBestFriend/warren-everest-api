@@ -1,6 +1,7 @@
 ﻿using DomainModels.Models;
 using DomainServices.Services;
 using DomainServices.Tests.Fixtures;
+using EntityFrameworkCore.QueryBuilder;
 using EntityFrameworkCore.QueryBuilder.Interfaces;
 using EntityFrameworkCore.UnitOfWork.Interfaces;
 using FluentAssertions;
@@ -87,21 +88,16 @@ namespace DomainServices.Tests.Services
         {
             long id = 1;
             var customer = CustomerFixture.GenerateCustomerFixture();
-            ISingleResultQuery<Customer> singleQuery = _unitOfWork.Repository<Customer>().SingleResultQuery();
 
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().Remove(It.IsAny<Customer>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
-            _unitOfWorkMock.Setup(p => p.Repository<Customer>().SingleResultQuery()).Returns(singleQuery);
-            _unitOfWorkMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(singleQuery);
-            _unitOfWorkMock.Setup(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>())).Returns(customer);
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).ReturnsAsync(customer);
 
             _customerService.Delete(id);
 
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Remove(It.IsAny<Customer>()), Times.Once);
             _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Customer>().SingleResultQuery(), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default), Times.Once);
         }
 
         [Fact]
@@ -109,10 +105,7 @@ namespace DomainServices.Tests.Services
         {
             long id = 1;
             var customer = CustomerFixture.GenerateCustomerFixture();
-            ISingleResultQuery<Customer> singleQuery = _unitOfWork.Repository<Customer>().SingleResultQuery();
 
-            _unitOfWorkMock.Setup(p => p.Repository<Customer>().SingleResultQuery()).Returns(singleQuery);
-            _unitOfWorkMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(singleQuery);
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>())).Returns(customer);
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().Remove(It.IsAny<Customer>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
@@ -126,8 +119,6 @@ namespace DomainServices.Tests.Services
                 Console.WriteLine(e.Message);
             }
 
-            _unitOfWorkMock.Verify(p => p.Repository<Customer>().SingleResultQuery(), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>()), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Remove(It.IsAny<Customer>()), Times.Never);
             _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
@@ -136,15 +127,12 @@ namespace DomainServices.Tests.Services
         [Fact]
         public void Should_GetAll_SucessFully()
         {
-            IMultipleResultQuery<Customer> multipleQuery = _unitOfWork.Repository<Customer>().MultipleResultQuery();
             List<Customer> customerList = CustomerFixture.GenerateCustomerFixture(2);
 
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().MultipleResultQuery()).Returns(multipleQuery);
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().Search(It.IsAny<IMultipleResultQuery<Customer>>())).Returns(customerList);
 
             var customers = _customerService.GetAll();
 
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().MultipleResultQuery(), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().Search(It.IsAny<IMultipleResultQuery<Customer>>()), Times.Once);
 
             customers.Should().HaveCountGreaterThanOrEqualTo(0);
@@ -155,17 +143,12 @@ namespace DomainServices.Tests.Services
         {
             var cpf = "42713070848";
             var customer = CustomerFixture.GenerateCustomerFixture();
-            ISingleResultQuery<Customer> singleQuery = _unitOfWork.Repository<Customer>().SingleResultQuery();
 
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery()).Returns(singleQuery);
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(singleQuery);
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>())).Returns(customer);
+            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).ReturnsAsync(customer);
 
             var customers = _customerService.GetByCpfAsync(cpf);
 
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery(), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default), Times.Once);
 
             customers.Should().NotBeNull();
         }
@@ -175,8 +158,9 @@ namespace DomainServices.Tests.Services
         {
             var cpf = "42713070848";
             var customer = CustomerFixture.GenerateCustomerFixture();
+            ArgumentNullException excnull = new();
 
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>())).Returns(customer);
+            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).Throws(excnull);
 
             try
             {
@@ -188,7 +172,7 @@ namespace DomainServices.Tests.Services
                 Console.WriteLine(e.Message);
             }
 
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default), Times.Once);
         }
 
         [Fact]
@@ -322,17 +306,12 @@ namespace DomainServices.Tests.Services
         {
             var id = 1;
             var customer = CustomerFixture.GenerateCustomerFixture();
-            ISingleResultQuery<Customer> singleQuery = _unitOfWork.Repository<Customer>().SingleResultQuery();
 
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery()).Returns(singleQuery);
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(singleQuery);
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>())).Returns(customer);
+            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).ReturnsAsync(customer);
 
             var customers = _customerService.GetByIdAsync(id);
 
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery(), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default), Times.Once);
 
             customers.Should().NotBeNull();
         }
@@ -342,11 +321,8 @@ namespace DomainServices.Tests.Services
         {
             var id = 0;
             var customer = CustomerFixture.GenerateCustomerFixture();
-            ISingleResultQuery<Customer> singleQuery = _unitOfWork.Repository<Customer>().SingleResultQuery();
 
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery()).Returns(singleQuery);
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(singleQuery);
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>())).Returns(customer);
+            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<SingleResultQuery<Customer>>())).Returns(customer);
 
             try
             {
@@ -358,10 +334,7 @@ namespace DomainServices.Tests.Services
                 Console.WriteLine(e.Message);
             }
 
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery(), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<IQuery<Customer>>()), Times.Once);
-
+            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefault(It.IsAny<SingleResultQuery<Customer>>()), Times.Once);
         }
     }
 }
