@@ -22,16 +22,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
-    <Folder Include="Validator\Customer\" />
-    <Folder Include="Validator\Product\" />
-    <Folder Include="Validator\Portfolio\" />
-    <Folder Include="Validator\Order\" />
+    <ProjectReference Include="..\AppServices\AppServices.csproj" />
+    <ProjectReference Include="..\DomainServices.Tests\DomainServices.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppServices\AppServices.csproj" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Profiles\" />
+    <Folder Include="Validator\" />
   </ItemGroup>
 
 </Project>
