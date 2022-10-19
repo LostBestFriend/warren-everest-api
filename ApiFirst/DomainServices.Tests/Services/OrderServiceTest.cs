@@ -83,6 +83,7 @@ namespace DomainServices.Tests.Services
         public void Should_GetExecutableOrders()
         {
             var orders = OrderFixture.GenerateOrderFixture(3);
+
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>())).Returns(It.IsAny<IQuery<Order>>());
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>())).Returns(orders);
 
@@ -91,6 +92,71 @@ namespace DomainServices.Tests.Services
 
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Update_Sucessfully()
+        {
+            var order = OrderFixture.GenerateOrderFixture();
+            _unitOfWorkMock.Setup(P => P.Repository<Order>().Update(It.IsAny<Order>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            _orderService.Update(order);
+
+            _unitOfWorkMock.Verify(P => P.Repository<Order>().Update(It.IsAny<Order>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Delete_Sucessfully()
+        {
+            long id = 1;
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Any(It.IsAny<Expression<Func<Order, bool>>>())).Returns(true);
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Remove(It.IsAny<Expression<Func<Order, bool>>>()));
+
+            _orderService.Delete(id);
+
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Remove(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Not_Delete_When_Id_Dismatch()
+        {
+            long id = 0;
+
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Any(It.IsAny<Expression<Func<Order, bool>>>())).Returns(false);
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Remove(It.IsAny<Expression<Func<Order, bool>>>()));
+
+            try
+            {
+                _orderService.Delete(id);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Remove(It.IsAny<Expression<Func<Order, bool>>>()), Times.Never);
+        }
+
+        [Fact]
+        public void Should_GetQuotesAvaliable()
+        {
+            long portfolioId = 1;
+            long productId = 1;
+
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>())).Returns(It.IsAny<IQuery<Order>>());
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()));
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Any(null)).Returns(true);
+
+            var result = _orderService.GetQuotesAvaliable(portfolioId, productId);
+            result.Should().BeGreaterThanOrEqualTo(0);
+
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(null), Times.Once);
         }
     }
 }
