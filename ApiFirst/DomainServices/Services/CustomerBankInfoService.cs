@@ -46,7 +46,7 @@ namespace DomainServices.Services
             var bankInfo = repository.FirstOrDefault(query);
 
             if (bankInfo is null)
-                throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");
+                throw new ArgumentNullException($"Cliente não encontrado para o id {customerId}");
 
             bankInfo.AccountBalance += amount;
             repository.Update(bankInfo, bankinfo => bankinfo.AccountBalance);
