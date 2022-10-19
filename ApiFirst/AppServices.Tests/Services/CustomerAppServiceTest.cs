@@ -31,7 +31,7 @@ namespace AppServices.Tests.Services
         [Fact]
         public async void Should_Create_SucessFully()
         {
-            var customer = CreateCustomerFixture.GenerateCustomerFixture();
+            var customer = CreateCustomerFixture.GenerateCreateCustomerFixture();
             Customer custom = CustomerFixture.GenerateCustomerFixture();
             long id = 1;
 
@@ -51,7 +51,7 @@ namespace AppServices.Tests.Services
         [Fact]
         public async void Should_Not_Create_When_Cpf_Or_Email_Already_Exists()
         {
-            var customer = CreateCustomerFixture.GenerateCustomerFixture();
+            var customer = CreateCustomerFixture.GenerateCreateCustomerFixture();
             Customer custom = CustomerFixture.GenerateCustomerFixture();
             long id = 1;
             ArgumentException exc = new();
@@ -110,7 +110,7 @@ namespace AppServices.Tests.Services
         [Fact]
         public void Should_GetAll_SucessFully()
         {
-            var customer = CustomerResponseFixture.GenerateCustomerFixture(3);
+            var customer = CustomerResponseFixture.GenerateCustomerResponseFixture(3);
             var customers1 = new List<Customer>();
 
             _customerServiceMock.Setup(p => p.GetAll()).Returns(customers1);
@@ -129,7 +129,7 @@ namespace AppServices.Tests.Services
         {
             var cpf = "42713070848";
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var customerResponse = CustomerResponseFixture.GenerateCustomerFixture();
+            var customerResponse = CustomerResponseFixture.GenerateCustomerResponseFixture();
 
             _customerServiceMock.Setup(p => p.GetByCpfAsync(It.IsAny<string>())).ReturnsAsync(customer);
             _mapperMock.Setup(p => p.Map<CustomerResponse>(It.IsAny<Customer>())).Returns(customerResponse);
@@ -147,7 +147,7 @@ namespace AppServices.Tests.Services
         {
             var cpf = "42713070848";
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var customerResponse = CustomerResponseFixture.GenerateCustomerFixture();
+            var customerResponse = CustomerResponseFixture.GenerateCustomerResponseFixture();
             ArgumentNullException excnull = new();
 
             _customerServiceMock.Setup(p => p.GetByCpfAsync(It.IsAny<string>())).Throws(excnull);
@@ -172,7 +172,7 @@ namespace AppServices.Tests.Services
         public void Should_Update_Sucessfully()
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var UpdateCustomer = UpdateCustomerFixture.GenerateCustomerFixture();
+            var UpdateCustomer = UpdateCustomerFixture.GenerateUpdateCustomerFixture();
 
             _mapperMock.Setup(p => p.Map<Customer>(It.IsAny<UpdateCustomer>())).Returns(customer);
             _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>()));
@@ -187,7 +187,7 @@ namespace AppServices.Tests.Services
         public void Should_Not_Update_When_Id_Dismatch()
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var UpdateCustomer = UpdateCustomerFixture.GenerateCustomerFixture();
+            var UpdateCustomer = UpdateCustomerFixture.GenerateUpdateCustomerFixture();
             ArgumentNullException excnull = new();
 
             _mapperMock.Setup(p => p.Map<Customer>(It.IsAny<UpdateCustomer>())).Returns(customer);
@@ -210,7 +210,7 @@ namespace AppServices.Tests.Services
         public void Should_Not_Update_When_Cpf_Or_Email_Already_Exists()
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var UpdateCustomer = UpdateCustomerFixture.GenerateCustomerFixture();
+            var UpdateCustomer = UpdateCustomerFixture.GenerateUpdateCustomerFixture();
             ArgumentException exc = new();
 
             _mapperMock.Setup(p => p.Map<Customer>(It.IsAny<UpdateCustomer>())).Returns(customer);
@@ -234,7 +234,7 @@ namespace AppServices.Tests.Services
         {
             var id = 1;
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var customerResponse = CustomerResponseFixture.GenerateCustomerFixture();
+            var customerResponse = CustomerResponseFixture.GenerateCustomerResponseFixture();
 
             _customerServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(customer);
             _mapperMock.Setup(p => p.Map<CustomerResponse>(It.IsAny<Customer>())).Returns(customerResponse);
@@ -252,7 +252,7 @@ namespace AppServices.Tests.Services
         {
             var id = 1;
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var customerResponse = CustomerResponseFixture.GenerateCustomerFixture();
+            var customerResponse = CustomerResponseFixture.GenerateCustomerResponseFixture();
             ArgumentNullException excnull = new();
 
             _customerServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).Throws(excnull);

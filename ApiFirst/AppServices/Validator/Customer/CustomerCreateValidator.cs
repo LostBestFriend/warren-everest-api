@@ -107,7 +107,7 @@ namespace AppServices.Validator.Customer
                 }
                 digito = resto.ToString();
 
-                tempCpf = tempCpf + digito;
+                tempCpf += digito;
 
                 soma = 0;
                 for (int i = 0; i < 10; i++)

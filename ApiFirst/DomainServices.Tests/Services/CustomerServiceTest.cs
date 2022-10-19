@@ -98,14 +98,13 @@ namespace DomainServices.Tests.Services
         [Fact]
         public void Should_Not_Delete_When_Id_Doesnt_Exist()
         {
-            long id = 0;
+            long id = 1;
             var customer = CustomerFixture.GenerateCustomerFixture();
-            ArgumentNullException excnull = new();
 
-            _unitOfWorkMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(It.IsAny<IQuery<Customer>>());
-            _unitOfWorkMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).Throws(excnull);
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().Remove(It.IsAny<Customer>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(It.IsAny<IQuery<Customer>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default));
 
             try
             {
@@ -117,9 +116,9 @@ namespace DomainServices.Tests.Services
             }
 
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Remove(It.IsAny<Customer>()), Times.Never);
             _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default), Times.Once);
         }
 
         [Fact]
@@ -158,10 +157,9 @@ namespace DomainServices.Tests.Services
         {
             var cpf = "42713070848";
             var customer = CustomerFixture.GenerateCustomerFixture();
-            ArgumentNullException excnull = new();
 
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(It.IsAny<IQuery<Customer>>());
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).Throws(excnull);
+            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).Throws(new ArgumentNullException());
 
             try
             {

@@ -5,6 +5,16 @@ namespace AppModels.AppModels.Product
 {
     public class UpdateProduct
     {
+        public UpdateProduct(string symbol, decimal unitPrice, DateTime issuanceAt, DateTime expirationAt, ProductEnum type)
+        {
+            Symbol = symbol;
+            UnitPrice = unitPrice;
+            IssuanceAt = issuanceAt;
+            ExpirationAt = expirationAt;
+            DaysToExpire = expirationAt.Subtract(issuanceAt).Days;
+            Type = type;
+        }
+
         public string Symbol { get; set; }
         public decimal UnitPrice { get; set; }
         public DateTime IssuanceAt { get; set; }

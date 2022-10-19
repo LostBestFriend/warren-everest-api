@@ -5,6 +5,15 @@ namespace AppModels.AppModels.Product
 {
     public class CreateProduct
     {
+        public CreateProduct(string symbol, decimal unitPrice, DateTime issuanceAt, DateTime expirationAt, ProductEnum type)
+        {
+            Symbol = symbol;
+            UnitPrice = unitPrice;
+            IssuanceAt = issuanceAt;
+            ExpirationAt = expirationAt;
+            Type = type;
+        }
+
         public string Symbol { get; set; }
         public decimal UnitPrice { get; set; }
         public DateTime IssuanceAt { get; set; }

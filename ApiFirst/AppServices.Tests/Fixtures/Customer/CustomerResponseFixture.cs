@@ -8,7 +8,7 @@ namespace AppServices.Tests.Fixtures.Customer
 {
     public class CustomerResponseFixture
     {
-        public static List<CustomerResponse> GenerateCustomerFixture(int quantity)
+        public static List<CustomerResponse> GenerateCustomerResponseFixture(int quantity)
         {
             return new Faker<CustomerResponse>("en_US")
                 .CustomInstantiator(p => new CustomerResponse(id: 1, cpf: p.Person.Cpf(false), country: p.Address.Country(),
@@ -17,7 +17,7 @@ namespace AppServices.Tests.Fixtures.Customer
                 dateOfBirth: p.Date.BetweenDateOnly(DateOnly.FromDateTime(DateTime.Now), DateOnly.FromDateTime(DateTime.Now.AddYears(-18))).ToDateTime(TimeOnly.FromDateTime(DateTime.Now)), postalCode: p.Address.ZipCode()))
                 .Generate(quantity);
         }
-        public static CustomerResponse GenerateCustomerFixture()
+        public static CustomerResponse GenerateCustomerResponseFixture()
         {
             return new Faker<CustomerResponse>("en_US")
                 .CustomInstantiator(p => new CustomerResponse(id: 1, cpf: p.Person.Cpf(false), country: p.Address.Country(),
