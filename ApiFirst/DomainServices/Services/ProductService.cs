@@ -67,12 +67,5 @@ namespace DomainServices.Services
 
             repository.Remove(product => product.Id == id);
         }
-
-        public void AddPortfolio(long productId, long portfolioId)
-        {
-            var repository = _unitOfWork.Repository<Product>();
-            var query = repository.SingleResultQuery().AndFilter(product => product.Id == productId);
-            var product = repository.SingleOrDefault(query);
-        }
     }
 }

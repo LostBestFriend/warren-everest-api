@@ -22,5 +22,6 @@ namespace DomainModels.Models
         public ICollection<Order> Orders { get; set; }
         public ICollection<PortfolioProduct> PortfolioProducts { get; set; }
         protected Portfolio() { }
+
     }
 }

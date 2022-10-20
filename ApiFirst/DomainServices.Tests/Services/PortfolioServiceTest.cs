@@ -150,6 +150,509 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleOrDefaultAsync(It.IsAny<IQuery<Portfolio>>(), default), Times.Once);
         }
 
+        [Fact]
+        public void Should_Deposit_Sucessfully()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            long portfolioId = 1;
+            decimal amount = 100;
 
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            _portfolioService.Deposit(amount, portfolioId);
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Not_Deposit_When_Id_Dismatch()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.Deposit(amount, portfolioId);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_DepositAccountBalance_Sucessfully()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            _portfolioService.DepositAccountBalance(amount, portfolioId);
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Not_DepositAccountBalance_When_Id_Dismatch()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.DepositAccountBalance(amount, portfolioId);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_Not_DepositAccountBalance_When_Balance_Is_Lesser_Than_Amount()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            long portfolioId = 1;
+            decimal amount = 10000;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.DepositAccountBalance(amount, portfolioId);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_Withdraw_Sucessfully()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            _portfolioService.Withdraw(amount, portfolioId);
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Not_Withdraw_When_Id_Dismatch()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.Withdraw(amount, portfolioId);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_Not_Withdraw_When_Balance_Is_Lesser_Than_Amount()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            long portfolioId = 1;
+            decimal amount = 10000;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false)); _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+
+            try
+            {
+                _portfolioService.Withdraw(amount, portfolioId);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_WithdrawAccountBalance_Sucessfully()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            _portfolioService.WithdrawAccountBalance(amount, portfolioId);
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Not_WithdrawAccountBalance_When_Id_Dismatch()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.WithdrawAccountBalance(amount, portfolioId);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_Not_WithdrawAccountBalance_When_Balance_Is_Lesser_Than_Amount()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            long portfolioId = 1;
+            decimal amount = 10000;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.WithdrawAccountBalance(amount, portfolioId);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_ExecuteSellOrder_Sucessfully()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            _portfolioService.ExecuteSellOrder(amount, portfolioId);
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Not_ExecuteSellOrder_When_Id_Dismatch()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.ExecuteSellOrder(amount, portfolioId);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_ExecuteBuyOrder_Sucessfully()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            _portfolioService.ExecuteBuyOrder(amount, portfolioId);
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Not_ExecuteBuyOrder_When_Id_Dismatch()
+        {
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+            long portfolioId = 1;
+            decimal amount = 100;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(false);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.ExecuteBuyOrder(amount, portfolioId);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_Delete_Sucessfully()
+        {
+            long portfolioId = 1;
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 0;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            _portfolioService.Delete(portfolioId);
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Not_Delete_When_Id_Dismatch()
+        {
+            long portfolioId = 1;
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 0;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()));
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.Delete(portfolioId);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_Not_Delete_When_Balance_Is_Greater_Than_Zero()
+        {
+            long portfolioId = 1;
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 1000;
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.Delete(portfolioId);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
+
+        [Fact]
+        public void Should_Not_Delete_When_Products_Isnt_Null()
+        {
+            long portfolioId = 1;
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+            portfolio.AccountBalance = 0;
+            portfolio.Products = ProductFixture.GenerateProductFixture(3);
+
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>())).Returns(portfolio);
+            _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()));
+            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
+
+            try
+            {
+                _portfolioService.Delete(portfolioId);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().SingleOrDefault(It.IsAny<IQuery<Portfolio>>()), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()), Times.Never);
+            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
+        }
     }
 }
