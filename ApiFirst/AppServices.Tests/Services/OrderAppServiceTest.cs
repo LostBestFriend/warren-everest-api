@@ -57,12 +57,80 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetByIdAsync_Sucessfully()
+        public async void Should_GetByIdAsync_Sucessfully()
         {
             var orderId = 1;
             var orderResponse = OrderResponseFixture.GenerateOrderResponseFixture();
+            var order = OrderFixture.GenerateOrderFixture();
 
-            _orderServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>()));
+            _orderServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(order);
+            _mapperMock.Setup(p => p.Map<OrderResponse>(It.IsAny<Order>())).Returns(orderResponse);
+
+            var result = await _orderAppService.GetByIdAsync(orderId);
+
+            result.Should().NotBeNull();
+
+            _orderServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+            _mapperMock.Verify(p => p.Map<OrderResponse>(It.IsAny<Order>()), Times.Once);
+        }
+
+        [Fact]
+        public void Should_GetQuotesAvaliable_Sucessfully()
+        {
+            long portfolioId = 1;
+            long productId = 1;
+            int quantity = 1;
+
+            _orderServiceMock.Setup(p => p.GetQuotesAvaliable(It.IsAny<long>(), It.IsAny<long>())).Returns(quantity);
+
+            var result = _orderAppService.GetQuotesAvaliable(portfolioId, productId);
+            result.Should().BeGreaterThanOrEqualTo(0);
+
+            _orderServiceMock.Verify(p => p.GetQuotesAvaliable(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
+        }
+
+        [Fact]
+        public void Should_GetExecutableOrders_Sucessfully()
+        {
+            var orders = OrderFixture.GenerateOrderFixture(3);
+            var ordersResponse = OrderResponseFixture.GenerateOrderResponseFixture(3);
+
+            _orderServiceMock.Setup(p => p.GetExecutableOrders()).Returns(orders);
+            _mapperMock.Setup(p => p.Map<IEnumerable<OrderResponse>>(orders));
+
+            var result = _orderAppService.GetExecutableOrders();
+            result.Should().NotBeNull();
+
+            _orderServiceMock.Verify(p => p.GetExecutableOrders(), Times.Once);
+            _mapperMock.Verify(p => p.Map<IEnumerable<OrderResponse>>(orders), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Update_Sucessfully()
+        {
+            var updateOrder = UpdateOrderFixture.GenerateUpdateOrderFixture();
+            long id = 1;
+            var order = OrderFixture.GenerateOrderFixture();
+
+            _orderServiceMock.Setup(p => p.Update(It.IsAny<Order>()));
+            _mapperMock.Setup(p => p.Map<Order>(It.IsAny<UpdateOrder>())).Returns(order);
+
+            _orderAppService.Update(id, updateOrder);
+
+            _orderServiceMock.Verify(p => p.Update(It.IsAny<Order>()), Times.Once);
+            _mapperMock.Verify(p => p.Map<Order>(It.IsAny<UpdateOrder>()), Times.Once);
+        }
+
+        [Fact]
+        public void Should_Delete_Sucessfully()
+        {
+            long id = 1;
+
+            _orderServiceMock.Setup(p => p.Delete(It.IsAny<long>()));
+
+            _orderAppService.Delete(id);
+
+            _orderServiceMock.Verify(p => p.Delete(It.IsAny<long>()), Times.Once);
         }
     }
 }

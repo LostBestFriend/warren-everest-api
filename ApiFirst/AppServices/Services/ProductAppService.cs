@@ -21,6 +21,7 @@ namespace AppServices.Services
             _productService = productServices ??
                 throw new ArgumentNullException(nameof(productServices));
         }
+
         public IEnumerable<ProductResponse> GetAll()
         {
             var result = _productService.GetAll();

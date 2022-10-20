@@ -55,7 +55,7 @@ namespace AppServices.Services
 
         public void Update(long id, UpdateOrder model)
         {
-            Order order = _mapper.Map<Order>(model);
+            var order = _mapper.Map<Order>(model);
             _orderServices.Update(order);
         }
 
