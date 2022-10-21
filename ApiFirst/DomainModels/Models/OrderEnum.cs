@@ -3,6 +3,6 @@
     public enum OrderEnum
     {
         Buy = 1,
-        Sell = 2,
+        Sell = 2
     }
 }
