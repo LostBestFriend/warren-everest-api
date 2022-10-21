@@ -93,7 +93,7 @@ namespace AppServices.Services
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var product = await _productAppService.GetByIdAsync(productId);
             var order = new CreateOrder(quotes, product.UnitPrice,
-                                        liquidateAt, AppModels.EnumModels.OrderEnum.Buy, productId, portfolioId);
+                                        liquidateAt, AppModels.EnumModels.OrderDirection.Buy, productId, portfolioId);
             var orderId = await _orderAppService.CreateAsync(order).ConfigureAwait(false);
 
             if (GetAccountBalance(portfolioId) < order.NetValue)
@@ -118,7 +118,7 @@ namespace AppServices.Services
                 throw new ArgumentException("A quantidade de cotas informada é maior do que as cotas existentes na carteira");
 
             var createOrder = new CreateOrder(quotes, product.UnitPrice,
-                                        liquidateAt, AppModels.EnumModels.OrderEnum.Sell, productId, portfolioId);
+                                        liquidateAt, AppModels.EnumModels.OrderDirection.Sell, productId, portfolioId);
             var orderId = await _orderAppService.CreateAsync(createOrder).ConfigureAwait(false);
 
             if (DateTime.Now.Date >= liquidateAt.Date)
@@ -135,7 +135,7 @@ namespace AppServices.Services
 
             foreach (var order in orders)
             {
-                if (order.Direction == AppModels.EnumModels.OrderEnum.Buy)
+                if (order.Direction == AppModels.EnumModels.OrderDirection.Buy)
                 {
                     await ExecuteBuyOrderAsync(order);
                 }

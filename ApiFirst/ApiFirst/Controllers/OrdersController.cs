@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Order;
+﻿using AppModels.AppModels.Orders;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;

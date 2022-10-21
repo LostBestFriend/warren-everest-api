@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Portfolio;
+﻿using AppModels.AppModels.Portfolios;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;

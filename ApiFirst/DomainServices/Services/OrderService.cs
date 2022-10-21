@@ -91,7 +91,7 @@ namespace DomainServices.Services
 
             foreach (var order in allOrders)
             {
-                availableQuotes = order.Direction == OrderEnum.Buy ?
+                availableQuotes = order.Direction == OrderDirection.Buy ?
                     availableQuotes += order.Quotes :
                     availableQuotes -= order.Quotes;
             }

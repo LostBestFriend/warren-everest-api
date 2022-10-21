@@ -1,5 +1,5 @@
-﻿using AppModels.AppModels.Order;
-using AppModels.AppModels.Portfolio;
+﻿using AppModels.AppModels.Orders;
+using AppModels.AppModels.Portfolios;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
