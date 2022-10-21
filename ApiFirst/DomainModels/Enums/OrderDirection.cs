@@ -1,4 +1,4 @@
-﻿namespace DomainModels.Models.Enums
+﻿namespace DomainModels.Enums
 {
     public enum OrderDirection
     {

@@ -1,7 +1,7 @@
 ﻿using AppModels.AppModels.Orders;
 using FluentValidation;
 
-namespace AppServices.Validator.Order
+namespace AppServices.Validator.Orders
 {
     public class CreateOrderValidator : AbstractValidator<CreateOrder>
     {
