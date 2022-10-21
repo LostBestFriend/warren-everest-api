@@ -6,6 +6,6 @@
         Trade = 2,
         Funds = 3,
         Fii = 4,
-        Crypto = 5,
+        Crypto = 5
     }
 }
