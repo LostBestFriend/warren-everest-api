@@ -63,6 +63,7 @@ namespace DomainServices.Services
 
             if (response is null)
                 throw new ArgumentNullException($"Não foi encontrado Customer para o CPF: {cpf}");
+
             return response;
         }
 
