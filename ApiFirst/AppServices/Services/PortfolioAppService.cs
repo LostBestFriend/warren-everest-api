@@ -155,7 +155,6 @@ namespace AppServices.Services
 
             _portfolioService.ExecuteBuyOrder(order.NetValue, order.PortfolioId);
 
-
             if (!_portfolioProductService.RelationAlreadyExists(order.PortfolioId, order.ProductId))
             {
                 await _portfolioProductService.InitRelationAsync(portfolio, product);
