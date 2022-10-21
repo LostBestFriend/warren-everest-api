@@ -1,5 +1,4 @@
-﻿using AppModels.AppModels.Customer;
-using AppServices.Services;
+﻿using AppServices.Services;
 using AppServices.Tests.Fixtures.Customer;
 using AutoMapper;
 using DomainModels.Models;
@@ -17,13 +16,12 @@ namespace AppServices.Tests.Services
     {
         private readonly CustomerAppService _customerAppService;
         private readonly Mock<ICustomerService> _customerServiceMock;
-        private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ICustomerBankInfoService> _customerBankInfoServiceMock;
 
         public CustomerAppServiceTest()
         {
             _customerServiceMock = new();
-            _mapperMock = new();
+            Mock<IMapper> _mapperMock = new();
             _customerBankInfoServiceMock = new();
             _customerAppService = new CustomerAppService(_customerBankInfoServiceMock.Object, _customerServiceMock.Object, _mapperMock.Object);
         }
@@ -35,7 +33,6 @@ namespace AppServices.Tests.Services
             Customer custom = CustomerFixture.GenerateCustomerFixture();
             long id = 1;
 
-            _mapperMock.Setup(p => p.Map<Customer>(It.IsAny<CreateCustomer>())).Returns(custom);
             _customerServiceMock.Setup(p => p.CreateAsync(It.IsAny<Customer>())).ReturnsAsync(id);
             _customerBankInfoServiceMock.Setup(p => p.Create(id));
 
@@ -43,7 +40,6 @@ namespace AppServices.Tests.Services
 
             idResult.Should().BeGreaterThanOrEqualTo(1);
 
-            _mapperMock.Verify(p => p.Map<Customer>(It.IsAny<CreateCustomer>()), Times.Once);
             _customerServiceMock.Verify(p => p.CreateAsync(It.IsAny<Customer>()), Times.Once);
             _customerBankInfoServiceMock.Verify(p => p.Create(id), Times.Once);
         }
@@ -56,7 +52,6 @@ namespace AppServices.Tests.Services
             long id = 1;
             ArgumentException exc = new();
 
-            _mapperMock.Setup(p => p.Map<Customer>(It.IsAny<CreateCustomer>())).Returns(custom);
             _customerServiceMock.Setup(p => p.CreateAsync(It.IsAny<Customer>())).Throws(exc);
             _customerBankInfoServiceMock.Setup(p => p.Create(id));
 
@@ -70,7 +65,6 @@ namespace AppServices.Tests.Services
                 Console.WriteLine(e.Message);
             }
 
-            _mapperMock.Verify(p => p.Map<Customer>(It.IsAny<CreateCustomer>()), Times.Once);
             _customerServiceMock.Verify(p => p.CreateAsync(It.IsAny<Customer>()), Times.Once);
             _customerBankInfoServiceMock.Verify(p => p.Create(id), Times.Never);
         }
@@ -114,14 +108,12 @@ namespace AppServices.Tests.Services
             var customers1 = new List<Customer>();
 
             _customerServiceMock.Setup(p => p.GetAll()).Returns(customers1);
-            _mapperMock.Setup(p => p.Map<IEnumerable<CustomerResponse>>(customers1)).Returns(customer);
 
             var customersResponse = _customerAppService.GetAll();
 
             customersResponse.Should().HaveCountGreaterThanOrEqualTo(0);
 
             _customerServiceMock.Verify(p => p.GetAll(), Times.Once);
-            _mapperMock.Verify(p => p.Map<IEnumerable<CustomerResponse>>(customers1), Times.Once);
         }
 
         [Fact]
@@ -129,17 +121,14 @@ namespace AppServices.Tests.Services
         {
             var cpf = "42713070848";
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var customerResponse = CustomerResponseFixture.GenerateCustomerResponseFixture();
 
             _customerServiceMock.Setup(p => p.GetByCpfAsync(It.IsAny<string>())).ReturnsAsync(customer);
-            _mapperMock.Setup(p => p.Map<CustomerResponse>(It.IsAny<Customer>())).Returns(customerResponse);
 
             var result = await _customerAppService.GetByCpfAsync(cpf);
 
             result.Should().NotBeNull();
 
             _customerServiceMock.Verify(p => p.GetByCpfAsync(It.IsAny<string>()), Times.Once);
-            _mapperMock.Verify(p => p.Map<CustomerResponse>(It.IsAny<Customer>()), Times.Once);
         }
 
         [Fact]
@@ -147,11 +136,9 @@ namespace AppServices.Tests.Services
         {
             var cpf = "42713070848";
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var customerResponse = CustomerResponseFixture.GenerateCustomerResponseFixture();
             ArgumentNullException excnull = new();
 
             _customerServiceMock.Setup(p => p.GetByCpfAsync(It.IsAny<string>())).Throws(excnull);
-            _mapperMock.Setup(p => p.Map<CustomerResponse>(It.IsAny<Customer>())).Returns(customerResponse);
 
             try
             {
@@ -164,8 +151,6 @@ namespace AppServices.Tests.Services
             }
 
             _customerServiceMock.Verify(p => p.GetByCpfAsync(It.IsAny<string>()), Times.Once);
-            _mapperMock.Verify(p => p.Map<CustomerResponse>(It.IsAny<Customer>()), Times.Never);
-
         }
 
         [Fact]
@@ -174,12 +159,10 @@ namespace AppServices.Tests.Services
             var customer = CustomerFixture.GenerateCustomerFixture();
             var UpdateCustomer = UpdateCustomerFixture.GenerateUpdateCustomerFixture();
 
-            _mapperMock.Setup(p => p.Map<Customer>(It.IsAny<UpdateCustomer>())).Returns(customer);
             _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>()));
 
             _customerAppService.Update(UpdateCustomer);
 
-            _mapperMock.Verify(p => p.Map<Customer>(It.IsAny<UpdateCustomer>()), Times.Once);
             _customerServiceMock.Verify(p => p.Update(It.IsAny<Customer>()), Times.Once);
         }
 
@@ -190,7 +173,6 @@ namespace AppServices.Tests.Services
             var UpdateCustomer = UpdateCustomerFixture.GenerateUpdateCustomerFixture();
             ArgumentNullException excnull = new();
 
-            _mapperMock.Setup(p => p.Map<Customer>(It.IsAny<UpdateCustomer>())).Returns(customer);
             _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>())).Throws(excnull);
 
             try
@@ -202,7 +184,6 @@ namespace AppServices.Tests.Services
                 Console.WriteLine(e.Message);
             }
 
-            _mapperMock.Verify(p => p.Map<Customer>(It.IsAny<UpdateCustomer>()), Times.Once);
             _customerServiceMock.Verify(p => p.Update(It.IsAny<Customer>()), Times.Once);
         }
 
@@ -213,7 +194,6 @@ namespace AppServices.Tests.Services
             var UpdateCustomer = UpdateCustomerFixture.GenerateUpdateCustomerFixture();
             ArgumentException exc = new();
 
-            _mapperMock.Setup(p => p.Map<Customer>(It.IsAny<UpdateCustomer>())).Returns(customer);
             _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>())).Throws(exc);
 
             try
@@ -225,7 +205,6 @@ namespace AppServices.Tests.Services
                 Console.WriteLine(e.Message);
             }
 
-            _mapperMock.Verify(p => p.Map<Customer>(It.IsAny<UpdateCustomer>()), Times.Once);
             _customerServiceMock.Verify(p => p.Update(It.IsAny<Customer>()), Times.Once);
         }
 
@@ -237,14 +216,12 @@ namespace AppServices.Tests.Services
             var customerResponse = CustomerResponseFixture.GenerateCustomerResponseFixture();
 
             _customerServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(customer);
-            _mapperMock.Setup(p => p.Map<CustomerResponse>(It.IsAny<Customer>())).Returns(customerResponse);
 
             var result = await _customerAppService.GetByIdAsync(id);
 
             result.Should().NotBeNull();
-            _customerServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
 
-            _mapperMock.Verify(p => p.Map<CustomerResponse>(It.IsAny<Customer>()), Times.Once);
+            _customerServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
         }
 
         [Fact]
@@ -256,7 +233,6 @@ namespace AppServices.Tests.Services
             ArgumentNullException excnull = new();
 
             _customerServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).Throws(excnull);
-            _mapperMock.Setup(p => p.Map<CustomerResponse>(It.IsAny<Customer>())).Returns(customerResponse);
 
             try
             {
@@ -270,7 +246,6 @@ namespace AppServices.Tests.Services
             }
 
             _customerServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
-            _mapperMock.Verify(p => p.Map<CustomerResponse>(It.IsAny<Customer>()), Times.Never);
         }
     }
 }

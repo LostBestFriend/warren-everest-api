@@ -7,7 +7,6 @@ using DomainServices.Interfaces;
 using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
-using System.Collections.Generic;
 using Xunit;
 
 namespace AppServices.Tests.Services
@@ -16,12 +15,11 @@ namespace AppServices.Tests.Services
     {
         private readonly OrderAppService _orderAppService;
         private readonly Mock<IOrderService> _orderServiceMock;
-        private readonly Mock<IMapper> _mapperMock;
 
         public OrderAppServiceTest()
         {
             _orderServiceMock = new();
-            _mapperMock = new();
+            Mock<IMapper> _mapperMock = new();
             _orderAppService = new OrderAppService(_mapperMock.Object, _orderServiceMock.Object);
         }
 
@@ -31,14 +29,12 @@ namespace AppServices.Tests.Services
             CreateOrder order = CreateOrderFixture.GenerateCreateOrderFixture();
 
             _orderServiceMock.Setup(p => p.CreateAsync(It.IsAny<Order>())).ReturnsAsync(It.IsAny<long>());
-            _mapperMock.Setup(p => p.Map<Order>(It.IsAny<CreateOrder>())).Returns(It.IsAny<Order>());
 
             var result = await _orderAppService.CreateAsync(order);
 
             result.Should().BeGreaterThanOrEqualTo(0);
 
             _orderServiceMock.Verify(p => p.CreateAsync(It.IsAny<Order>()), Times.Once);
-            _mapperMock.Verify(p => p.Map<Order>(It.IsAny<CreateOrder>()), Times.Once);
         }
 
         [Fact]
@@ -48,12 +44,10 @@ namespace AppServices.Tests.Services
             var orderResponses = OrderResponseFixture.GenerateOrderResponseFixture(3);
 
             _orderServiceMock.Setup(p => p.GetAll()).Returns(orders);
-            _mapperMock.Setup(p => p.Map<IList<OrderResponse>>(It.IsAny<IList<Order>>())).Returns(orderResponses);
 
             _orderAppService.GetAll();
 
             _orderServiceMock.Verify(p => p.GetAll(), Times.Once);
-            _mapperMock.Verify(p => p.Map<IList<OrderResponse>>(It.IsAny<IList<Order>>()), Times.Once);
         }
 
         [Fact]
@@ -64,14 +58,12 @@ namespace AppServices.Tests.Services
             var order = OrderFixture.GenerateOrderFixture();
 
             _orderServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(order);
-            _mapperMock.Setup(p => p.Map<OrderResponse>(It.IsAny<Order>())).Returns(orderResponse);
 
             var result = await _orderAppService.GetByIdAsync(orderId);
 
             result.Should().NotBeNull();
 
             _orderServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
-            _mapperMock.Verify(p => p.Map<OrderResponse>(It.IsAny<Order>()), Times.Once);
         }
 
         [Fact]
@@ -96,13 +88,11 @@ namespace AppServices.Tests.Services
             var ordersResponse = OrderResponseFixture.GenerateOrderResponseFixture(3);
 
             _orderServiceMock.Setup(p => p.GetExecutableOrders()).Returns(orders);
-            _mapperMock.Setup(p => p.Map<IEnumerable<OrderResponse>>(orders));
 
             var result = _orderAppService.GetExecutableOrders();
             result.Should().NotBeNull();
 
             _orderServiceMock.Verify(p => p.GetExecutableOrders(), Times.Once);
-            _mapperMock.Verify(p => p.Map<IEnumerable<OrderResponse>>(orders), Times.Once);
         }
 
         [Fact]
@@ -113,12 +103,10 @@ namespace AppServices.Tests.Services
             var order = OrderFixture.GenerateOrderFixture();
 
             _orderServiceMock.Setup(p => p.Update(It.IsAny<Order>()));
-            _mapperMock.Setup(p => p.Map<Order>(It.IsAny<UpdateOrder>())).Returns(order);
 
             _orderAppService.Update(id, updateOrder);
 
             _orderServiceMock.Verify(p => p.Update(It.IsAny<Order>()), Times.Once);
-            _mapperMock.Verify(p => p.Map<Order>(It.IsAny<UpdateOrder>()), Times.Once);
         }
 
         [Fact]
