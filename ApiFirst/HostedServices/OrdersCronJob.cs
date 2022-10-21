@@ -33,7 +33,7 @@ namespace HostedServices
         {
             try
             {
-                using var scope = _scopeFactory.CreateScope();
+                var scope = _scopeFactory.CreateScope();
                 var repository = scope.ServiceProvider.GetRequiredService<IPortfolioAppService>();
                 repository.ExecuteNowOrdersAsync().ConfigureAwait(false);
             }
