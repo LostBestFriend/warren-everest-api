@@ -18,11 +18,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             try
             {
-                var portolios = _productAppService.GetAllAsync();
+                var portolios = await _productAppService.GetAllAsync();
                 return Ok(portolios);
             }
             catch (Exception exception)
