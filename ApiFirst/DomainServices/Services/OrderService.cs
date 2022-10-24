@@ -69,16 +69,6 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public void Delete(long id)
-        {
-            var repository = _repositoryFactory.Repository<Order>();
-
-            if (!repository.Any(order => order.Id == id))
-                throw new ArgumentNullException($"Não encontrada nenhuma Ordem de Investimento com o id: {id}");
-
-            repository.Remove(order => order.Id == id);
-        }
-
         public int GetQuotesAvaliable(long portfolioId, long productId)
         {
             var repository = _repositoryFactory.Repository<Order>();

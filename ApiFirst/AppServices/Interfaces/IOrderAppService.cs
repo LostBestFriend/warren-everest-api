@@ -12,6 +12,5 @@ namespace AppServices.Interfaces
         Task<IEnumerable<OrderResponse>> GetExecutableOrdersAsync();
         int GetQuotesAvaliable(long portfolioId, long productId);
         void Update(long id, UpdateOrder model);
-        void Delete(long id);
     }
 }

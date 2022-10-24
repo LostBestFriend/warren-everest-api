@@ -12,6 +12,5 @@ namespace DomainServices.Interfaces
         Task<long> CreateAsync(Order model);
         Task<IList<Order>> GetExecutableOrdersAsync();
         void Update(Order model);
-        void Delete(long id);
     }
 }

@@ -80,23 +80,5 @@ namespace ApiFirst.Controllers
                 return Problem(exception.Message);
             }
         }
-
-        [HttpDelete]
-        public IActionResult Delete(long id)
-        {
-            try
-            {
-                _orderAppService.Delete(id);
-                return Ok();
-            }
-            catch (ArgumentNullException exception)
-            {
-                return NotFound(exception.Message);
-            }
-            catch (Exception exception)
-            {
-                return Problem(exception.Message);
-            }
-        }
     }
 }

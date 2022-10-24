@@ -58,10 +58,5 @@ namespace AppServices.Services
             Order order = _mapper.Map<Order>(model);
             _orderServices.Update(order);
         }
-
-        public void Delete(long id)
-        {
-            _orderServices.Delete(id);
-        }
     }
 }
