@@ -79,6 +79,13 @@ namespace Infrastructure.Data.Mapping
                 .IsRequired()
                 .HasColumnName("Number").
                 HasColumnType("int");
+
+            builder.HasOne(customer => customer.CustomerBankInfo)
+                   .WithOne(customerBankInfo => customerBankInfo.Customer);
+
+            builder.HasMany(customer => customer.Portfolios)
+                .WithOne(port => port.Customer)
+                .HasForeignKey(cus => cus.CustomerId);
         }
     }
 }

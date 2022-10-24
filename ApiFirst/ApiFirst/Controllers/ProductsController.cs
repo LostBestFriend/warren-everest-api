@@ -50,7 +50,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(CreateProduct model)
+        public async Task<IActionResult> CreateAsync(CreateProduct model)
         {
             try
             {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DomainModels.Enums;
+using System;
 using System.Collections.Generic;
-using DomainModels.Enums;
 
 namespace DomainModels.Models
 {
@@ -21,6 +21,7 @@ namespace DomainModels.Models
         public int DaysToExpire { get; set; }
         public ProductType Type { get; set; }
         public ICollection<PortfolioProduct> PortfolioProducts { get; set; }
+        public List<Order> Orders { get; set; }
 
     }
 }

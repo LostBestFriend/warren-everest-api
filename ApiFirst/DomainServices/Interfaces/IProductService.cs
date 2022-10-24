@@ -6,11 +6,10 @@ namespace DomainServices.Interfaces
 {
     public interface IProductService
     {
-        IEnumerable<Product> GetAll();
+        Task<IEnumerable<Product>> GetAllAsync();
         Task<Product> GetByIdAsync(long id);
         Task<long> CreateAsync(Product model);
         void Update(Product model);
-        void AddPortfolio(long productId, long portfolioId);
-        void Delete(long id);
+        void DeleteAsync(long id);
     }
 }

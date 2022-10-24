@@ -37,6 +37,9 @@ namespace Infrastructure.Data.Mapping
             builder.Property(portfolio => portfolio.CustomerId)
                     .IsRequired()
                     .HasColumnName("CustomerId");
+            builder.HasMany(portfolio => portfolio.Orders)
+                .WithOne(order => order.Portfolio)
+                .HasForeignKey(k => k.PortfolioId);
         }
     }
 }

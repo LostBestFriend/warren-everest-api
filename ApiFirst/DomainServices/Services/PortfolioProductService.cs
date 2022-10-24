@@ -50,11 +50,11 @@ namespace DomainServices.Services
             return relation;
         }
 
-        public bool RelationAlreadyExists(long portfolioId, long productId)
+        public async Task<bool> RelationAlreadyExists(long portfolioId, long productId)
         {
             var repository = _repositoryFactory.Repository<PortfolioProduct>();
 
-            return repository.Any(portfolioproduct => portfolioproduct.PortfolioId == portfolioId && portfolioproduct.ProductId == productId);
+            return await repository.AnyAsync(portfolioproduct => portfolioproduct.PortfolioId == portfolioId && portfolioproduct.ProductId == productId);
         }
     }
 }

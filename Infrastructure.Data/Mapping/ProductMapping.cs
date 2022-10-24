@@ -44,6 +44,10 @@ namespace Infrastructure.Data.Mapping
             builder.Property(product => product.Type)
                     .IsRequired()
                     .HasColumnName("Type");
+
+            builder.HasMany(product => product.Orders)
+                .WithOne(cus => cus.Product)
+                .HasForeignKey(c => c.ProductId);
         }
     }
 }

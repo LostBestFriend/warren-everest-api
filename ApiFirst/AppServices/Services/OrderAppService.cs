@@ -22,15 +22,15 @@ namespace AppServices.Services
                 throw new ArgumentNullException(nameof(orderServices));
         }
 
-        public Task<long> CreateAsync(CreateOrder model)
+        public async Task<long> CreateAsync(CreateOrder model)
         {
             Order order = _mapper.Map<Order>(model);
-            return _orderServices.CreateAsync(order);
+            return await _orderServices.CreateAsync(order);
         }
 
         public IEnumerable<OrderResponse> GetAll()
         {
-            var result = _orderServices.GetAll();
+            var result = _orderServices.GetAllAsync();
             return _mapper.Map<IList<OrderResponse>>(result);
         }
 
@@ -47,7 +47,7 @@ namespace AppServices.Services
 
         public IEnumerable<OrderResponse> GetExecutableOrders()
         {
-            var orders = _orderServices.GetExecutableOrders();
+            var orders = _orderServices.GetExecutableOrdersAsync();
 
             return _mapper.Map<IEnumerable<OrderResponse>>(orders);
 

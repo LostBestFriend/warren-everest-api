@@ -19,6 +19,7 @@ namespace AppServices.Validator.Orders
                 .NotEmpty();
 
             RuleFor(order => order.Direction)
+                .IsInEnum()
                 .NotEmpty();
 
             RuleFor(order => order.LiquidateAt)

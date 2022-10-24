@@ -23,7 +23,7 @@ namespace AppServices.Services
         }
         public IEnumerable<ProductResponse> GetAll()
         {
-            var result = _productService.GetAll();
+            var result = _productService.GetAllAsync();
             return _mapper.Map<IEnumerable<ProductResponse>>(result);
         }
 
@@ -48,7 +48,7 @@ namespace AppServices.Services
 
         public void Delete(long id)
         {
-            _productService.Delete(id);
+            _productService.DeleteAsync(id);
         }
     }
 }

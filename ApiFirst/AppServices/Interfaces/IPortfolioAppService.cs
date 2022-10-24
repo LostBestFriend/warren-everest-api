@@ -11,9 +11,9 @@ namespace AppServices.Interfaces
         Task<long> CreateAsync(CreatePortfolio model);
         IEnumerable<PortfolioResponse> GetAll();
         Task<PortfolioResponse> GetByIdAsync(long id);
-        decimal GetAccountBalance(long portfolioId);
+        Task<decimal> GetAccountBalanceAsync(long portfolioId);
         void Deposit(decimal amount, long customerId, long portfolioId);
-        void Withdraw(decimal amount, long customerId, long portfolioId);
+        void WithdrawAsync(decimal amount, long customerId, long portfolioId);
         Task ExecuteNowOrdersAsync();
         Task ExecuteBuyOrderAsync(OrderResponse order);
         Task ExecuteSellOrderAsync(OrderResponse order);

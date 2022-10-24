@@ -32,12 +32,12 @@ namespace DomainServices.Services
             return model.Id;
         }
 
-        public IEnumerable<Order> GetAll()
+        public async Task<IEnumerable<Order>> GetAllAsync()
         {
             var repository = _repositoryFactory.Repository<Order>();
-            var query = repository.MultipleResultQuery();
+            var query = repository.MultipleResultQuery().Include(source => source.Include(order => order.Product).Include(order => order.Portfolio));
 
-            return repository.Search(query);
+            return await repository.SearchAsync(query);
         }
 
         public async Task<Order> GetByIdAsync(long id)
@@ -52,11 +52,11 @@ namespace DomainServices.Services
             return order;
         }
 
-        public IList<Order> GetExecutableOrders()
+        public async Task<IList<Order>> GetExecutableOrdersAsync()
         {
             var repository = _unitOfWork.Repository<Order>();
             var query = repository.MultipleResultQuery().AndFilter(order => order.LiquidateAt.Date <= DateTime.Now.Date);
-            var orders = repository.Search(query);
+            var orders = await repository.SearchAsync(query);
 
             return orders;
         }

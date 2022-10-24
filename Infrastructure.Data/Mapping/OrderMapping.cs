@@ -22,14 +22,6 @@ namespace Infrastructure.Data.Mapping
                     .IsRequired()
                     .HasColumnName("Quotes");
 
-            builder.Property(order => order.UnitPrice)
-                   .IsRequired()
-                   .HasColumnName("UnitPrice");
-
-            builder.Property(order => order.NetValue)
-                   .IsRequired()
-                   .HasColumnName("NetValue");
-
             builder.Property(order => order.LiquidateAt)
                    .IsRequired()
                    .HasColumnName("LiquidateAt");

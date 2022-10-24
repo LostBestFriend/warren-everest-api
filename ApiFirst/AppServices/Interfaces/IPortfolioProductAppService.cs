@@ -1,4 +1,5 @@
 ﻿using DomainModels.Models;
+using System.Threading.Tasks;
 
 namespace AppServices.Interfaces
 {
@@ -6,6 +7,6 @@ namespace AppServices.Interfaces
     {
         void InitRelation(Portfolio portfolio, Product product);
         void DisposeRelation(Portfolio portfolio, Product product);
-        bool RelationAlreadyExists(long portfolioId, long productId);
+        Task<bool> RelationAlreadyExists(long portfolioId, long productId);
     }
 }

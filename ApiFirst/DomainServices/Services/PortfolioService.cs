@@ -21,7 +21,7 @@ namespace DomainServices.Services
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
-        public decimal GetAccountBalance(long portfolioId)
+        public async Task<decimal> GetAccountBalanceAsync(long portfolioId)
         {
             var repository = _repositoryFactory.Repository<Portfolio>();
 
@@ -29,7 +29,7 @@ namespace DomainServices.Services
                 throw new ArgumentNullException($"Cliente não encontrato para o id {portfolioId}");
 
             var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == portfolioId).Select(portfolio => portfolio.AccountBalance);
-            var accountBalance = repository.FirstOrDefault(query);
+            var accountBalance = await repository.FirstOrDefaultAsync(query);
 
             return accountBalance;
         }
@@ -43,7 +43,7 @@ namespace DomainServices.Services
             return model.Id;
         }
 
-        public IEnumerable<Portfolio> GetAll()
+        public async Task<IEnumerable<Portfolio>> GetAllAsync()
         {
             var repository = _repositoryFactory.Repository<Portfolio>();
             var query = repository.MultipleResultQuery()
@@ -53,7 +53,7 @@ namespace DomainServices.Services
                 .Include(portfolio => portfolio.PortfolioProducts)
                 .ThenInclude(pp => pp.Product)
                 .Include(portfolio => portfolio.Products));
-            var portfolios = repository.Search(query);
+            var portfolios = await repository.SearchAsync(query);
 
             return portfolios;
         }
@@ -73,30 +73,22 @@ namespace DomainServices.Services
             return portfolio;
         }
 
-        public void Deposit(decimal amount, long portfolioId)
+        public async void DepositAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            if (!repository.Any(portfolio => portfolio.Id == portfolioId))
-                throw new ArgumentNullException($"Carteira não encontrada para o id: {portfolioId}");
-
-            var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == portfolioId);
-            var portfolio = repository.SingleOrDefault(query);
+            var portfolio = await GetByIdAsync(portfolioId);
 
             portfolio.AccountBalance += amount;
             repository.Update(portfolio);
             _unitOfWork.SaveChanges();
         }
 
-        public void Withdraw(decimal amount, long portfolioId)
+        public async void WithdrawAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            if (!repository.Any(portfolio => portfolio.Id == portfolioId))
-                throw new ArgumentNullException($"Carteira não encontrada para o id: {portfolioId}");
-
-            var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == portfolioId);
-            var portfolio = repository.SingleOrDefault(query);
+            var portfolio = await GetByIdAsync(portfolioId);
 
             if (portfolio.AccountBalance < amount)
                 throw new ArgumentException("Não há saldo suficiente para o saque");
@@ -106,15 +98,11 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public void DepositAccountBalance(decimal amount, long portfolioId)
+        public async void DepositAccountBalanceAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            if (!repository.Any(portfolio => portfolio.Id == portfolioId))
-                throw new ArgumentNullException($"Carteira não encontrada para o id: {portfolioId}");
-
-            var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == portfolioId);
-            var portfolio = repository.SingleOrDefault(query);
+            var portfolio = await GetByIdAsync(portfolioId);
 
             if (portfolio.AccountBalance < amount)
                 throw new ArgumentException("Não há saldo suficiente para o saque");
@@ -124,15 +112,11 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public void WithdrawAccountBalance(decimal amount, long portfolioId)
+        public async void WithdrawAccountBalanceAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            if (!repository.Any(portfolio => portfolio.Id == portfolioId))
-                throw new ArgumentNullException($"Carteira não encontrada para o id: {portfolioId}");
-
-            var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == portfolioId);
-            var portfolio = repository.SingleOrDefault(query);
+            var portfolio = await GetByIdAsync(portfolioId);
 
             if (portfolio.AccountBalance < amount)
                 throw new ArgumentException("Não há saldo suficiente para o saque");
@@ -142,15 +126,11 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public void ExecuteBuyOrder(decimal amount, long portfolioId)
+        public async void ExecuteBuyOrderAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            if (!repository.Any(portfolio => portfolio.Id == portfolioId))
-                throw new ArgumentNullException($"Carteira não encontrada para o id: {portfolioId}");
-
-            var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == portfolioId);
-            var portfolio = repository.SingleOrDefault(query);
+            var portfolio = await GetByIdAsync(portfolioId);
 
             portfolio.TotalBalance += amount;
             portfolio.AccountBalance -= amount;
@@ -158,15 +138,11 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public void ExecuteSellOrder(decimal amount, long portfolioId)
+        public async void ExecuteSellOrderAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            if (!repository.Any(portfolio => portfolio.Id == portfolioId))
-                throw new ArgumentNullException($"Carteira não encontrada para o id: {portfolioId}");
-
-            var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == portfolioId);
-            var portfolio = repository.SingleOrDefault(query);
+            var portfolio = await GetByIdAsync(portfolioId);
 
             portfolio.TotalBalance -= amount;
             portfolio.AccountBalance += amount;
@@ -174,14 +150,10 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public void Delete(long portfolioId)
+        public async void DeleteAsync(long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
-            var query = repository.SingleResultQuery().AndFilter(p => p.Id == portfolioId);
-            var portfolio = repository.SingleOrDefault(query);
-
-            if (portfolio is null)
-                throw new ArgumentNullException($"Não encontrada carteira para o Id: {portfolioId}");
+            var portfolio = await GetByIdAsync(portfolioId);
 
             if (portfolio.AccountBalance > 0)
                 throw new ArgumentException($"Não é possível excluir a carteira enquanto houver saldo");

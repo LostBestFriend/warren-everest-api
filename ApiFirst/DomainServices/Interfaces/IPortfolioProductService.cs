@@ -8,6 +8,6 @@ namespace DomainServices.Interfaces
         Task InitRelationAsync(Portfolio portfolio, Product product);
         Task DisposeRelationAsync(Portfolio portfolio, Product product);
         Task<PortfolioProduct> GetByRelationAsync(long portfolioId, long productId);
-        bool RelationAlreadyExists(long portfolioId, long productId);
+        Task<bool> RelationAlreadyExists(long portfolioId, long productId);
     }
 }

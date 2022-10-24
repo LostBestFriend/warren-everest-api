@@ -11,14 +11,8 @@ namespace AppServices.Validator.Orders
                 .NotEmpty()
                 .GreaterThan(0);
 
-            RuleFor(order => order.NetValue)
-                .Equal(p => p.Quotes * p.UnitPrice)
-                .NotEmpty();
-
-            RuleFor(order => order.UnitPrice)
-                .NotEmpty();
-
             RuleFor(order => order.Direction)
+                .IsInEnum()
                 .NotEmpty();
 
             RuleFor(order => order.LiquidateAt)

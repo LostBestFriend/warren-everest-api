@@ -43,7 +43,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(CreatePortfolio model)
+        public async Task<IActionResult> CreateAsync(CreatePortfolio model)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                _portfolioAppService.Withdraw(amount, customerId, portfolioId);
+                _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
                 return Ok();
             }
             catch (ArgumentNullException exception)

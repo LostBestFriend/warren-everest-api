@@ -6,5 +6,6 @@
         decimal GetBalance(long customerId);
         void Deposit(long customerId, decimal amount);
         void Withdraw(long customerId, decimal amount);
+        void Delete(long customerId);
     }
 }

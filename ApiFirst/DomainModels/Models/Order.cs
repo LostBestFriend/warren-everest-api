@@ -1,14 +1,13 @@
-﻿using System;
-using DomainModels.Enums;
+﻿using DomainModels.Enums;
+using System;
 
 namespace DomainModels.Models
 {
     public class Order : BaseModel
     {
-        public Order(int quotes, decimal unitPrice, decimal netValue, DateTime liquidateAt, OrderDirection direction, long productId, long portfolioId)
+        public Order(int quotes, decimal netValue, DateTime liquidateAt, OrderDirection direction, long productId, long portfolioId)
         {
             Quotes = quotes;
-            UnitPrice = unitPrice;
             NetValue = netValue;
             LiquidateAt = liquidateAt;
             Direction = direction;
@@ -17,7 +16,6 @@ namespace DomainModels.Models
         }
 
         public int Quotes { get; set; }
-        public decimal UnitPrice { get; set; }
         public decimal NetValue { get; set; }
         public DateTime LiquidateAt { get; set; }
         public OrderDirection Direction { get; set; }

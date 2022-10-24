@@ -52,7 +52,7 @@ namespace AppServices.Services
 
         public IEnumerable<PortfolioResponse> GetAll()
         {
-            var result = _portfolioService.GetAll();
+            var result = _portfolioService.GetAllAsync();
             return _mapper.Map<IEnumerable<PortfolioResponse>>(result);
         }
 
@@ -62,9 +62,9 @@ namespace AppServices.Services
             return _mapper.Map<PortfolioResponse>(result);
         }
 
-        public decimal GetAccountBalance(long portfolioId)
+        public async Task<decimal> GetAccountBalanceAsync(long portfolioId)
         {
-            return _portfolioService.GetAccountBalance(portfolioId);
+            return await _portfolioService.GetAccountBalanceAsync(portfolioId);
         }
 
         public void Deposit(decimal amount, long customerId, long portfolioId)
@@ -74,17 +74,17 @@ namespace AppServices.Services
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
             _customerBankInfoAppService.Withdraw(customerId, amount);
-            _portfolioService.Deposit(amount, portfolioId);
+            _portfolioService.DepositAsync(amount, portfolioId);
             transactionScope.Complete();
         }
 
-        public void Withdraw(decimal amount, long customerId, long portfolioId)
+        public async void WithdrawAsync(decimal amount, long customerId, long portfolioId)
         {
-            if (_portfolioService.GetAccountBalance(portfolioId) < amount)
+            if (await _portfolioService.GetAccountBalanceAsync(portfolioId) < amount)
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar o saque requerido");
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
-            _portfolioService.Withdraw(amount, portfolioId);
+            _portfolioService.WithdrawAsync(amount, portfolioId);
             _customerBankInfoAppService.Deposit(customerId, amount);
             transactionScope.Complete();
         }
@@ -97,7 +97,7 @@ namespace AppServices.Services
                                         liquidateAt, OrderDirection.Buy, productId, portfolioId);
             var orderId = await _orderAppService.CreateAsync(order).ConfigureAwait(false);
 
-            if (GetAccountBalance(portfolioId) < order.NetValue)
+            if (await GetAccountBalanceAsync(portfolioId) < order.NetValue)
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar este investimento");
 
             if (DateTime.Now.Date >= liquidateAt.Date)
@@ -154,10 +154,11 @@ namespace AppServices.Services
             var productResult = await _productAppService.GetByIdAsync(order.ProductId);
             var product = _mapper.Map<Product>(productResult);
 
-            _portfolioService.ExecuteBuyOrder(order.NetValue, order.PortfolioId);
+            _portfolioService.ExecuteBuyOrderAsync(order.NetValue, order.PortfolioId);
 
+            bool condition = await _portfolioProductService.RelationAlreadyExists(order.PortfolioId, order.ProductId);
 
-            if (!_portfolioProductService.RelationAlreadyExists(order.PortfolioId, order.ProductId))
+            if (!condition)
             {
                 await _portfolioProductService.InitRelationAsync(portfolio, product);
             }
@@ -171,7 +172,7 @@ namespace AppServices.Services
             var productResult = await _productAppService.GetByIdAsync(order.ProductId);
             var product = _mapper.Map<Product>(productResult);
 
-            _portfolioService.ExecuteSellOrder(order.NetValue, order.PortfolioId);
+            _portfolioService.ExecuteSellOrderAsync(order.NetValue, order.PortfolioId);
 
             int availableQuotes = _orderAppService.GetQuotesAvaliable(order.PortfolioId, order.ProductId);
 
@@ -185,7 +186,7 @@ namespace AppServices.Services
 
         public void Delete(long portfolioId)
         {
-            _portfolioService.Delete(portfolioId);
+            _portfolioService.DeleteAsync(portfolioId);
         }
     }
 }

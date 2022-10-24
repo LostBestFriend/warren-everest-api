@@ -11,6 +11,7 @@ namespace AppServices.Validator.Products
                 .NotEmpty();
 
             RuleFor(product => product.UnitPrice)
+                .GreaterThan(0)
                 .NotEmpty();
 
             RuleFor(product => product.IssuanceAt)
@@ -21,6 +22,7 @@ namespace AppServices.Validator.Products
                 .GreaterThan(product => product.IssuanceAt);
 
             RuleFor(product => product.Type)
+                .IsInEnum()
                 .NotEmpty();
         }
     }

@@ -14,9 +14,9 @@ namespace AppServices.Services
     {
         private readonly ICustomerService _customerServices;
         private readonly IMapper _mapper;
-        private readonly ICustomerBankInfoService _customerBankInfoAppService;
+        private readonly ICustomerBankInfoAppService _customerBankInfoAppService;
 
-        public CustomerAppService(ICustomerBankInfoService bankInfoAppServices, ICustomerService customerServices, IMapper mapper)
+        public CustomerAppService(ICustomerBankInfoAppService bankInfoAppServices, ICustomerService customerServices, IMapper mapper)
         {
             _customerServices = customerServices ??
                 throw new ArgumentNullException(nameof(customerServices));
@@ -44,6 +44,7 @@ namespace AppServices.Services
         public void Delete(long id)
         {
             _customerServices.Delete(id);
+            _customerBankInfoAppService.Delete(id);
         }
 
         public IEnumerable<CustomerResponse> GetAll()

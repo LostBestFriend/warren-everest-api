@@ -2,6 +2,7 @@
 using DomainModels.Models;
 using DomainServices.Interfaces;
 using System;
+using System.Threading.Tasks;
 
 namespace AppServices.Services
 {
@@ -25,9 +26,9 @@ namespace AppServices.Services
             _portfolioProductService.DisposeRelationAsync(portfolio, product);
         }
 
-        public bool RelationAlreadyExists(long portfolioId, long productId)
+        public async Task<bool> RelationAlreadyExists(long portfolioId, long productId)
         {
-            return _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
+            return await _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
         }
     }
 }
