@@ -18,9 +18,9 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var portolios = _portfolioAppService.GetAllAsync();
+            var portolios = await _portfolioAppService.GetAllAsync();
             return Ok(portolios);
         }
 
@@ -79,7 +79,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("withdraw")]
-        public IActionResult Withdraw(decimal amount, long customerId, long portfolioId)
+        public IActionResult WithdrawAsync(decimal amount, long customerId, long portfolioId)
         {
             try
             {

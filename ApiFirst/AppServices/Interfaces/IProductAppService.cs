@@ -6,7 +6,7 @@ namespace AppServices.Interfaces
 {
     public interface IProductAppService
     {
-        IEnumerable<ProductResponse> GetAllAsync();
+        Task<IEnumerable<ProductResponse>> GetAllAsync();
         Task<ProductResponse> GetByIdAsync(long id);
         Task<long> CreateAsync(CreateProduct model);
         void Update(long id, UpdateProduct model);

@@ -9,7 +9,7 @@ namespace AppServices.Interfaces
     public interface IPortfolioAppService
     {
         Task<long> CreateAsync(CreatePortfolio model);
-        IEnumerable<PortfolioResponse> GetAllAsync();
+        Task<IEnumerable<PortfolioResponse>> GetAllAsync();
         Task<PortfolioResponse> GetByIdAsync(long id);
         Task<decimal> GetAccountBalanceAsync(long portfolioId);
         void Deposit(decimal amount, long customerId, long portfolioId);
