@@ -16,9 +16,9 @@ namespace AppServices.Services
                 throw new ArgumentNullException(nameof(portfolioProductServices));
         }
 
-        public void InitRelation(Portfolio portfolio, Product product)
+        public async Task InitRelationAsync(Portfolio portfolio, Product product)
         {
-            _portfolioProductService.InitRelationAsync(portfolio, product);
+            await _portfolioProductService.InitRelationAsync(portfolio, product);
         }
 
         public void DisposeRelation(Portfolio portfolio, Product product)

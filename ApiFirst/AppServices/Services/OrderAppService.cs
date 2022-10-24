@@ -28,9 +28,9 @@ namespace AppServices.Services
             return await _orderServices.CreateAsync(order);
         }
 
-        public IEnumerable<OrderResponse> GetAll()
+        public async Task<IEnumerable<OrderResponse>> GetAllAsync()
         {
-            var result = _orderServices.GetAllAsync();
+            var result = await _orderServices.GetAllAsync();
             return _mapper.Map<IList<OrderResponse>>(result);
         }
 
@@ -45,9 +45,9 @@ namespace AppServices.Services
             return _orderServices.GetQuotesAvaliable(portfolioId, productId);
         }
 
-        public IEnumerable<OrderResponse> GetExecutableOrders()
+        public async Task<IEnumerable<OrderResponse>> GetExecutableOrdersAsync()
         {
-            var orders = _orderServices.GetExecutableOrdersAsync();
+            var orders = await _orderServices.GetExecutableOrdersAsync();
 
             return _mapper.Map<IEnumerable<OrderResponse>>(orders);
 

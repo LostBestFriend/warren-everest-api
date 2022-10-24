@@ -22,7 +22,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                var orders = _orderAppService.GetAll();
+                var orders = _orderAppService.GetAllAsync();
                 return Ok(orders);
             }
             catch (Exception exception)

@@ -50,9 +50,9 @@ namespace AppServices.Services
             return await _portfolioService.CreateAsync(portfolio).ConfigureAwait(false);
         }
 
-        public IEnumerable<PortfolioResponse> GetAll()
+        public async Task<IEnumerable<PortfolioResponse>> GetAllAsync()
         {
-            var result = _portfolioService.GetAllAsync();
+            var result = await _portfolioService.GetAllAsync();
             return _mapper.Map<IEnumerable<PortfolioResponse>>(result);
         }
 
@@ -132,11 +132,11 @@ namespace AppServices.Services
 
         public async Task ExecuteNowOrdersAsync()
         {
-            var orders = _orderAppService.GetExecutableOrders();
+            var orders = await _orderAppService.GetExecutableOrdersAsync();
 
             foreach (var order in orders)
             {
-                if (order.Direction == AppModels.EnumModels.OrderDirection.Buy)
+                if (order.Direction == OrderDirection.Buy)
                 {
                     await ExecuteBuyOrderAsync(order);
                 }

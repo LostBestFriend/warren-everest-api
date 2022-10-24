@@ -21,9 +21,9 @@ namespace AppServices.Services
             _productService = productServices ??
                 throw new ArgumentNullException(nameof(productServices));
         }
-        public IEnumerable<ProductResponse> GetAll()
+        public async Task<IEnumerable<ProductResponse>> GetAllAsync()
         {
-            var result = _productService.GetAllAsync();
+            var result = await _productService.GetAllAsync();
             return _mapper.Map<IEnumerable<ProductResponse>>(result);
         }
 

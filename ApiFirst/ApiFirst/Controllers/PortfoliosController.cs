@@ -20,7 +20,7 @@ namespace ApiFirst.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var portolios = _portfolioAppService.GetAll();
+            var portolios = _portfolioAppService.GetAllAsync();
             return Ok(portolios);
         }
 
