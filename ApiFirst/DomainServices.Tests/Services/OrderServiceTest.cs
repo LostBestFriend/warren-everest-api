@@ -81,7 +81,7 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public async void Should_GetExecutableOrders()
+        public async void Should_GetExecutableOrders_Sucessfully()
         {
             var orders = OrderFixture.GenerateOrderFixture(3);
 
