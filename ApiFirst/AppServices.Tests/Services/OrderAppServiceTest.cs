@@ -85,7 +85,7 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public async Task Should_GetExecutableOrders_SucessfullyAsync()
+        public async Task Should_GetExecutableOrdersAsync_Sucessfully()
         {
             var orders = OrderFixture.GenerateOrderFixture(3);
             var ordersResponse = OrderResponseFixture.GenerateOrderResponseFixture(3);

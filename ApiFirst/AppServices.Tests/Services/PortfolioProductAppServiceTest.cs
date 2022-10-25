@@ -47,7 +47,7 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public async Task Should_RelationAlreadyExists_SucessfullyAsync()
+        public async Task Should_RelationAlreadyExistsAsync_Sucessfully()
         {
             long portfolioId = 1;
             long productId = 1;

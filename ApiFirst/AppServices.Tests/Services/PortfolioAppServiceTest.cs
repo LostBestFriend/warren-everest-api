@@ -55,7 +55,7 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public async Task Should_GetAll_SucessfullyAsync()
+        public async Task Should_GetAllAsync_Sucessfully()
         {
             var portfolios = PortfolioFixture.GeneratePortfolioFixture(3);
             var portfolioResponses = PortfolioResponseFixture.GeneratePortfolioResponseFixture(3);
@@ -284,7 +284,7 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_ExecuteBuyOrderAsyncSucessfully_And_Creating_Relation()
+        public void Should_ExecuteBuyOrderAsync_Sucessfully_And_Creating_Relation()
         {
             var orderResponse = OrderResponseFixture.GenerateOrderResponseFixture();
             var portfolio = PortfolioFixture.GeneratePortfolioFixture();
@@ -307,7 +307,7 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_ExecuteBuyOrderAsyncSucessfully_And_Not_Creating_Relation()
+        public void Should_ExecuteBuyOrderAsync_Sucessfully_And_Not_Creating_Relation()
         {
             var orderResponse = OrderResponseFixture.GenerateOrderResponseFixture();
             var portfolio = PortfolioFixture.GeneratePortfolioFixture();

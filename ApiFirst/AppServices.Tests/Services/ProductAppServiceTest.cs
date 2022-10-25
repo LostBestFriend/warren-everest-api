@@ -24,7 +24,7 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public async Task Should_GetAll_SucessfullyAsync()
+        public async Task Should_GetAllAsync_Sucessfully()
         {
             var products = ProductFixture.GenerateProductFixture(3);
             var productResponses = ProductResponseFixture.GenerateProductResponseFixture(3);
