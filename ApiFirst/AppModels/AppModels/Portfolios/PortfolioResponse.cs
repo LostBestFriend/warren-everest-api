@@ -7,6 +7,18 @@ namespace AppModels.AppModels.Portfolios
 {
     public class PortfolioResponse
     {
+        public PortfolioResponse(long id, string name, string description, decimal totalBalance, decimal accountBalance, CustomerResponse customer, IEnumerable<PortfolioProductResponse> products, IEnumerable<OrderResponse> orders)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            TotalBalance = totalBalance;
+            AccountBalance = accountBalance;
+            Customer = customer;
+            Products = products;
+            Orders = orders;
+        }
+
         public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

@@ -21,6 +21,7 @@ namespace AppServices.Services
             _productService = productServices ??
                 throw new ArgumentNullException(nameof(productServices));
         }
+
         public async Task<IEnumerable<ProductResponse>> GetAllAsync()
         {
             var result = await _productService.GetAllAsync();

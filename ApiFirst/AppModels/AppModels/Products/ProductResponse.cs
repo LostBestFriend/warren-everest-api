@@ -5,6 +5,17 @@ namespace AppModels.AppModels.Products
 {
     public class ProductResponse
     {
+        public ProductResponse(long id, string symbol, decimal unitPrice, DateTime issuanceAt, DateTime expirationAt, ProductEnum type)
+        {
+            Id = id;
+            Symbol = symbol;
+            UnitPrice = unitPrice;
+            IssuanceAt = issuanceAt;
+            ExpirationAt = expirationAt;
+            DaysToExpire = expirationAt.Subtract(issuanceAt).Days;
+            Type = type;
+        }
+
         public long Id { get; set; }
         public string Symbol { get; set; }
         public decimal UnitPrice { get; set; }

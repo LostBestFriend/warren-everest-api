@@ -26,7 +26,7 @@ namespace DomainServices.Services
             var repository = _repositoryFactory.Repository<Portfolio>();
 
             if (!repository.Any(portfolio => portfolio.Id == portfolioId))
-                throw new ArgumentNullException($"Cliente não encontrato para o id {portfolioId}");
+                throw new ArgumentNullException($"Cliente não encontrado para o id {portfolioId}");
 
             var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == portfolioId).Select(portfolio => portfolio.AccountBalance);
             var accountBalance = await repository.FirstOrDefaultAsync(query);
