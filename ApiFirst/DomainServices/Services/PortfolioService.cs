@@ -60,7 +60,7 @@ namespace DomainServices.Services
 
         public async Task<Portfolio> GetByIdAsync(long id)
         {
-            var repository = _unitOfWork.Repository<Portfolio>();
+            var repository = _repositoryFactory.Repository<Portfolio>();
             var query = repository.SingleResultQuery().AndFilter(portfolio => portfolio.Id == id)
                 .Include(source => source.Include(portfolio => portfolio.Products)
                 .Include(portfolio => portfolio.Orders)
@@ -84,7 +84,7 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public async void WithdrawAsync(decimal amount, long portfolioId)
+        public async Task WithdrawAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
@@ -98,7 +98,7 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public async void DepositAccountBalanceAsync(decimal amount, long portfolioId)
+        public async Task DepositAccountBalanceAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
@@ -112,7 +112,7 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public async void WithdrawAccountBalanceAsync(decimal amount, long portfolioId)
+        public async Task WithdrawAccountBalanceAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
@@ -150,7 +150,7 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public async void DeleteAsync(long portfolioId)
+        public async Task DeleteAsync(long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
             var portfolio = await GetByIdAsync(portfolioId);

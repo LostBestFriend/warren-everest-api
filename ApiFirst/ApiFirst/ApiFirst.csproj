@@ -19,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AppModels\AppModels.csproj" />
     <ProjectReference Include="..\AppServices\AppServices.csproj" />
-    <ProjectReference Include="..\DomainServices.Tests\DomainServices.Tests.csproj" />
   </ItemGroup>
 
 </Project>

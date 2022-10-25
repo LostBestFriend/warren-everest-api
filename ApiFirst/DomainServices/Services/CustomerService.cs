@@ -37,11 +37,7 @@ namespace DomainServices.Services
         public async void Delete(long id)
         {
             var repository = _unitOfWork.Repository<Customer>();
-            var query = repository.SingleResultQuery().AndFilter(customer => customer.Id == id);
-            var response = await repository.FirstOrDefaultAsync(query).ConfigureAwait(false);
-
-            if (response is null)
-                throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
+            var response = await GetByIdAsync(id);
 
             repository.Remove(response);
             _unitOfWork.SaveChanges();

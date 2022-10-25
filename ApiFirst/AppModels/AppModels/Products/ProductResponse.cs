@@ -5,7 +5,7 @@ namespace AppModels.AppModels.Products
 {
     public class ProductResponse
     {
-        public ProductResponse(long id, string symbol, decimal unitPrice, DateTime issuanceAt, DateTime expirationAt, ProductEnum type)
+        public ProductResponse(long id, string symbol, decimal unitPrice, DateTime issuanceAt, DateTime expirationAt, ProductType type)
         {
             Id = id;
             Symbol = symbol;

@@ -47,7 +47,7 @@ namespace DomainServices.Services
             return accountBalance;
         }
 
-        public async void DepositAsync(long customerId, decimal amount)
+        public async Task DepositAsync(long customerId, decimal amount)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
             var bankInfo = await GetByCustomerIdAsync(customerId);
@@ -62,12 +62,17 @@ namespace DomainServices.Services
 
         public async Task<CustomerBankInfo> GetByCustomerIdAsync(long customerId)
         {
-            var repository = _unitOfWork.Repository<CustomerBankInfo>();
+            var repository = _repositoryFactory.Repository<CustomerBankInfo>();
             var query = repository.SingleResultQuery().AndFilter(bankinfo => bankinfo.CustomerId == customerId);
-            return await repository.FirstOrDefaultAsync(query);
+            var bankInfo = await repository.FirstOrDefaultAsync(query);
+
+            if (bankInfo is null)
+                throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");
+
+            return bankInfo;
         }
 
-        public async void WithdrawAsync(long customerId, decimal amount)
+        public async Task WithdrawAsync(long customerId, decimal amount)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
             var bankInfo = await GetByCustomerIdAsync(customerId);
@@ -75,7 +80,7 @@ namespace DomainServices.Services
             if (bankInfo is null)
                 throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");
             if (bankInfo.AccountBalance < amount)
-                throw new ArgumentException($"Não é possível sacar o valor informado pois não há saldo suficiente");
+                throw new ArgumentException("Não é possível sacar o valor informado pois não há saldo suficiente");
 
             bankInfo.AccountBalance -= amount;
             repository.Update(bankInfo, bankinfo => bankinfo.AccountBalance);

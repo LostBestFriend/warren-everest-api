@@ -1,14 +1,5 @@
-<<<<<<< HEAD
 using AppServices.Dependencies;
 using DomainServices.Dependencies;
-=======
-using AppServices.Interfaces;
-using AppServices.Services;
-using DomainServices.Interfaces;
-using DomainServices.Services;
-using DomainServices.Tests.Services;
-using EntityFrameworkCore.UnitOfWork.Extensions;
->>>>>>> origin/EV-677-net-08-testes-unitarios
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure.Data.Dependencies;
