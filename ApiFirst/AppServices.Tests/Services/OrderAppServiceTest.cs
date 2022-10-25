@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Order;
+﻿using AppModels.AppModels.Orders;
 using AppServices.Services;
 using AppServices.Tests.Fixtures.Order;
 using AutoMapper;
@@ -7,6 +7,7 @@ using DomainServices.Interfaces;
 using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace AppServices.Tests.Services
@@ -38,16 +39,18 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetAll_Sucessfully()
+        public async void Should_GetAll_Sucessfully()
         {
             var orders = OrderFixture.GenerateOrderFixture(3);
             var orderResponses = OrderResponseFixture.GenerateOrderResponseFixture(3);
 
-            _orderServiceMock.Setup(p => p.GetAll()).Returns(orders);
+            _orderServiceMock.Setup(p => p.GetAllAsync()).ReturnsAsync(orders);
 
-            _orderAppService.GetAll();
+            var result = await _orderAppService.GetAllAsync();
 
-            _orderServiceMock.Verify(p => p.GetAll(), Times.Once);
+            result.Should().HaveCountGreaterThanOrEqualTo(0);
+
+            _orderServiceMock.Verify(p => p.GetAllAsync(), Times.Once);
         }
 
         [Fact]
@@ -82,17 +85,17 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetExecutableOrders_Sucessfully()
+        public async Task Should_GetExecutableOrders_SucessfullyAsync()
         {
             var orders = OrderFixture.GenerateOrderFixture(3);
             var ordersResponse = OrderResponseFixture.GenerateOrderResponseFixture(3);
 
-            _orderServiceMock.Setup(p => p.GetExecutableOrders()).Returns(orders);
+            _orderServiceMock.Setup(p => p.GetExecutableOrdersAsync()).ReturnsAsync(orders);
 
-            var result = _orderAppService.GetExecutableOrders();
+            var result = await _orderAppService.GetExecutableOrdersAsync();
             result.Should().NotBeNull();
 
-            _orderServiceMock.Verify(p => p.GetExecutableOrders(), Times.Once);
+            _orderServiceMock.Verify(p => p.GetExecutableOrdersAsync(), Times.Once);
         }
 
         [Fact]
@@ -107,18 +110,6 @@ namespace AppServices.Tests.Services
             _orderAppService.Update(id, updateOrder);
 
             _orderServiceMock.Verify(p => p.Update(It.IsAny<Order>()), Times.Once);
-        }
-
-        [Fact]
-        public void Should_Delete_Sucessfully()
-        {
-            long id = 1;
-
-            _orderServiceMock.Setup(p => p.Delete(It.IsAny<long>()));
-
-            _orderAppService.Delete(id);
-
-            _orderServiceMock.Verify(p => p.Delete(It.IsAny<long>()), Times.Once);
         }
     }
 }

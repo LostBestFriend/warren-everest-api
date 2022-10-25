@@ -35,11 +35,11 @@ namespace AppServices.Tests.Services
             long customerId = 1;
             decimal amount = 100;
 
-            _customerBankInfoServiceMock.Setup(p => p.Deposit(It.IsAny<long>(), It.IsAny<decimal>()));
+            _customerBankInfoServiceMock.Setup(p => p.DepositAsync(It.IsAny<long>(), It.IsAny<decimal>()));
 
             _customerBankInfoAppService.Deposit(customerId, amount);
 
-            _customerBankInfoServiceMock.Verify(p => p.Deposit(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
+            _customerBankInfoServiceMock.Verify(p => p.DepositAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
         }
 
         [Fact]
@@ -62,11 +62,11 @@ namespace AppServices.Tests.Services
             long customerId = 1;
             decimal amount = 100;
 
-            _customerBankInfoServiceMock.Setup(p => p.Withdraw(It.IsAny<long>(), It.IsAny<decimal>()));
+            _customerBankInfoServiceMock.Setup(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()));
 
             _customerBankInfoAppService.Withdraw(customerId, amount);
 
-            _customerBankInfoServiceMock.Verify(p => p.Withdraw(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
+            _customerBankInfoServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Customer;
+﻿using AppModels.AppModels.Customers;
 using AutoMapper;
 using DomainModels.Models;
 using FluentAssertions;
@@ -71,7 +71,7 @@ namespace AppServices.Tests.Profiles
         }
 
         [Fact]
-        public void Should_Map_CustomerCreate_Sucessfully()
+        public void Should_Map_CustomerResponse_Sucessfully()
         {
             var customer = new Customer(fullName: "João", email: "a@g",
                 cpf: "42713070848", cellphone: "991541506",

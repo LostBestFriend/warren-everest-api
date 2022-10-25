@@ -1,4 +1,5 @@
-﻿using AppServices.Services;
+﻿using AppServices.Interfaces;
+using AppServices.Services;
 using AppServices.Tests.Fixtures.Customer;
 using AutoMapper;
 using DomainModels.Models;
@@ -16,7 +17,7 @@ namespace AppServices.Tests.Services
     {
         private readonly CustomerAppService _customerAppService;
         private readonly Mock<ICustomerService> _customerServiceMock;
-        private readonly Mock<ICustomerBankInfoService> _customerBankInfoServiceMock;
+        private readonly Mock<ICustomerBankInfoAppService> _customerBankInfoServiceMock;
 
         public CustomerAppServiceTest()
         {

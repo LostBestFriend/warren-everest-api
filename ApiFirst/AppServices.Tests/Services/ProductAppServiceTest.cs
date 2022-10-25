@@ -6,6 +6,7 @@ using DomainServices.Interfaces;
 using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace AppServices.Tests.Services
@@ -23,18 +24,18 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetAll_Sucessfully()
+        public async Task Should_GetAll_SucessfullyAsync()
         {
             var products = ProductFixture.GenerateProductFixture(3);
             var productResponses = ProductResponseFixture.GenerateProductResponseFixture(3);
 
-            _productServiceMock.Setup(p => p.GetAll()).Returns(products);
+            _productServiceMock.Setup(p => p.GetAllAsync()).ReturnsAsync(products);
 
-            var result = _productAppService.GetAll();
+            var result = await _productAppService.GetAllAsync();
 
             result.Should().NotBeNull();
 
-            _productServiceMock.Verify(p => p.GetAll(), Times.Once);
+            _productServiceMock.Verify(p => p.GetAllAsync(), Times.Once);
         }
 
         [Fact]
@@ -86,11 +87,11 @@ namespace AppServices.Tests.Services
         {
             long id = 1;
 
-            _productServiceMock.Setup(p => p.Delete(It.IsAny<long>()));
+            _productServiceMock.Setup(p => p.DeleteAsync(It.IsAny<long>()));
 
             _productAppService.Delete(id);
 
-            _productServiceMock.Verify(p => p.Delete(It.IsAny<long>()), Times.Once);
+            _productServiceMock.Verify(p => p.DeleteAsync(It.IsAny<long>()), Times.Once);
         }
     }
 }

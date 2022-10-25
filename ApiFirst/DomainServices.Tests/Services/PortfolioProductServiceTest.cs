@@ -50,12 +50,17 @@ namespace DomainServices.Tests.Services
         {
             var portfolio = PortfolioFixture.GeneratePortfolioFixture();
             var product = ProductFixture.GenerateProductFixture();
+            var portfolioProduct = PortfolioProductFixture.GeneratePortfolioProductFixture();
 
+            _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>())).Returns(It.IsAny<IQuery<PortfolioProduct>>());
+            _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default)).ReturnsAsync(portfolioProduct);
             _unitOfWorkMock.Setup(p => p.Repository<PortfolioProduct>().Remove(It.IsAny<PortfolioProduct>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
             await _portfolioProductService.DisposeRelationAsync(portfolio, product);
 
+            _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<PortfolioProduct>().Remove(It.IsAny<PortfolioProduct>()), Times.Once);
             _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
         }
@@ -103,33 +108,33 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_RelationAlreadyExists_Sucessfully()
+        public async void Should_RelationAlreadyExists_Sucessfully()
         {
             long portfolioId = 1;
             long productId = 1;
 
-            _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().Any(It.IsAny<Expression<Func<PortfolioProduct, bool>>>())).Returns(true);
+            _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().AnyAsync(It.IsAny<Expression<Func<PortfolioProduct, bool>>>(), default)).ReturnsAsync(true);
 
-            var result = _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
+            var result = await _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
 
             result.Should().BeTrue();
 
-            _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().Any(It.IsAny<Expression<Func<PortfolioProduct, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().AnyAsync(It.IsAny<Expression<Func<PortfolioProduct, bool>>>(), default), Times.Once);
         }
 
         [Fact]
-        public void Should_RelationDoesntExists_Sucessfully()
+        public async void Should_RelationDoesntExists_Sucessfully()
         {
             long portfolioId = 1;
             long productId = 1;
 
-            _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().Any(It.IsAny<Expression<Func<PortfolioProduct, bool>>>())).Returns(false);
+            _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().AnyAsync(It.IsAny<Expression<Func<PortfolioProduct, bool>>>(), default)).ReturnsAsync(false);
 
-            var result = _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
+            var result = await _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
 
             result.Should().BeFalse();
 
-            _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().Any(It.IsAny<Expression<Func<PortfolioProduct, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().AnyAsync(It.IsAny<Expression<Func<PortfolioProduct, bool>>>(), default), Times.Once);
         }
     }
 }

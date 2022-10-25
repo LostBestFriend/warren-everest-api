@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Portfolio;
+﻿using AppModels.AppModels.Portfolios;
 using AppServices.Tests.Fixtures.Customer;
 using AppServices.Tests.Fixtures.Order;
 using AppServices.Tests.Fixtures.PortfolioProduct;

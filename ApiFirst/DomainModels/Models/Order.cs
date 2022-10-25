@@ -5,10 +5,10 @@ namespace DomainModels.Models
 {
     public class Order : BaseModel
     {
-        public Order(int quotes, decimal netValue, DateTime liquidateAt, OrderDirection direction, long productId, long portfolioId)
+        public Order(int quotes, decimal unitPrice, DateTime liquidateAt, OrderDirection direction, long productId, long portfolioId)
         {
             Quotes = quotes;
-            NetValue = netValue;
+            NetValue = unitPrice * quotes;
             LiquidateAt = liquidateAt;
             Direction = direction;
             ProductId = productId;

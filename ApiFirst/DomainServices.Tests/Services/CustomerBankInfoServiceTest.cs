@@ -8,6 +8,7 @@ using Infrastructure.Data.Context;
 using Moq;
 using System;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DomainServices.Tests.Services
@@ -95,44 +96,17 @@ namespace DomainServices.Tests.Services
             decimal amount = 10;
             long id = 1;
 
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>())).Returns(bankInfo);
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default)).ReturnsAsync(bankInfo);
             _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            _customerBankInfoService.Deposit(id, amount);
+            _customerBankInfoService.DepositAsync(id, amount);
 
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()), Times.Once);
             _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
-        }
-
-
-        [Fact]
-        public void Should_Not_Deposit_When_BankInfo_Doesnt_Exist()
-        {
-            decimal amount = 10;
-            long id = 1;
-
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>())).Throws(new ArgumentNullException());
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
-            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
-
-            try
-            {
-                _customerBankInfoService.Deposit(id, amount);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()), Times.Never);
-            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
         }
 
         [Fact]
@@ -142,69 +116,43 @@ namespace DomainServices.Tests.Services
             decimal amount = 1;
             long id = 1;
 
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>())).Returns(bankInfo);
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default)).ReturnsAsync(bankInfo);
             _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            _customerBankInfoService.Withdraw(id, amount);
+            _customerBankInfoService.WithdrawAsync(id, amount);
 
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()), Times.Once);
             _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
         }
 
         [Fact]
-        public void Should_Not_Withdraw_When_Balance_Is_Lower_Than_Amount()
+        public async Task Should_Not_Withdraw_When_Balance_Is_Lower_Than_AmountAsync()
         {
             var bankInfo = CustomerBankInfoFixture.GenerateCustomerBankInfoFixture();
             bankInfo.AccountBalance = 0;
             decimal amount = 1;
             long id = 1;
 
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>())).Returns(bankInfo);
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default)).ReturnsAsync(bankInfo);
             _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
             try
             {
-                _customerBankInfoService.Withdraw(id, amount);
+                await _customerBankInfoService.WithdrawAsync(id, amount);
             }
             catch (ArgumentException e)
             {
                 Console.WriteLine(e.Message);
             }
 
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()), Times.Never);
-            _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
-        }
-
-        [Fact]
-        public void Should_Not_Withdraw_When_BankInfo_Doesnt_Exist()
-        {
-            decimal amount = 10;
-            long id = 1;
-
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>())).Throws(new ArgumentNullException());
-            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
-            _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
-
-            try
-            {
-                _customerBankInfoService.Withdraw(id, amount);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()), Times.Never);
             _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Never);
         }

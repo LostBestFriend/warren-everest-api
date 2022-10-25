@@ -5,11 +5,10 @@ namespace AppModels.AppModels.Orders
 {
     public class OrderResponse
     {
-        public OrderResponse(int id, int quotes, int unitPrice, DateTime liquidateAt, OrderEnum direction, int productId, int portfolioId)
+        public OrderResponse(int id, int quotes, int unitPrice, DateTime liquidateAt, OrderDirection direction, int productId, int portfolioId)
         {
             Id = id;
             Quotes = quotes;
-            UnitPrice = unitPrice;
             NetValue = quotes * unitPrice;
             LiquidateAt = liquidateAt;
             Direction = direction;

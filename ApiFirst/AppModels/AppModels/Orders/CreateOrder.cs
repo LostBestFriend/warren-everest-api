@@ -8,15 +8,13 @@ namespace AppModels.AppModels.Orders
         public CreateOrder(int quotes, decimal unitPrice, DateTime liquidateAt, OrderDirection direction, long productId, long portfolioId)
         {
             Quotes = quotes;
-            UnitPrice = unitPrice;
-            NetValue = quotes * unitPrice;
+            NetValue = unitPrice * quotes;
             LiquidateAt = liquidateAt;
             Direction = direction;
             ProductId = productId;
             PortfolioId = portfolioId;
         }
         public int Quotes { get; set; }
-        public decimal UnitPrice { get; set; }
         public decimal NetValue { get; set; }
         public DateTime LiquidateAt { get; set; }
         public OrderDirection Direction { get; set; }

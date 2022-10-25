@@ -6,10 +6,9 @@ namespace AppModels.AppModels.Orders
     public class UpdateOrder
     {
 
-        public UpdateOrder(int quotes, int unitPrice, DateTime liquidateAt, OrderEnum direction, int productId, int portfolioId)
+        public UpdateOrder(int quotes, int unitPrice, DateTime liquidateAt, OrderDirection direction, int productId, int portfolioId)
         {
             Quotes = quotes;
-            UnitPrice = unitPrice;
             LiquidateAt = liquidateAt;
             NetValue = quotes * unitPrice;
             Direction = direction;

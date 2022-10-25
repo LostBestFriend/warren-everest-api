@@ -84,19 +84,19 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetAll_Sucessfully()
+        public async void Should_GetAllAsync_Sucessfully()
         {
             var products = ProductFixture.GenerateProductFixture(3);
 
             _repositoryFactoryMock.Setup(p => p.Repository<Product>().MultipleResultQuery()).Returns(It.IsAny<IMultipleResultQuery<Product>>);
-            _repositoryFactoryMock.Setup(p => p.Repository<Product>().Search(It.IsAny<IMultipleResultQuery<Product>>())).Returns(products);
+            _repositoryFactoryMock.Setup(p => p.Repository<Product>().SearchAsync(It.IsAny<IMultipleResultQuery<Product>>(), default)).ReturnsAsync(products);
 
-            var result = _productService.GetAll();
+            var result = await _productService.GetAllAsync();
 
             result.Should().HaveCountGreaterThanOrEqualTo(0);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Product>().MultipleResultQuery(), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Product>().Search(It.IsAny<IQuery<Product>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Product>().SearchAsync(It.IsAny<IQuery<Product>>(), default), Times.Once);
         }
 
         [Fact]
@@ -117,33 +117,17 @@ namespace DomainServices.Tests.Services
         public void Should_Delete_Sucessfully()
         {
             long productId = 1;
-            _unitOfWorkMock.Setup(p => p.Repository<Product>().Any(It.IsAny<Expression<Func<Product, bool>>>())).Returns(true);
-            _unitOfWorkMock.Setup(p => p.Repository<Product>().Remove(It.IsAny<Expression<Func<Product, bool>>>()));
+            var product = ProductFixture.GenerateProductFixture();
 
-            _productService.Delete(productId);
+            _repositoryFactoryMock.Setup(p => p.Repository<Product>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Product, bool>>>())).Returns(It.IsAny<IQuery<Product>>());
+            _repositoryFactoryMock.Setup(P => P.Repository<Product>().FirstOrDefaultAsync(It.IsAny<IQuery<Product>>(), default)).ReturnsAsync(product);
+            _unitOfWorkMock.Setup(p => p.Repository<Product>().Remove(It.IsAny<Product>()));
 
-            _unitOfWorkMock.Verify(p => p.Repository<Product>().Any(It.IsAny<Expression<Func<Product, bool>>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Product>().Remove(It.IsAny<Expression<Func<Product, bool>>>()), Times.Once);
-        }
+            _productService.DeleteAsync(productId);
 
-        [Fact]
-        public void Should_Not_Delete_When_Id_Dismatch()
-        {
-            long productId = 0;
-            _unitOfWorkMock.Setup(p => p.Repository<Product>().Any(It.IsAny<Expression<Func<Product, bool>>>())).Returns(false);
-            _unitOfWorkMock.Setup(p => p.Repository<Product>().Remove(It.IsAny<Expression<Func<Product, bool>>>()));
-
-            try
-            {
-                _productService.Delete(productId);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            _unitOfWorkMock.Verify(p => p.Repository<Product>().Any(It.IsAny<Expression<Func<Product, bool>>>()), Times.Once);
-            _unitOfWorkMock.Verify(p => p.Repository<Product>().Remove(It.IsAny<Expression<Func<Product, bool>>>()), Times.Never);
+            _repositoryFactoryMock.Verify(p => p.Repository<Product>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Product, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(P => P.Repository<Product>().FirstOrDefaultAsync(It.IsAny<IQuery<Product>>(), default), Times.Once);
+            _unitOfWorkMock.Verify(p => p.Repository<Product>().Remove(It.IsAny<Product>()), Times.Once);
         }
     }
 }

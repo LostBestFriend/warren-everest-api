@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.PortfolioProduct;
+﻿using AppModels.AppModels.PortfolioProducts;
 using AppServices.Tests.Fixtures.Product;
 using Bogus;
 using System.Collections.Generic;

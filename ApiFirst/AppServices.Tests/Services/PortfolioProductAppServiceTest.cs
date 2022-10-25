@@ -4,6 +4,7 @@ using DomainServices.Interfaces;
 using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace AppServices.Tests.Services
@@ -27,7 +28,7 @@ namespace AppServices.Tests.Services
 
             _portfolioProductServiceMock.Setup(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
-            _portfolioProductAppService.InitRelation(portfolio, product);
+            _ = _portfolioProductAppService.InitRelationAsync(portfolio, product);
 
             _portfolioProductServiceMock.Verify(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Once);
         }
@@ -46,28 +47,28 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_RelationAlreadyExists_Sucessfully()
+        public async Task Should_RelationAlreadyExists_SucessfullyAsync()
         {
             long portfolioId = 1;
             long productId = 1;
 
-            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).Returns(true);
+            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(true);
 
-            var result = _portfolioProductAppService.RelationAlreadyExists(portfolioId, productId);
+            var result = await _portfolioProductAppService.RelationAlreadyExists(portfolioId, productId);
             result.Should().BeTrue();
 
             _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>()));
         }
 
         [Fact]
-        public void Should_RelationAlreadyExists_Sucessfully_From_False()
+        public async void Should_RelationAlreadyExists_Sucessfully_From_False()
         {
             long portfolioId = 1;
             long productId = 1;
 
-            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).Returns(false);
+            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(false);
 
-            var result = _portfolioProductAppService.RelationAlreadyExists(portfolioId, productId);
+            var result = await _portfolioProductAppService.RelationAlreadyExists(portfolioId, productId);
             result.Should().BeFalse();
 
             _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>()));

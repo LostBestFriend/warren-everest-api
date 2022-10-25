@@ -54,7 +54,7 @@ namespace DomainServices.Services
 
         public async Task<IList<Order>> GetExecutableOrdersAsync()
         {
-            var repository = _unitOfWork.Repository<Order>();
+            var repository = _repositoryFactory.Repository<Order>();
             var query = repository.MultipleResultQuery().AndFilter(order => order.LiquidateAt.Date <= DateTime.Now.Date);
             var orders = await repository.SearchAsync(query);
 

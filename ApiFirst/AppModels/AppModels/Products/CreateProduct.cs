@@ -5,7 +5,7 @@ namespace AppModels.AppModels.Products
 {
     public class CreateProduct
     {
-        public CreateProduct(string symbol, decimal unitPrice, DateTime issuanceAt, DateTime expirationAt, ProductEnum type)
+        public CreateProduct(string symbol, decimal unitPrice, DateTime issuanceAt, DateTime expirationAt, ProductType type)
         {
             Symbol = symbol;
             UnitPrice = unitPrice;

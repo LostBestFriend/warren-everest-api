@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Portfolio;
+﻿using AppModels.AppModels.Portfolios;
 using Bogus;
 using System.Collections.Generic;
 

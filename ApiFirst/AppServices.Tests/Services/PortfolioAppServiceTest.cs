@@ -1,4 +1,5 @@
-﻿using AppModels.AppModels.Order;
+﻿using AppModels.AppModels.Orders;
+using AppModels.EnumModels;
 using AppServices.Interfaces;
 using AppServices.Services;
 using AppServices.Tests.Fixtures.Order;
@@ -11,8 +12,8 @@ using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
 using System;
+using System.Threading.Tasks;
 using Xunit;
-using OrderEnum = AppModels.EnumModels.OrderEnum;
 
 namespace AppServices.Tests.Services
 {
@@ -54,18 +55,18 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetAll_Sucessfully()
+        public async Task Should_GetAll_SucessfullyAsync()
         {
             var portfolios = PortfolioFixture.GeneratePortfolioFixture(3);
             var portfolioResponses = PortfolioResponseFixture.GeneratePortfolioResponseFixture(3);
 
-            _portfolioServiceMock.Setup(p => p.GetAll()).Returns(portfolios);
+            _portfolioServiceMock.Setup(p => p.GetAllAsync()).ReturnsAsync(portfolios);
 
-            var result = _portfolioAppService.GetAll();
+            var result = await _portfolioAppService.GetAllAsync();
 
             result.Should().NotBeNull();
 
-            _portfolioServiceMock.Verify(p => p.GetAll(), Times.Once);
+            _portfolioServiceMock.Verify(p => p.GetAllAsync(), Times.Once);
         }
 
         [Fact]
@@ -84,17 +85,18 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetAccountBalance_Sucessfully()
+        public async void Should_GetAccountBalance_Sucessfully()
         {
             long portfolioId = 1;
+            decimal balance = 1000;
 
-            _portfolioServiceMock.Setup(p => p.GetAccountBalance(It.IsAny<long>())).Returns(It.IsAny<decimal>());
+            _portfolioServiceMock.Setup(p => p.GetAccountBalanceAsync(It.IsAny<long>())).ReturnsAsync(balance);
 
-            var result = _portfolioAppService.GetAccountBalance(portfolioId);
+            var result = await _portfolioAppService.GetAccountBalanceAsync(portfolioId);
 
             result.Should().BeGreaterThanOrEqualTo(0);
 
-            _portfolioServiceMock.Verify(p => p.GetAccountBalance(It.IsAny<long>()), Times.Once);
+            _portfolioServiceMock.Verify(p => p.GetAccountBalanceAsync(It.IsAny<long>()), Times.Once);
         }
 
         [Fact]
@@ -107,13 +109,13 @@ namespace AppServices.Tests.Services
 
             _customerBankInfoAppServiceMock.Setup(p => p.GetBalance(It.IsAny<long>())).Returns(balance);
             _customerBankInfoAppServiceMock.Setup(p => p.Withdraw(It.IsAny<long>(), It.IsAny<decimal>()));
-            _portfolioServiceMock.Setup(p => p.Deposit(It.IsAny<decimal>(), It.IsAny<long>()));
+            _portfolioServiceMock.Setup(p => p.DepositAsync(It.IsAny<decimal>(), It.IsAny<long>()));
 
             _portfolioAppService.Deposit(amount, customerId, portfolioId);
 
             _customerBankInfoAppServiceMock.Verify(p => p.GetBalance(It.IsAny<long>()), Times.Once);
             _customerBankInfoAppServiceMock.Verify(p => p.Withdraw(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
-            _portfolioServiceMock.Verify(p => p.Deposit(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+            _portfolioServiceMock.Verify(p => p.DepositAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
         }
 
         [Fact]
@@ -124,14 +126,14 @@ namespace AppServices.Tests.Services
             decimal amount = 100;
             decimal balance = 1000;
 
-            _portfolioServiceMock.Setup(p => p.GetAccountBalance(It.IsAny<long>())).Returns(balance);
-            _portfolioServiceMock.Setup(p => p.Withdraw(It.IsAny<decimal>(), It.IsAny<long>()));
+            _portfolioServiceMock.Setup(p => p.GetAccountBalanceAsync(It.IsAny<long>())).ReturnsAsync(balance);
+            _portfolioServiceMock.Setup(p => p.WithdrawAsync(It.IsAny<decimal>(), It.IsAny<long>()));
             _customerBankInfoAppServiceMock.Setup(p => p.Deposit(It.IsAny<long>(), It.IsAny<decimal>()));
 
-            _portfolioAppService.Withdraw(amount, customerId, portfolioId);
+            _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
 
-            _portfolioServiceMock.Verify(p => p.GetAccountBalance(It.IsAny<long>()), Times.Once);
-            _portfolioServiceMock.Verify(p => p.Withdraw(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+            _portfolioServiceMock.Verify(p => p.GetAccountBalanceAsync(It.IsAny<long>()), Times.Once);
+            _portfolioServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
             _customerBankInfoAppServiceMock.Verify(p => p.Deposit(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
         }
 
@@ -269,16 +271,16 @@ namespace AppServices.Tests.Services
         public void Should_ExecuteNowOrdersAsync_Sucessfully_With_Sell_And_Buy_Orders()
         {
             var orders = OrderResponseFixture.GenerateOrderResponseFixture(4);
-            orders[0].Direction = OrderEnum.Sell;
-            orders[1].Direction = OrderEnum.Buy;
-            orders[2].Direction = OrderEnum.Sell;
-            orders[3].Direction = OrderEnum.Buy;
+            orders[0].Direction = OrderDirection.Sell;
+            orders[1].Direction = OrderDirection.Buy;
+            orders[2].Direction = OrderDirection.Sell;
+            orders[3].Direction = OrderDirection.Buy;
 
-            _orderAppServiceMock.Setup(p => p.GetExecutableOrders()).Returns(orders);
+            _orderAppServiceMock.Setup(p => p.GetExecutableOrdersAsync()).ReturnsAsync(orders);
 
-            _portfolioAppService.ExecuteNowOrdersAsync();
+            _ = _portfolioAppService.ExecuteNowOrdersAsync();
 
-            _orderAppServiceMock.Verify(p => p.GetExecutableOrders(), Times.Once);
+            _orderAppServiceMock.Verify(p => p.GetExecutableOrdersAsync(), Times.Once);
         }
 
         [Fact]
@@ -291,15 +293,15 @@ namespace AppServices.Tests.Services
 
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(productResponse);
-            _portfolioServiceMock.Setup(p => p.ExecuteBuyOrder(It.IsAny<decimal>(), It.IsAny<long>()));
-            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).Returns(false);
+            _portfolioServiceMock.Setup(p => p.ExecuteBuyOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()));
+            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(false);
             _portfolioProductServiceMock.Setup(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
             _portfolioAppService.ExecuteBuyOrderAsync(orderResponse);
 
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
-            _portfolioServiceMock.Verify(p => p.ExecuteBuyOrder(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+            _portfolioServiceMock.Verify(p => p.ExecuteBuyOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
             _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
             _portfolioProductServiceMock.Verify(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Once);
         }
@@ -314,15 +316,15 @@ namespace AppServices.Tests.Services
 
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(productResponse);
-            _portfolioServiceMock.Setup(p => p.ExecuteBuyOrder(It.IsAny<decimal>(), It.IsAny<long>()));
-            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).Returns(true);
+            _portfolioServiceMock.Setup(p => p.ExecuteBuyOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()));
+            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(true);
             _portfolioProductServiceMock.Setup(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
             _portfolioAppService.ExecuteBuyOrderAsync(orderResponse);
 
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
-            _portfolioServiceMock.Verify(p => p.ExecuteBuyOrder(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+            _portfolioServiceMock.Verify(p => p.ExecuteBuyOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
             _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
             _portfolioProductServiceMock.Verify(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Never);
         }
@@ -338,7 +340,7 @@ namespace AppServices.Tests.Services
 
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(productResponse);
-            _portfolioServiceMock.Setup(p => p.ExecuteSellOrder(It.IsAny<decimal>(), It.IsAny<long>()));
+            _portfolioServiceMock.Setup(p => p.ExecuteSellOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()));
             _orderAppServiceMock.Setup(p => p.GetQuotesAvaliable(It.IsAny<long>(), It.IsAny<long>())).Returns(quotesAvaliable);
             _portfolioProductServiceMock.Setup(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
@@ -346,7 +348,7 @@ namespace AppServices.Tests.Services
 
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
-            _portfolioServiceMock.Verify(p => p.ExecuteSellOrder(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+            _portfolioServiceMock.Verify(p => p.ExecuteSellOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
             _orderAppServiceMock.Verify(p => p.GetQuotesAvaliable(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
             _portfolioProductServiceMock.Verify(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Once);
         }
@@ -362,7 +364,7 @@ namespace AppServices.Tests.Services
 
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(productResponse);
-            _portfolioServiceMock.Setup(p => p.ExecuteSellOrder(It.IsAny<decimal>(), It.IsAny<long>()));
+            _portfolioServiceMock.Setup(p => p.ExecuteSellOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()));
             _orderAppServiceMock.Setup(p => p.GetQuotesAvaliable(It.IsAny<long>(), It.IsAny<long>())).Returns(quotesAvaliable);
             _portfolioProductServiceMock.Setup(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
@@ -370,7 +372,7 @@ namespace AppServices.Tests.Services
 
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
-            _portfolioServiceMock.Verify(p => p.ExecuteSellOrder(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+            _portfolioServiceMock.Verify(p => p.ExecuteSellOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
             _orderAppServiceMock.Verify(p => p.GetQuotesAvaliable(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
             _portfolioProductServiceMock.Verify(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Never);
         }
@@ -380,11 +382,11 @@ namespace AppServices.Tests.Services
         {
             long portfolioId = 1;
 
-            _portfolioServiceMock.Setup(p => p.Delete(It.IsAny<long>()));
+            _portfolioServiceMock.Setup(p => p.DeleteAsync(It.IsAny<long>()));
 
             _portfolioAppService.Delete(portfolioId);
 
-            _portfolioServiceMock.Verify(p => p.Delete(It.IsAny<long>()), Times.Once);
+            _portfolioServiceMock.Verify(p => p.DeleteAsync(It.IsAny<long>()), Times.Once);
         }
     }
 }

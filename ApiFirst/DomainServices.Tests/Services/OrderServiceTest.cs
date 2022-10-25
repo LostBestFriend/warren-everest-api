@@ -50,17 +50,18 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetAll_Sucessfully()
+        public async void Should_GetAll_Sucessfully()
         {
             List<Order> orderList = OrderFixture.GenerateOrderFixture(2);
 
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IMultipleResultQuery<Order>>())).Returns(orderList);
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().MultipleResultQuery().Include(It.IsAny<Func<IQueryable<Order>, IIncludableQueryable<Order, object>>>())).Returns(It.IsAny<IMultipleResultQuery<Order>>());
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().SearchAsync(It.IsAny<IMultipleResultQuery<Order>>(), default)).ReturnsAsync(orderList);
 
-            var customers = _orderService.GetAll();
+            var customers = await _orderService.GetAllAsync();
 
             customers.Should().HaveCountGreaterThanOrEqualTo(0);
 
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Search(It.IsAny<IMultipleResultQuery<Order>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().SearchAsync(It.IsAny<IMultipleResultQuery<Order>>(), default), Times.Once);
         }
 
         [Fact]
@@ -80,18 +81,18 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetExecutableOrders()
+        public async void Should_GetExecutableOrders()
         {
             var orders = OrderFixture.GenerateOrderFixture(3);
 
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>())).Returns(It.IsAny<IQuery<Order>>());
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>())).Returns(orders);
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().SearchAsync(It.IsAny<IQuery<Order>>(), default)).ReturnsAsync(orders);
 
-            var result = _orderService.GetExecutableOrders();
+            var result = await _orderService.GetExecutableOrdersAsync();
             result.Should().HaveCountGreaterThanOrEqualTo(0);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().SearchAsync(It.IsAny<IQuery<Order>>(), default), Times.Once);
         }
 
         [Fact]
@@ -108,47 +109,14 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_Delete_Sucessfully()
-        {
-            long id = 1;
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Any(It.IsAny<Expression<Func<Order, bool>>>())).Returns(true);
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Remove(It.IsAny<Expression<Func<Order, bool>>>()));
-
-            _orderService.Delete(id);
-
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Remove(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
-        }
-
-        [Fact]
-        public void Should_Not_Delete_When_Id_Dismatch()
-        {
-            long id = 0;
-
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Any(It.IsAny<Expression<Func<Order, bool>>>())).Returns(false);
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Remove(It.IsAny<Expression<Func<Order, bool>>>()));
-
-            try
-            {
-                _orderService.Delete(id);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Remove(It.IsAny<Expression<Func<Order, bool>>>()), Times.Never);
-        }
-
-        [Fact]
-        public void Should_GetQuotesAvaliable()
+        public void Should_GetQuotesAvaliable_Sucessfully()
         {
             long portfolioId = 1;
             long productId = 1;
+            var orders = OrderFixture.GenerateOrderFixture(3);
 
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>())).Returns(It.IsAny<IQuery<Order>>());
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()));
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>())).Returns(orders);
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().Any(null)).Returns(true);
 
             var result = _orderService.GetQuotesAvaliable(portfolioId, productId);
@@ -156,7 +124,7 @@ namespace DomainServices.Tests.Services
 
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(null), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(null), Times.Never);
         }
 
         [Fact]
@@ -181,7 +149,7 @@ namespace DomainServices.Tests.Services
 
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(null), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(null), Times.Never);
         }
     }
 }

@@ -5,19 +5,19 @@ namespace AppModels.AppModels.Products
 {
     public class UpdateProduct
     {
-        public UpdateProduct(string symbol, decimal unitPrice, DateTime issuanceAt, DateTime expirationAt, ProductEnum type)
+        public UpdateProduct(string symbol, decimal unitPrice, DateTime issuanceAt, DateTime expirationAt, ProductType type)
         {
             Symbol = symbol;
-            UnitPrice = unitPrice;
             IssuanceAt = issuanceAt;
             ExpirationAt = expirationAt;
+            UnitPrice = unitPrice;
             DaysToExpire = expirationAt.Subtract(issuanceAt).Days;
             Type = type;
         }
 
         public string Symbol { get; set; }
-        public decimal UnitPrice { get; set; }
         public DateTime IssuanceAt { get; set; }
+        public decimal UnitPrice { get; set; }
         public DateTime ExpirationAt { get; set; }
         public int DaysToExpire { get; set; }
         public ProductType Type { get; set; }
