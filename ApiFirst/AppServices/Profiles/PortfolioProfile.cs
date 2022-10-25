@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Portfolio;
+﻿using AppModels.AppModels.Portfolios;
 using AutoMapper;
 using DomainModels.Models;
 

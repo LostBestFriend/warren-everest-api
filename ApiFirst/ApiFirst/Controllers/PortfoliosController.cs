@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Portfolio;
+﻿using AppModels.AppModels.Portfolios;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,9 +18,9 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var portolios = _portfolioAppService.GetAll();
+            var portolios = await _portfolioAppService.GetAllAsync();
             return Ok(portolios);
         }
 
@@ -43,7 +43,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(CreatePortfolio model)
+        public async Task<IActionResult> CreateAsync(CreatePortfolio model)
         {
             try
             {
@@ -79,11 +79,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("withdraw")]
-        public IActionResult Withdraw(decimal amount, long customerId, long portfolioId)
+        public IActionResult WithdrawAsync(decimal amount, long customerId, long portfolioId)
         {
             try
             {
-                _portfolioAppService.Withdraw(amount, customerId, portfolioId);
+                _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
                 return Ok();
             }
             catch (ArgumentNullException exception)

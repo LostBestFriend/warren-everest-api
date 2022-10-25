@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Order;
+﻿using AppModels.AppModels.Orders;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,11 +18,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             try
             {
-                var orders = _orderAppService.GetAll();
+                var orders = await _orderAppService.GetAllAsync();
                 return Ok(orders);
             }
             catch (Exception exception)
@@ -50,7 +50,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(CreateOrder model)
+        public async Task<IActionResult> CreateAsync(CreateOrder model)
         {
             try
             {
@@ -69,24 +69,6 @@ namespace ApiFirst.Controllers
             try
             {
                 _orderAppService.Update(id, model);
-                return Ok();
-            }
-            catch (ArgumentNullException exception)
-            {
-                return NotFound(exception.Message);
-            }
-            catch (Exception exception)
-            {
-                return Problem(exception.Message);
-            }
-        }
-
-        [HttpDelete]
-        public IActionResult Delete(long id)
-        {
-            try
-            {
-                _orderAppService.Delete(id);
                 return Ok();
             }
             catch (ArgumentNullException exception)

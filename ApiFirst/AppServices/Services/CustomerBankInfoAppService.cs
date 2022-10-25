@@ -21,7 +21,7 @@ namespace AppServices.Services
 
         public void Deposit(long customerId, decimal amount)
         {
-            _customerBankInfoServices.Deposit(customerId, amount);
+            _customerBankInfoServices.DepositAsync(customerId, amount);
         }
 
         public decimal GetBalance(long customerId)
@@ -31,7 +31,12 @@ namespace AppServices.Services
 
         public void Withdraw(long customerId, decimal amount)
         {
-            _customerBankInfoServices.Withdraw(customerId, amount);
+            _customerBankInfoServices.WithdrawAsync(customerId, amount);
+        }
+
+        public void Delete(long customerId)
+        {
+            _customerBankInfoServices.DeleteAsync(customerId);
         }
     }
 }

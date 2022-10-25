@@ -3,6 +3,7 @@ using DomainServices.Interfaces;
 using EntityFrameworkCore.UnitOfWork.Interfaces;
 using Infrastructure.Data.Context;
 using System;
+using System.Threading.Tasks;
 
 namespace DomainServices.Services
 {
@@ -26,6 +27,13 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
+        public void DeleteAsync(long customerId)
+        {
+            var repository = _unitOfWork.Repository<CustomerBankInfo>();
+
+            repository.RemoveAsync(bankInfo => bankInfo.CustomerId == customerId);
+        }
+
         public decimal GetBalance(long customerId)
         {
             var repository = _repositoryFactory.Repository<CustomerBankInfo>();
@@ -39,11 +47,10 @@ namespace DomainServices.Services
             return accountBalance;
         }
 
-        public void Deposit(long customerId, decimal amount)
+        public async void DepositAsync(long customerId, decimal amount)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
-            var query = repository.SingleResultQuery().AndFilter(bankinfo => bankinfo.CustomerId == customerId);
-            var bankInfo = repository.FirstOrDefault(query);
+            var bankInfo = await GetByCustomerIdAsync(customerId);
 
             if (bankInfo is null)
                 throw new ArgumentNullException($"Cliente não encontrado para o id {customerId}");
@@ -53,11 +60,17 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public void Withdraw(long customerId, decimal amount)
+        public async Task<CustomerBankInfo> GetByCustomerIdAsync(long customerId)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
             var query = repository.SingleResultQuery().AndFilter(bankinfo => bankinfo.CustomerId == customerId);
-            var bankInfo = repository.FirstOrDefault(query);
+            return await repository.FirstOrDefaultAsync(query);
+        }
+
+        public async void WithdrawAsync(long customerId, decimal amount)
+        {
+            var repository = _unitOfWork.Repository<CustomerBankInfo>();
+            var bankInfo = await GetByCustomerIdAsync(customerId);
 
             if (bankInfo is null)
                 throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");

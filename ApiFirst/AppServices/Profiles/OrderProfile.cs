@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Order;
+﻿using AppModels.AppModels.Orders;
 using AutoMapper;
 using DomainModels.Models;
 

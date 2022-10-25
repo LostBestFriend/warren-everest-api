@@ -2,6 +2,7 @@
 using DomainModels.Models;
 using DomainServices.Interfaces;
 using System;
+using System.Threading.Tasks;
 
 namespace AppServices.Services
 {
@@ -15,9 +16,9 @@ namespace AppServices.Services
                 throw new ArgumentNullException(nameof(portfolioProductServices));
         }
 
-        public void InitRelation(Portfolio portfolio, Product product)
+        public async Task InitRelationAsync(Portfolio portfolio, Product product)
         {
-            _portfolioProductService.InitRelationAsync(portfolio, product);
+            await _portfolioProductService.InitRelationAsync(portfolio, product);
         }
 
         public void DisposeRelation(Portfolio portfolio, Product product)
@@ -25,9 +26,9 @@ namespace AppServices.Services
             _portfolioProductService.DisposeRelationAsync(portfolio, product);
         }
 
-        public bool RelationAlreadyExists(long portfolioId, long productId)
+        public async Task<bool> RelationAlreadyExists(long portfolioId, long productId)
         {
-            return _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
+            return await _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
         }
     }
 }

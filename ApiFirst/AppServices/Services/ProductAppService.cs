@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Product;
+﻿using AppModels.AppModels.Products;
 using AppServices.Interfaces;
 using AutoMapper;
 using DomainModels.Models;
@@ -22,9 +22,9 @@ namespace AppServices.Services
                 throw new ArgumentNullException(nameof(productServices));
         }
 
-        public IEnumerable<ProductResponse> GetAll()
+        public async Task<IEnumerable<ProductResponse>> GetAllAsync()
         {
-            var result = _productService.GetAll();
+            var result = await _productService.GetAllAsync();
             return _mapper.Map<IEnumerable<ProductResponse>>(result);
         }
 
@@ -49,7 +49,7 @@ namespace AppServices.Services
 
         public void Delete(long id)
         {
-            _productService.Delete(id);
+            _productService.DeleteAsync(id);
         }
     }
 }

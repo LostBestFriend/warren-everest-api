@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Product;
+﻿using AppModels.AppModels.Products;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,11 +18,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             try
             {
-                var portolios = _productAppService.GetAll();
+                var portolios = await _productAppService.GetAllAsync();
                 return Ok(portolios);
             }
             catch (Exception exception)
@@ -50,7 +50,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(CreateProduct model)
+        public async Task<IActionResult> CreateAsync(CreateProduct model)
         {
             try
             {

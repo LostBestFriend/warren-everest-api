@@ -42,12 +42,12 @@ namespace DomainServices.Services
         }
 
 
-        public IEnumerable<Product> GetAll()
+        public async Task<IEnumerable<Product>> GetAllAsync()
         {
             var repository = _repositoryFactory.Repository<Product>();
             var query = repository.MultipleResultQuery();
 
-            return repository.Search(query);
+            return await repository.SearchAsync(query);
         }
 
         public void Update(Product model)
@@ -58,14 +58,13 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public void Delete(long id)
+        public async void DeleteAsync(long id)
         {
             var repository = _unitOfWork.Repository<Product>();
 
-            if (!repository.Any(product => product.Id == id))
-                throw new ArgumentNullException($"Produto não encontrado para o id: {id}");
+            var product = await GetByIdAsync(id);
 
-            repository.Remove(product => product.Id == id);
+            repository.Remove(product);
         }
     }
 }

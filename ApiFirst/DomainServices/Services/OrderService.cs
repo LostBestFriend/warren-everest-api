@@ -1,4 +1,5 @@
-﻿using DomainModels.Models;
+﻿using DomainModels.Enums;
+using DomainModels.Models;
 using DomainServices.Interfaces;
 using EntityFrameworkCore.UnitOfWork.Interfaces;
 using Infrastructure.Data.Context;
@@ -31,12 +32,12 @@ namespace DomainServices.Services
             return model.Id;
         }
 
-        public IEnumerable<Order> GetAll()
+        public async Task<IEnumerable<Order>> GetAllAsync()
         {
             var repository = _repositoryFactory.Repository<Order>();
-            var query = repository.MultipleResultQuery();
+            var query = repository.MultipleResultQuery().Include(source => source.Include(order => order.Product).Include(order => order.Portfolio));
 
-            return repository.Search(query);
+            return await repository.SearchAsync(query);
         }
 
         public async Task<Order> GetByIdAsync(long id)
@@ -51,11 +52,11 @@ namespace DomainServices.Services
             return order;
         }
 
-        public IList<Order> GetExecutableOrders()
+        public async Task<IList<Order>> GetExecutableOrdersAsync()
         {
             var repository = _unitOfWork.Repository<Order>();
             var query = repository.MultipleResultQuery().AndFilter(order => order.LiquidateAt.Date <= DateTime.Now.Date);
-            var orders = repository.Search(query);
+            var orders = await repository.SearchAsync(query);
 
             return orders;
         }
@@ -66,16 +67,6 @@ namespace DomainServices.Services
 
             repository.Update(model);
             _unitOfWork.SaveChanges();
-        }
-
-        public void Delete(long id)
-        {
-            var repository = _repositoryFactory.Repository<Order>();
-
-            if (!repository.Any(order => order.Id == id))
-                throw new ArgumentNullException($"Não encontrada nenhuma Ordem de Investimento com o id: {id}");
-
-            repository.Remove(order => order.Id == id);
         }
 
         public int GetQuotesAvaliable(long portfolioId, long productId)
@@ -91,7 +82,7 @@ namespace DomainServices.Services
 
             foreach (var order in allOrders)
             {
-                availableQuotes = order.Direction == OrderEnum.Buy ?
+                availableQuotes = order.Direction == OrderDirection.Buy ?
                     availableQuotes += order.Quotes :
                     availableQuotes -= order.Quotes;
             }

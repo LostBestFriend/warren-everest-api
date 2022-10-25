@@ -6,12 +6,11 @@ namespace DomainServices.Interfaces
 {
     public interface IOrderService
     {
-        IEnumerable<Order> GetAll();
+        Task<IEnumerable<Order>> GetAllAsync();
         int GetQuotesAvaliable(long portfolioId, long productId);
         Task<Order> GetByIdAsync(long id);
         Task<long> CreateAsync(Order model);
-        IList<Order> GetExecutableOrders();
+        Task<IList<Order>> GetExecutableOrdersAsync();
         void Update(Order model);
-        void Delete(long id);
     }
 }

@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Order;
+﻿using AppModels.AppModels.Orders;
 using AppServices.Interfaces;
 using AutoMapper;
 using DomainModels.Models;
@@ -22,15 +22,15 @@ namespace AppServices.Services
                 throw new ArgumentNullException(nameof(orderServices));
         }
 
-        public Task<long> CreateAsync(CreateOrder model)
+        public async Task<long> CreateAsync(CreateOrder model)
         {
             Order order = _mapper.Map<Order>(model);
-            return _orderServices.CreateAsync(order);
+            return await _orderServices.CreateAsync(order);
         }
 
-        public IEnumerable<OrderResponse> GetAll()
+        public async Task<IEnumerable<OrderResponse>> GetAllAsync()
         {
-            var result = _orderServices.GetAll();
+            var result = await _orderServices.GetAllAsync();
             return _mapper.Map<IList<OrderResponse>>(result);
         }
 
@@ -45,9 +45,9 @@ namespace AppServices.Services
             return _orderServices.GetQuotesAvaliable(portfolioId, productId);
         }
 
-        public IEnumerable<OrderResponse> GetExecutableOrders()
+        public async Task<IEnumerable<OrderResponse>> GetExecutableOrdersAsync()
         {
-            var orders = _orderServices.GetExecutableOrders();
+            var orders = await _orderServices.GetExecutableOrdersAsync();
 
             return _mapper.Map<IEnumerable<OrderResponse>>(orders);
 
@@ -57,11 +57,6 @@ namespace AppServices.Services
         {
             var order = _mapper.Map<Order>(model);
             _orderServices.Update(order);
-        }
-
-        public void Delete(long id)
-        {
-            _orderServices.Delete(id);
         }
     }
 }
