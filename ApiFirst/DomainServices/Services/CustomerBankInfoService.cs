@@ -27,11 +27,11 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public void DeleteAsync(long customerId)
+        public async Task DeleteAsync(long customerId)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
 
-            repository.RemoveAsync(bankInfo => bankInfo.CustomerId == customerId);
+            _ = await repository.RemoveAsync(bankInfo => bankInfo.CustomerId == customerId);
         }
 
         public decimal GetBalance(long customerId)

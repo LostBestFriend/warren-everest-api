@@ -8,6 +8,6 @@ namespace DomainServices.Interfaces
         decimal GetBalance(long customerId);
         Task DepositAsync(long customerId, decimal amount);
         Task WithdrawAsync(long customerId, decimal amount);
-        void DeleteAsync(long customerId);
+        Task DeleteAsync(long customerId);
     }
 }

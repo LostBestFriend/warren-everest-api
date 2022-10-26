@@ -32,6 +32,58 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
+        public async void Should_DeleteAsync_Sucessfully()
+        {
+            long customerId = 1;
+
+            _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().RemoveAsync(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>(), default));
+
+            await _customerBankInfoService.DeleteAsync(customerId);
+
+            _unitOfWorkMock.Verify(p => p.Repository<CustomerBankInfo>().RemoveAsync(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>(), default), Times.Once);
+        }
+
+        [Fact]
+        public async void Should_GetByCustomerIdAsync_Sucessfully()
+        {
+            long customerId = 1;
+            var bankInfo = CustomerBankInfoFixture.GenerateCustomerBankInfoFixture();
+
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default)).ReturnsAsync(bankInfo);
+
+            var result = await _customerBankInfoService.GetByCustomerIdAsync(customerId);
+
+            result.Should().NotBeNull();
+
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
+        }
+
+        [Fact]
+        public async void Should_Not_GetByCustomerIdAsync_When_CustomerId_Dismatch()
+        {
+            long customerId = 1;
+            var bankInfo = CustomerBankInfoFixture.GenerateCustomerBankInfoFixture();
+
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
+            _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default));
+
+            try
+            {
+                var result = await _customerBankInfoService.GetByCustomerIdAsync(customerId);
+                result.Should().NotBeNull();
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
+        }
+
+        [Fact]
         public void Should_Create_SucessFully()
         {
             long customerId = 1;
@@ -88,6 +140,8 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Never);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefault(It.IsAny<IQuery<CustomerBankInfo, decimal>>()), Times.Never);
         }
+
+
 
         [Fact]
         public void Should_Deposit_Sucessfully()
