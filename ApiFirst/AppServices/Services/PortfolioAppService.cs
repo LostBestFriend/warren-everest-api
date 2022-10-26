@@ -78,7 +78,7 @@ namespace AppServices.Services
             transactionScope.Complete();
         }
 
-        public async void WithdrawAsync(decimal amount, long customerId, long portfolioId)
+        public async Task WithdrawAsync(decimal amount, long customerId, long portfolioId)
         {
             if (await _portfolioService.GetAccountBalanceAsync(portfolioId) < amount)
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar o saque requerido");

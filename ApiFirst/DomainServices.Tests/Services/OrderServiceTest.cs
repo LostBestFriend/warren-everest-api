@@ -132,10 +132,11 @@ namespace DomainServices.Tests.Services
         {
             long portfolioId = 1;
             long productId = 1;
+            var order = OrderFixture.GenerateOrderFixture(3);
+            List<Order> list = new();
 
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>())).Returns(It.IsAny<IQuery<Order>>());
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()));
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Any(null)).Returns(false);
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>())).Returns(list);
 
             try
             {
@@ -149,7 +150,6 @@ namespace DomainServices.Tests.Services
 
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(null), Times.Never);
         }
     }
 }

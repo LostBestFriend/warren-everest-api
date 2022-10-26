@@ -13,7 +13,7 @@ namespace AppServices.Interfaces
         Task<PortfolioResponse> GetByIdAsync(long id);
         Task<decimal> GetAccountBalanceAsync(long portfolioId);
         void Deposit(decimal amount, long customerId, long portfolioId);
-        void WithdrawAsync(decimal amount, long customerId, long portfolioId);
+        Task WithdrawAsync(decimal amount, long customerId, long portfolioId);
         Task ExecuteNowOrdersAsync();
         Task ExecuteBuyOrderAsync(OrderResponse order);
         Task ExecuteSellOrderAsync(OrderResponse order);

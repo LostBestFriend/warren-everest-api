@@ -1,5 +1,6 @@
 ﻿using AppModels.AppModels.Orders;
 using AppModels.AppModels.Portfolios;
+using AppModels.AppModels.Products;
 using AppModels.EnumModels;
 using AppServices.Interfaces;
 using AppServices.Services;
@@ -35,6 +36,7 @@ namespace AppServices.Tests.Services
             {
                 cfg.CreateMap<UpdatePortfolio, Portfolio>();
                 cfg.CreateMap<Portfolio, PortfolioResponse>();
+                cfg.CreateMap<ProductResponse, Product>();
                 cfg.CreateMap<CreatePortfolio, Portfolio>();
             }).CreateMapper();
             _portfolioServiceMock = new();
@@ -126,6 +128,32 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
+        public void Should_Not_Deposit_Sucessfully()
+        {
+            long portfolioId = 1;
+            long customerId = 1;
+            decimal amount = 100;
+            decimal balance = 10;
+
+            _customerBankInfoAppServiceMock.Setup(p => p.GetBalance(It.IsAny<long>())).Returns(balance);
+            _customerBankInfoAppServiceMock.Setup(p => p.Withdraw(It.IsAny<long>(), It.IsAny<decimal>()));
+            _portfolioServiceMock.Setup(p => p.DepositAsync(It.IsAny<decimal>(), It.IsAny<long>()));
+
+            try
+            {
+                _portfolioAppService.Deposit(amount, customerId, portfolioId);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            _customerBankInfoAppServiceMock.Verify(p => p.GetBalance(It.IsAny<long>()), Times.Once);
+            _customerBankInfoAppServiceMock.Verify(p => p.Withdraw(It.IsAny<long>(), It.IsAny<decimal>()), Times.Never);
+            _portfolioServiceMock.Verify(p => p.DepositAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Never);
+        }
+
+        [Fact]
         public void Should_Withdraw_Sucessfully()
         {
             long portfolioId = 1;
@@ -145,7 +173,7 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_Not_Withdraw_Sucessfully()
+        public async void Should_Not_Withdraw_When_Balance_Is_Lesser_Than_Amount()
         {
             long portfolioId = 1;
             long customerId = 1;
@@ -158,7 +186,7 @@ namespace AppServices.Tests.Services
 
             try
             {
-                _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
+                await _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
             }
             catch (ArgumentException e)
             {
@@ -239,7 +267,7 @@ namespace AppServices.Tests.Services
 
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Exactly(2));
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Exactly(2));
-            _orderAppServiceMock.Verify(p => p.GetQuotesAvaliable(portfolioId, productId), Times.Once);
+            _orderAppServiceMock.Verify(p => p.GetQuotesAvaliable(portfolioId, productId), Times.Exactly(2));
             _orderAppServiceMock.Verify(p => p.CreateAsync(It.IsAny<CreateOrder>()), Times.Once);
             _orderAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
         }
