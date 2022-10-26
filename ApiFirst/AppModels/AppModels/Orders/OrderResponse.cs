@@ -5,7 +5,7 @@ namespace AppModels.AppModels.Orders
 {
     public class OrderResponse
     {
-        public OrderResponse(int id, int quotes, int unitPrice, DateTime liquidateAt, OrderDirection direction, int productId, int portfolioId)
+        public OrderResponse(int id, int quotes, int unitPrice, DateTime liquidateAt, OrderDirection direction, long productId, long portfolioId)
         {
             Id = id;
             Quotes = quotes;
@@ -14,6 +14,11 @@ namespace AppModels.AppModels.Orders
             Direction = direction;
             ProductId = productId;
             PortfolioId = portfolioId;
+        }
+
+        public OrderResponse()
+        {
+
         }
 
         public long Id { get; set; }

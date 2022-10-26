@@ -5,20 +5,24 @@ using AppServices.Tests.Fixtures.PortfolioProduct;
 using AutoMapper;
 using DomainModels.Models;
 using FluentAssertions;
-using Moq;
 using Xunit;
 
 namespace AppServices.Tests.Profiles
 {
     public class PortfolioProfileTest
     {
-        private readonly IMapper _mapper;
-        private readonly Mock<IMapper> _mapperMock;
+        private readonly IMapper _mapperUpdate;
+        private readonly IMapper _mapperResponse;
+        private readonly IMapper _mapperCreate;
 
         public PortfolioProfileTest()
         {
-            _mapperMock = new();
-            _mapper = _mapperMock.Object;
+            _mapperUpdate = new MapperConfiguration(cfg =>
+            cfg.CreateMap<UpdatePortfolio, Portfolio>()).CreateMapper();
+            _mapperResponse = new MapperConfiguration(cfg =>
+            cfg.CreateMap<Portfolio, PortfolioResponse>()).CreateMapper();
+            _mapperCreate = new MapperConfiguration(cfg =>
+            cfg.CreateMap<CreatePortfolio, Portfolio>()).CreateMapper();
         }
 
         [Fact]
@@ -30,13 +34,9 @@ namespace AppServices.Tests.Profiles
             var updatePortfolio = new UpdatePortfolio(name: "João",
                 description: "aaa", customerId: 1);
 
-            _mapperMock.Setup(p => p.Map<Portfolio>(It.IsAny<UpdatePortfolio>())).Returns(portfolio);
+            var result = _mapperUpdate.Map<Portfolio>(updatePortfolio);
 
-            var result = _mapper.Map<Portfolio>(updatePortfolio);
-
-            result.Should().BeEquivalentTo(portfolio);
-
-            _mapperMock.Verify(p => p.Map<Portfolio>(It.IsAny<UpdatePortfolio>()), Times.Once);
+            result.Should().NotBeNull();
         }
 
         [Fact]
@@ -47,13 +47,9 @@ namespace AppServices.Tests.Profiles
             var createPortfolio = new CreatePortfolio(name: "João",
                 description: "aaa", customerId: 1);
 
-            _mapperMock.Setup(p => p.Map<Portfolio>(It.IsAny<CreatePortfolio>())).Returns(portfolio);
+            var result = _mapperCreate.Map<Portfolio>(createPortfolio);
 
-            var result = _mapper.Map<Portfolio>(createPortfolio);
-
-            _mapperMock.Verify(p => p.Map<Portfolio>(It.IsAny<CreatePortfolio>()), Times.Once);
-
-            result.Should().BeEquivalentTo(portfolio);
+            result.Should().NotBeNull();
         }
 
         [Fact]
@@ -68,13 +64,9 @@ namespace AppServices.Tests.Profiles
                 products: PortfolioProductResponseFixture.GeneratePortfolioProductResponseFixture(3),
                 orders: OrderResponseFixture.GenerateOrderResponseFixture(3));
 
-            _mapperMock.Setup(p => p.Map<PortfolioResponse>(It.IsAny<Portfolio>())).Returns(portfolioResponse);
+            var result = _mapperResponse.Map<PortfolioResponse>(portfolio);
 
-            var result = _mapper.Map<PortfolioResponse>(portfolio);
-
-            result.Should().BeEquivalentTo(portfolioResponse);
-
-            _mapperMock.Verify(p => p.Map<PortfolioResponse>(It.IsAny<Portfolio>()), Times.Once);
+            result.Should().NotBeNull();
         }
     }
 }

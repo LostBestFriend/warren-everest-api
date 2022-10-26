@@ -15,6 +15,9 @@ namespace DomainModels.Models
             PortfolioId = portfolioId;
         }
 
+        public Order()
+        { }
+
         public int Quotes { get; set; }
         public decimal NetValue { get; set; }
         public DateTime LiquidateAt { get; set; }

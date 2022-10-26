@@ -6,7 +6,7 @@ namespace AppModels.AppModels.Orders
     public class UpdateOrder
     {
 
-        public UpdateOrder(int quotes, int unitPrice, DateTime liquidateAt, OrderDirection direction, int productId, int portfolioId)
+        public UpdateOrder(int quotes, decimal unitPrice, DateTime liquidateAt, OrderDirection direction, long productId, long portfolioId)
         {
             Quotes = quotes;
             LiquidateAt = liquidateAt;
@@ -15,6 +15,9 @@ namespace AppModels.AppModels.Orders
             ProductId = productId;
             PortfolioId = portfolioId;
         }
+
+        public UpdateOrder()
+        { }
 
         public int Quotes { get; set; }
         public decimal NetValue { get; set; }

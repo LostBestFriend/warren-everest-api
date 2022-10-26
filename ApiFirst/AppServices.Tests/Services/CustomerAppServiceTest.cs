@@ -1,4 +1,5 @@
-﻿using AppServices.Interfaces;
+﻿using AppModels.AppModels.Customers;
+using AppServices.Interfaces;
 using AppServices.Services;
 using AppServices.Tests.Fixtures.Customer;
 using AutoMapper;
@@ -7,7 +8,6 @@ using DomainServices.Interfaces;
 using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
-using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -21,10 +21,15 @@ namespace AppServices.Tests.Services
 
         public CustomerAppServiceTest()
         {
+            IMapper _mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<UpdateCustomer, Customer>();
+                cfg.CreateMap<Customer, CustomerResponse>();
+                cfg.CreateMap<CreateCustomer, Customer>();
+            }).CreateMapper();
             _customerServiceMock = new();
-            Mock<IMapper> _mapperMock = new();
             _customerBankInfoServiceMock = new();
-            _customerAppService = new CustomerAppService(_customerBankInfoServiceMock.Object, _customerServiceMock.Object, _mapperMock.Object);
+            _customerAppService = new CustomerAppService(_customerBankInfoServiceMock.Object, _customerServiceMock.Object, _mapper);
         }
 
         [Fact]
@@ -46,30 +51,6 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public async void Should_Not_Create_When_Cpf_Or_Email_Already_Exists()
-        {
-            var customer = CreateCustomerFixture.GenerateCreateCustomerFixture();
-            Customer custom = CustomerFixture.GenerateCustomerFixture();
-            long id = 1;
-
-            _customerServiceMock.Setup(p => p.CreateAsync(It.IsAny<Customer>()));
-            _customerBankInfoServiceMock.Setup(p => p.Create(id));
-
-            try
-            {
-                long idResult = await _customerAppService.CreateAsync(customer);
-                idResult.Should().BeGreaterThanOrEqualTo(0);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            _customerServiceMock.Verify(p => p.CreateAsync(It.IsAny<Customer>()), Times.Once);
-            _customerBankInfoServiceMock.Verify(p => p.Create(id), Times.Never);
-        }
-
-        [Fact]
         public void Should_Delete_SucessFully()
         {
             long id = 1;
@@ -77,25 +58,6 @@ namespace AppServices.Tests.Services
             _customerServiceMock.Setup(p => p.Delete(It.IsAny<long>()));
 
             _customerAppService.Delete(id);
-
-            _customerServiceMock.Verify(p => p.Delete(It.IsAny<long>()), Times.Once);
-        }
-
-        [Fact]
-        public void Should_Not_Delete_When_Id_Doesnt_Exist()
-        {
-            long id = 0;
-
-            _customerServiceMock.Setup(p => p.Delete(It.IsAny<long>()));
-
-            try
-            {
-                _customerAppService.Delete(id);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
 
             _customerServiceMock.Verify(p => p.Delete(It.IsAny<long>()), Times.Once);
         }
@@ -131,27 +93,6 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public async void Should_Not_GetByCpf_When_Cpf_Dismatch()
-        {
-            var cpf = "42713070848";
-            var customer = CustomerFixture.GenerateCustomerFixture();
-
-            _customerServiceMock.Setup(p => p.GetByCpfAsync(It.IsAny<string>()));
-
-            try
-            {
-                var result = await _customerAppService.GetByCpfAsync(cpf);
-                result.Should().NotBeNull();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            _customerServiceMock.Verify(p => p.GetByCpfAsync(It.IsAny<string>()), Times.Once);
-        }
-
-        [Fact]
         public void Should_Update_Sucessfully()
         {
             var customer = CustomerFixture.GenerateCustomerFixture();
@@ -160,46 +101,6 @@ namespace AppServices.Tests.Services
             _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>()));
 
             _customerAppService.Update(UpdateCustomer);
-
-            _customerServiceMock.Verify(p => p.Update(It.IsAny<Customer>()), Times.Once);
-        }
-
-        [Fact]
-        public void Should_Not_Update_When_Id_Dismatch()
-        {
-            var customer = CustomerFixture.GenerateCustomerFixture();
-            var UpdateCustomer = UpdateCustomerFixture.GenerateUpdateCustomerFixture();
-
-            _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>()));
-
-            try
-            {
-                _customerAppService.Update(UpdateCustomer);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            _customerServiceMock.Verify(p => p.Update(It.IsAny<Customer>()), Times.Once);
-        }
-
-        [Fact]
-        public void Should_Not_Update_When_Cpf_Or_Email_Already_Exists()
-        {
-            var customer = CustomerFixture.GenerateCustomerFixture();
-            var UpdateCustomer = UpdateCustomerFixture.GenerateUpdateCustomerFixture();
-
-            _customerServiceMock.Setup(p => p.Update(It.IsAny<Customer>()));
-
-            try
-            {
-                _customerAppService.Update(UpdateCustomer);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
 
             _customerServiceMock.Verify(p => p.Update(It.IsAny<Customer>()), Times.Once);
         }
@@ -216,29 +117,6 @@ namespace AppServices.Tests.Services
             var result = await _customerAppService.GetByIdAsync(id);
 
             result.Should().NotBeNull();
-
-            _customerServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
-        }
-
-        [Fact]
-        public async void Should_Not_GetById_When_Id_Dismatch()
-        {
-            var id = 1;
-            var customer = CustomerFixture.GenerateCustomerFixture();
-            var customerResponse = CustomerResponseFixture.GenerateCustomerResponseFixture();
-
-            _customerServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>()));
-
-            try
-            {
-                var result = await _customerAppService.GetByIdAsync(id);
-                result.Should().NotBeNull();
-            }
-            catch (ArgumentNullException e)
-            {
-
-                Console.WriteLine(e.Message);
-            }
 
             _customerServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
         }

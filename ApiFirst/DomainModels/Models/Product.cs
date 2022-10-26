@@ -15,6 +15,12 @@ namespace DomainModels.Models
             Type = type;
             UnitPrice = unitPrice;
         }
+
+        public Product()
+        {
+
+        }
+
         public string Symbol { get; set; }
         public decimal UnitPrice { get; set; }
         public DateTime IssuanceAt { get; set; }

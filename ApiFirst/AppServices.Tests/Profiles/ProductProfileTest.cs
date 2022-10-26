@@ -3,7 +3,6 @@ using AppModels.EnumModels;
 using AutoMapper;
 using DomainModels.Models;
 using FluentAssertions;
-using Moq;
 using System;
 using Xunit;
 
@@ -11,58 +10,55 @@ namespace AppServices.Tests.Profiles
 {
     public class ProductProfileTest
     {
-        private readonly IMapper _mapper;
-        private readonly Mock<IMapper> _mapperMock;
+        private readonly IMapper _mapperUpdate;
+        private readonly IMapper _mapperResponse;
+        private readonly IMapper _mapperCreate;
 
         public ProductProfileTest()
         {
-            _mapperMock = new();
-            _mapper = _mapperMock.Object;
+            _mapperUpdate = new MapperConfiguration(cfg =>
+            cfg.CreateMap<UpdateProduct, Product>()).CreateMapper();
+            _mapperResponse = new MapperConfiguration(cfg =>
+            cfg.CreateMap<Product, ProductResponse>().ReverseMap()).CreateMapper();
+            _mapperCreate = new MapperConfiguration(cfg =>
+            cfg.CreateMap<CreateProduct, Product>()).CreateMapper();
         }
 
         [Fact]
         public void Should_Map_UpdateProduct_Sucessfully()
         {
             var product = new Product(symbol: "aaa",
-                issuanceAt: DateTime.Now.AddDays(-2),
-                expirationAt: DateTime.Now.AddDays(2),
+                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
                 type: DomainModels.Enums.ProductType.FixedIncome,
                 unitPrice: 1);
 
             var updateProduct = new UpdateProduct(symbol: "aaa",
-                issuanceAt: DateTime.Now.AddDays(-2),
-                expirationAt: DateTime.Now.AddDays(2),
+                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
                 type: ProductType.FixedIncome,
                 unitPrice: 1);
 
-            _mapperMock.Setup(p => p.Map<Product>(It.IsAny<UpdateProduct>())).Returns(product);
-
-            var result = _mapper.Map<Product>(updateProduct);
+            var result = _mapperUpdate.Map<Product>(updateProduct);
 
             result.Should().BeEquivalentTo(product);
-
-            _mapperMock.Verify(p => p.Map<Product>(It.IsAny<UpdateProduct>()), Times.Once);
         }
 
         [Fact]
         public void Should_Map_CreateProduct_Sucessfully()
         {
             var product = new Product(symbol: "aaa",
-                issuanceAt: DateTime.Now.AddDays(-2),
-                expirationAt: DateTime.Now.AddDays(2),
+                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
                 type: DomainModels.Enums.ProductType.FixedIncome,
                 unitPrice: 1);
             var createProduct = new CreateProduct(symbol: "aaa",
-                issuanceAt: DateTime.Now.AddDays(-2),
-                expirationAt: DateTime.Now.AddDays(2),
+                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
                 type: ProductType.FixedIncome,
                 unitPrice: 1);
 
-            _mapperMock.Setup(p => p.Map<Product>(It.IsAny<CreateProduct>())).Returns(product);
-
-            var result = _mapper.Map<Product>(createProduct);
-
-            _mapperMock.Verify(p => p.Map<Product>(It.IsAny<CreateProduct>()), Times.Once);
+            var result = _mapperCreate.Map<Product>(createProduct);
 
             result.Should().BeEquivalentTo(product);
         }
@@ -71,45 +67,37 @@ namespace AppServices.Tests.Profiles
         public void Should_Map_ProductResponse_Sucessfully()
         {
             var product = new Product(symbol: "aaa",
-                issuanceAt: DateTime.Now.AddDays(-2),
-                expirationAt: DateTime.Now.AddDays(2),
+                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
                 type: DomainModels.Enums.ProductType.FixedIncome,
                 unitPrice: 1);
             var productResponse = new ProductResponse(id: 1,
-                symbol: "aaa", issuanceAt: DateTime.Now.AddDays(-2),
-                expirationAt: DateTime.Now.AddDays(2),
+                symbol: "aaa", issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
                 type: ProductType.FixedIncome,
                 unitPrice: 1);
 
-            _mapperMock.Setup(p => p.Map<ProductResponse>(It.IsAny<Product>())).Returns(productResponse);
+            var result = _mapperResponse.Map<ProductResponse>(product);
 
-            var result = _mapper.Map<ProductResponse>(product);
-
-            result.Should().BeEquivalentTo(productResponse);
-
-            _mapperMock.Verify(p => p.Map<ProductResponse>(It.IsAny<Product>()), Times.Once);
+            result.Should().NotBeNull();
         }
         [Fact]
         public void Should_Map_ProductResponse_Reverse_Sucessfully()
         {
             var product = new Product(symbol: "aaa",
-                issuanceAt: DateTime.Now.AddDays(-2),
-                expirationAt: DateTime.Now.AddDays(2),
+                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
                 type: DomainModels.Enums.ProductType.FixedIncome,
                 unitPrice: 1);
             var productResponse = new ProductResponse(id: 1,
-                symbol: "aaa", issuanceAt: DateTime.Now.AddDays(-2),
-                expirationAt: DateTime.Now.AddDays(2),
+                symbol: "aaa", issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
                 type: ProductType.FixedIncome,
                 unitPrice: 1);
 
-            _mapperMock.Setup(p => p.Map<Product>(It.IsAny<ProductResponse>())).Returns(product);
+            var result = _mapperResponse.Map<Product>(productResponse);
 
-            var result = _mapper.Map<Product>(productResponse);
-
-            result.Should().BeEquivalentTo(product);
-
-            _mapperMock.Verify(p => p.Map<Product>(It.IsAny<ProductResponse>()), Times.Once);
+            result.Should().NotBeNull();
         }
     }
 }

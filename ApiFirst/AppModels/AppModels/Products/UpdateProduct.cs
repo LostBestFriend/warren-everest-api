@@ -15,6 +15,11 @@ namespace AppModels.AppModels.Products
             Type = type;
         }
 
+        public UpdateProduct()
+        {
+
+        }
+
         public string Symbol { get; set; }
         public DateTime IssuanceAt { get; set; }
         public decimal UnitPrice { get; set; }

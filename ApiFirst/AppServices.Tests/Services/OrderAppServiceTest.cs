@@ -19,9 +19,14 @@ namespace AppServices.Tests.Services
 
         public OrderAppServiceTest()
         {
+            IMapper _mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<UpdateOrder, Order>();
+                cfg.CreateMap<Order, OrderResponse>();
+                cfg.CreateMap<CreateOrder, Order>();
+            }).CreateMapper();
             _orderServiceMock = new();
-            Mock<IMapper> _mapperMock = new();
-            _orderAppService = new OrderAppService(_mapperMock.Object, _orderServiceMock.Object);
+            _orderAppService = new OrderAppService(_mapper, _orderServiceMock.Object);
         }
 
         [Fact]

@@ -155,7 +155,7 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            _customerBankInfoService.DepositAsync(id, amount);
+            _ = _customerBankInfoService.DepositAsync(id, amount);
 
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
@@ -175,7 +175,7 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            _customerBankInfoService.WithdrawAsync(id, amount);
+            _ = _customerBankInfoService.WithdrawAsync(id, amount);
 
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);

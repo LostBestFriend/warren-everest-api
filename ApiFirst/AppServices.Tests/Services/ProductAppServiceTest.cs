@@ -1,4 +1,5 @@
-﻿using AppServices.Services;
+﻿using AppModels.AppModels.Products;
+using AppServices.Services;
 using AppServices.Tests.Fixtures.Product;
 using AutoMapper;
 using DomainModels.Models;
@@ -18,9 +19,14 @@ namespace AppServices.Tests.Services
 
         public ProductAppServiceTest()
         {
+            IMapper _mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<UpdateProduct, Product>();
+                cfg.CreateMap<Product, ProductResponse>().ReverseMap();
+                cfg.CreateMap<CreateProduct, Product>();
+            }).CreateMapper();
             _productServiceMock = new();
-            Mock<IMapper> _mapperMock = new();
-            _productAppService = new ProductAppService(_mapperMock.Object, _productServiceMock.Object);
+            _productAppService = new ProductAppService(_mapper, _productServiceMock.Object);
         }
 
         [Fact]

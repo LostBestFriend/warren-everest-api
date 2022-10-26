@@ -68,5 +68,17 @@ namespace AppServices.Tests.Services
 
             _customerBankInfoServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
         }
+
+        [Fact]
+        public void Should_DeleteAsync_Sucessfully()
+        {
+            long customerId = 1;
+
+            _customerBankInfoServiceMock.Setup(p => p.DeleteAsync(It.IsAny<long>()));
+
+            _customerBankInfoAppService.Delete(customerId);
+
+            _customerBankInfoServiceMock.Verify(p => p.DeleteAsync(It.IsAny<long>()), Times.Once);
+        }
     }
 }
