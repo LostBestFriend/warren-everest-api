@@ -1,4 +1,5 @@
 ﻿using AppModels.AppModels.Orders;
+using AppServices.Profiles;
 using AppServices.Services;
 using AppServices.Tests.Fixtures.Order;
 using AutoMapper;
@@ -19,12 +20,7 @@ namespace AppServices.Tests.Services
 
         public OrderAppServiceTest()
         {
-            IMapper _mapper = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<UpdateOrder, Order>();
-                cfg.CreateMap<Order, OrderResponse>();
-                cfg.CreateMap<CreateOrder, Order>();
-            }).CreateMapper();
+            IMapper _mapper = new MapperConfiguration(cfg => cfg.AddProfile<OrderProfile>()).CreateMapper();
             _orderServiceMock = new();
             _orderAppService = new OrderAppService(_mapper, _orderServiceMock.Object);
         }

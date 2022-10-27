@@ -1,4 +1,5 @@
 ﻿using AppModels.AppModels.Customers;
+using AppServices.Profiles;
 using AutoMapper;
 using DomainModels.Models;
 using FluentAssertions;
@@ -9,18 +10,12 @@ namespace AppServices.Tests.Profiles
 {
     public class CustomerProfileTest
     {
-        private readonly IMapper _mapperUpdate;
-        private readonly IMapper _mapperResponse;
-        private readonly IMapper _mapperCreate;
+        private readonly IMapper _mapper;
+
 
         public CustomerProfileTest()
         {
-            _mapperUpdate = new MapperConfiguration(cfg =>
-            cfg.CreateMap<UpdateCustomer, Customer>()).CreateMapper();
-            _mapperResponse = new MapperConfiguration(cfg =>
-            cfg.CreateMap<Customer, CustomerResponse>()).CreateMapper();
-            _mapperCreate = new MapperConfiguration(cfg =>
-            cfg.CreateMap<CreateCustomer, Customer>()).CreateMapper();
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<CustomerProfile>()).CreateMapper();
         }
 
         [Fact]
@@ -40,7 +35,7 @@ namespace AppServices.Tests.Profiles
                 city: "Blumenau", postalCode: "89035360",
                 address: "Rua Prudente", number: 1234567890);
 
-            var result = _mapperUpdate.Map<Customer>(updateCustomer);
+            var result = _mapper.Map<Customer>(updateCustomer);
 
             result.Should().BeEquivalentTo(customer);
 
@@ -62,7 +57,7 @@ namespace AppServices.Tests.Profiles
                 city: "Blumenau", postalCode: "89035360",
                 address: "Rua Prudente", number: 1234567890);
 
-            var result = _mapperCreate.Map<Customer>(createCustomer);
+            var result = _mapper.Map<Customer>(createCustomer);
 
             result.Should().BeEquivalentTo(customer);
         }
@@ -83,7 +78,7 @@ namespace AppServices.Tests.Profiles
                 city: "Blumenau", postalCode: "89035360",
                 address: "Rua Prudente", number: 1234567890);
 
-            var result = _mapperResponse.Map<CustomerResponse>(customer);
+            var result = _mapper.Map<CustomerResponse>(customer);
 
             result.Should().NotBeNull();
         }

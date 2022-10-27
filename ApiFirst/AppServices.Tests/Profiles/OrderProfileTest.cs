@@ -1,5 +1,6 @@
 ﻿using AppModels.AppModels.Orders;
 using AppModels.EnumModels;
+using AppServices.Profiles;
 using AutoMapper;
 using DomainModels.Models;
 using FluentAssertions;
@@ -10,18 +11,11 @@ namespace AppServices.Tests.Profiles
 {
     public class OrderProfileTest
     {
-        private readonly IMapper _mapperUpdate;
-        private readonly IMapper _mapperResponse;
-        private readonly IMapper _mapperCreate;
+        private readonly IMapper _mapper;
 
         public OrderProfileTest()
         {
-            _mapperUpdate = new MapperConfiguration(cfg =>
-            cfg.CreateMap<UpdateOrder, Order>()).CreateMapper();
-            _mapperResponse = new MapperConfiguration(cfg =>
-            cfg.CreateMap<Order, OrderResponse>()).CreateMapper();
-            _mapperCreate = new MapperConfiguration(cfg =>
-            cfg.CreateMap<CreateOrder, Order>()).CreateMapper();
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<OrderProfile>()).CreateMapper();
         }
 
         [Fact]
@@ -37,7 +31,7 @@ namespace AppServices.Tests.Profiles
                 direction: OrderDirection.Buy,
                 productId: 1, portfolioId: 1);
 
-            var result = _mapperUpdate.Map<Order>(updateOrder);
+            var result = _mapper.Map<Order>(updateOrder);
 
             result.Should().BeEquivalentTo(order);
         }
@@ -55,7 +49,7 @@ namespace AppServices.Tests.Profiles
                 productId: 1, portfolioId: 1);
 
 
-            var result = _mapperCreate.Map<Order>(createOrder);
+            var result = _mapper.Map<Order>(createOrder);
 
             result.Should().BeEquivalentTo(order);
         }
@@ -72,7 +66,7 @@ namespace AppServices.Tests.Profiles
                 direction: OrderDirection.Buy,
                 productId: 1, portfolioId: 1);
 
-            var result = _mapperResponse.Map<OrderResponse>(order);
+            var result = _mapper.Map<OrderResponse>(order);
 
             result.Should().NotBeNull();
         }

@@ -1,4 +1,5 @@
 ﻿using AppModels.AppModels.Portfolios;
+using AppServices.Profiles;
 using AppServices.Tests.Fixtures.Customer;
 using AppServices.Tests.Fixtures.Order;
 using AppServices.Tests.Fixtures.PortfolioProduct;
@@ -11,18 +12,12 @@ namespace AppServices.Tests.Profiles
 {
     public class PortfolioProfileTest
     {
-        private readonly IMapper _mapperUpdate;
-        private readonly IMapper _mapperResponse;
-        private readonly IMapper _mapperCreate;
+        private readonly IMapper _mapper;
 
         public PortfolioProfileTest()
         {
-            _mapperUpdate = new MapperConfiguration(cfg =>
-            cfg.CreateMap<UpdatePortfolio, Portfolio>()).CreateMapper();
-            _mapperResponse = new MapperConfiguration(cfg =>
-            cfg.CreateMap<Portfolio, PortfolioResponse>()).CreateMapper();
-            _mapperCreate = new MapperConfiguration(cfg =>
-            cfg.CreateMap<CreatePortfolio, Portfolio>()).CreateMapper();
+            _mapper = new MapperConfiguration(cfg =>
+            cfg.AddProfile<PortfolioProfile>()).CreateMapper();
         }
 
         [Fact]
@@ -34,7 +29,7 @@ namespace AppServices.Tests.Profiles
             var updatePortfolio = new UpdatePortfolio(name: "João",
                 description: "aaa", customerId: 1);
 
-            var result = _mapperUpdate.Map<Portfolio>(updatePortfolio);
+            var result = _mapper.Map<Portfolio>(updatePortfolio);
 
             result.Should().NotBeNull();
         }
@@ -47,7 +42,7 @@ namespace AppServices.Tests.Profiles
             var createPortfolio = new CreatePortfolio(name: "João",
                 description: "aaa", customerId: 1);
 
-            var result = _mapperCreate.Map<Portfolio>(createPortfolio);
+            var result = _mapper.Map<Portfolio>(createPortfolio);
 
             result.Should().NotBeNull();
         }
@@ -64,7 +59,7 @@ namespace AppServices.Tests.Profiles
                 products: PortfolioProductResponseFixture.GeneratePortfolioProductResponseFixture(3),
                 orders: OrderResponseFixture.GenerateOrderResponseFixture(3));
 
-            var result = _mapperResponse.Map<PortfolioResponse>(portfolio);
+            var result = _mapper.Map<PortfolioResponse>(portfolio);
 
             result.Should().NotBeNull();
         }

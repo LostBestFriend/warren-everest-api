@@ -1,4 +1,5 @@
 ﻿using AppModels.AppModels.PortfolioProducts;
+using AppServices.Profiles;
 using AppServices.Tests.Fixtures.Product;
 using AutoMapper;
 using DomainModels.Models;
@@ -13,9 +14,7 @@ namespace AppServices.Tests.Profiles
 
         public PortfolioProductProfileTest()
         {
-
-            _mapperResponse = new MapperConfiguration(cfg =>
-            cfg.CreateMap<PortfolioProduct, PortfolioProductResponse>()).CreateMapper();
+            _mapperResponse = new MapperConfiguration(cfg => cfg.AddProfile<PortfolioProductProfile>()).CreateMapper();
         }
         [Fact]
         public void Should_Map_PortfolioProductResponse_Sucessfully()

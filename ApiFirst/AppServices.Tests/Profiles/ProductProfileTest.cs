@@ -1,5 +1,6 @@
 ﻿using AppModels.AppModels.Products;
 using AppModels.EnumModels;
+using AppServices.Profiles;
 using AutoMapper;
 using DomainModels.Models;
 using FluentAssertions;
@@ -10,18 +11,12 @@ namespace AppServices.Tests.Profiles
 {
     public class ProductProfileTest
     {
-        private readonly IMapper _mapperUpdate;
-        private readonly IMapper _mapperResponse;
-        private readonly IMapper _mapperCreate;
+        private readonly IMapper _mapper;
 
         public ProductProfileTest()
         {
-            _mapperUpdate = new MapperConfiguration(cfg =>
-            cfg.CreateMap<UpdateProduct, Product>()).CreateMapper();
-            _mapperResponse = new MapperConfiguration(cfg =>
-            cfg.CreateMap<Product, ProductResponse>().ReverseMap()).CreateMapper();
-            _mapperCreate = new MapperConfiguration(cfg =>
-            cfg.CreateMap<CreateProduct, Product>()).CreateMapper();
+            _mapper = new MapperConfiguration(cfg =>
+            cfg.AddProfile<ProductProfile>()).CreateMapper();
         }
 
         [Fact]
@@ -39,7 +34,7 @@ namespace AppServices.Tests.Profiles
                 type: ProductType.FixedIncome,
                 unitPrice: 1);
 
-            var result = _mapperUpdate.Map<Product>(updateProduct);
+            var result = _mapper.Map<Product>(updateProduct);
 
             result.Should().BeEquivalentTo(product);
         }
@@ -58,7 +53,7 @@ namespace AppServices.Tests.Profiles
                 type: ProductType.FixedIncome,
                 unitPrice: 1);
 
-            var result = _mapperCreate.Map<Product>(createProduct);
+            var result = _mapper.Map<Product>(createProduct);
 
             result.Should().BeEquivalentTo(product);
         }
@@ -77,7 +72,7 @@ namespace AppServices.Tests.Profiles
                 type: ProductType.FixedIncome,
                 unitPrice: 1);
 
-            var result = _mapperResponse.Map<ProductResponse>(product);
+            var result = _mapper.Map<ProductResponse>(product);
 
             result.Should().NotBeNull();
         }
@@ -95,7 +90,7 @@ namespace AppServices.Tests.Profiles
                 type: ProductType.FixedIncome,
                 unitPrice: 1);
 
-            var result = _mapperResponse.Map<Product>(productResponse);
+            var result = _mapper.Map<Product>(productResponse);
 
             result.Should().NotBeNull();
         }

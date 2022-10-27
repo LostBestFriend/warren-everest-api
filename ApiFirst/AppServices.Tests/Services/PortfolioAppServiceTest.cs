@@ -1,8 +1,7 @@
 ﻿using AppModels.AppModels.Orders;
-using AppModels.AppModels.Portfolios;
-using AppModels.AppModels.Products;
 using AppModels.EnumModels;
 using AppServices.Interfaces;
+using AppServices.Profiles;
 using AppServices.Services;
 using AppServices.Tests.Fixtures.Order;
 using AppServices.Tests.Fixtures.Portfolio;
@@ -34,10 +33,8 @@ namespace AppServices.Tests.Services
 
             _mapper = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<UpdatePortfolio, Portfolio>();
-                cfg.CreateMap<Portfolio, PortfolioResponse>();
-                cfg.CreateMap<ProductResponse, Product>();
-                cfg.CreateMap<CreatePortfolio, Portfolio>();
+                cfg.AddProfile<PortfolioProfile>();
+                cfg.AddProfile<ProductProfile>();
             }).CreateMapper();
             _portfolioServiceMock = new();
             _customerBankInfoAppServiceMock = new();

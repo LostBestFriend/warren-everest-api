@@ -1,5 +1,5 @@
-﻿using AppModels.AppModels.Customers;
-using AppServices.Interfaces;
+﻿using AppServices.Interfaces;
+using AppServices.Profiles;
 using AppServices.Services;
 using AppServices.Tests.Fixtures.Customer;
 using AutoMapper;
@@ -21,12 +21,7 @@ namespace AppServices.Tests.Services
 
         public CustomerAppServiceTest()
         {
-            IMapper _mapper = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<UpdateCustomer, Customer>();
-                cfg.CreateMap<Customer, CustomerResponse>();
-                cfg.CreateMap<CreateCustomer, Customer>();
-            }).CreateMapper();
+            IMapper _mapper = new MapperConfiguration(cfg => cfg.AddProfile<CustomerProfile>()).CreateMapper();
             _customerServiceMock = new();
             _customerBankInfoServiceMock = new();
             _customerAppService = new CustomerAppService(_customerBankInfoServiceMock.Object, _customerServiceMock.Object, _mapper);
