@@ -79,7 +79,7 @@ namespace DomainServices.Services
 
             var portfolio = await GetByIdAsync(portfolioId);
 
-            portfolio.AccountBalance += amount;
+            portfolio.TotalBalance += amount;
             repository.Update(portfolio);
             _unitOfWork.SaveChanges();
         }
@@ -93,7 +93,7 @@ namespace DomainServices.Services
             if (portfolio.AccountBalance < amount)
                 throw new ArgumentException("Não há saldo suficiente para o saque");
 
-            portfolio.AccountBalance -= amount;
+            portfolio.TotalBalance -= amount;
             repository.Update(portfolio);
             _unitOfWork.SaveChanges();
         }
@@ -105,7 +105,7 @@ namespace DomainServices.Services
             var portfolio = await GetByIdAsync(portfolioId);
 
             if (portfolio.AccountBalance < amount)
-                throw new ArgumentException("Não há saldo suficiente para o saque");
+                throw new ArgumentException("Não há saldo suficiente para o depósito");
 
             portfolio.AccountBalance += amount;
             repository.Update(portfolio, portfolio => portfolio.AccountBalance);

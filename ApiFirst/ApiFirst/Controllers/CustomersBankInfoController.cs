@@ -17,7 +17,7 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet("{customerId}")]
-        public async Task<IActionResult> GetAccountBalance(long customerId)
+        public async Task<IActionResult> GetAccountBalanceAsync(long customerId)
         {
             try
             {
