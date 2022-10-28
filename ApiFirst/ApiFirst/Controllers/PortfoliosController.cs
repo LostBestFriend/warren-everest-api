@@ -47,7 +47,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                long portfolioId = await _portfolioAppService.CreateAsync(model);
+                long portfolioId = await _portfolioAppService.CreateAsync(model).ConfigureAwait(false);
                 return Ok(portfolioId);
             }
             catch (Exception exception)
