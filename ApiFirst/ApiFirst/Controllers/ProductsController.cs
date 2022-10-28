@@ -22,7 +22,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                var portolios = await _productAppService.GetAllAsync();
+                var portolios = await _productAppService.GetAllAsync().ConfigureAwait(false);
                 return Ok(portolios);
             }
             catch (Exception exception)
