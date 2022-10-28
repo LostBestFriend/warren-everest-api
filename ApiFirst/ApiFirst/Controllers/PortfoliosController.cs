@@ -127,7 +127,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                await _portfolioAppService.WithdrawProduct(quotes, liquidateAt, productId, portfolioId);
+                await _portfolioAppService.WithdrawProductAsync(quotes, liquidateAt, productId, portfolioId).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)
