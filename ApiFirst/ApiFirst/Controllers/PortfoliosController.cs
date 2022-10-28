@@ -105,7 +105,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                await _portfolioAppService.InvestAsync(quotes, liquidateAt, productId, portfolioId);
+                await _portfolioAppService.InvestAsync(quotes, liquidateAt, productId, portfolioId).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)
