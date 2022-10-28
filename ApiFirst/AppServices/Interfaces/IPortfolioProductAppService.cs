@@ -7,6 +7,6 @@ namespace AppServices.Interfaces
     {
         Task InitRelationAsync(Portfolio portfolio, Product product);
         void DisposeRelation(Portfolio portfolio, Product product);
-        Task<bool> RelationAlreadyExists(long portfolioId, long productId);
+        Task<bool> RelationAlreadyExistsAsync(long portfolioId, long productId);
     }
 }
