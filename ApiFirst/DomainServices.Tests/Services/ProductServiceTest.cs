@@ -114,7 +114,7 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_Delete_Sucessfully()
+        public async void Should_Delete_Sucessfully()
         {
             long productId = 1;
             var product = ProductFixture.GenerateProductFixture();
@@ -123,7 +123,7 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(P => P.Repository<Product>().FirstOrDefaultAsync(It.IsAny<IQuery<Product>>(), default)).ReturnsAsync(product);
             _unitOfWorkMock.Setup(p => p.Repository<Product>().Remove(It.IsAny<Product>()));
 
-            _productService.DeleteAsync(productId);
+            await _productService.DeleteAsync(productId);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Product>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Product, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(P => P.Repository<Product>().FirstOrDefaultAsync(It.IsAny<IQuery<Product>>(), default), Times.Once);

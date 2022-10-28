@@ -34,7 +34,7 @@ namespace DomainServices.Services
             return model.Id;
         }
 
-        public async void Delete(long id)
+        public async Task DeleteAsync(long id)
         {
             var repository = _unitOfWork.Repository<Customer>();
             var response = await GetByIdAsync(id);
@@ -43,12 +43,12 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public IEnumerable<Customer> GetAll()
+        public async Task<IEnumerable<Customer>> GetAllAsync()
         {
             var repository = _repositoryFactory.Repository<Customer>();
             var query = repository.MultipleResultQuery();
 
-            return repository.Search(query);
+            return await repository.SearchAsync(query);
         }
 
         public async Task<Customer> GetByCpfAsync(string cpf)

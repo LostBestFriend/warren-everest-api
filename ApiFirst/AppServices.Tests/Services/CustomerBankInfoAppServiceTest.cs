@@ -18,65 +18,65 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_Create_Sucessfully()
+        public async void Should_Create_Sucessfully()
         {
             long customerId = 1;
 
-            _customerBankInfoServiceMock.Setup(p => p.Create(It.IsAny<long>()));
+            _customerBankInfoServiceMock.Setup(p => p.CreateAsync(It.IsAny<long>()));
 
-            _customerBankInfoAppService.Create(customerId);
+            await _customerBankInfoAppService.CreateAsync(customerId);
 
-            _customerBankInfoServiceMock.Verify(p => p.Create(It.IsAny<long>()), Times.Once);
+            _customerBankInfoServiceMock.Verify(p => p.CreateAsync(It.IsAny<long>()), Times.Once);
         }
 
         [Fact]
-        public void Should_Deposit_Sucessfully()
+        public async void Should_Deposit_Sucessfully()
         {
             long customerId = 1;
             decimal amount = 100;
 
             _customerBankInfoServiceMock.Setup(p => p.DepositAsync(It.IsAny<long>(), It.IsAny<decimal>()));
 
-            _customerBankInfoAppService.Deposit(customerId, amount);
+            await _customerBankInfoAppService.DepositAsync(customerId, amount);
 
             _customerBankInfoServiceMock.Verify(p => p.DepositAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
         }
 
         [Fact]
-        public void Should_GetBalance_Sucessfully()
+        public async void Should_GetBalance_Sucessfully()
         {
             long customerId = 1;
             decimal balance = 100;
 
-            _customerBankInfoServiceMock.Setup(p => p.GetBalance(It.IsAny<long>())).Returns(balance);
+            _customerBankInfoServiceMock.Setup(p => p.GetBalanceAsync(It.IsAny<long>())).ReturnsAsync(balance);
 
-            var result = _customerBankInfoAppService.GetBalance(customerId);
+            var result = await _customerBankInfoAppService.GetBalanceAsync(customerId);
             result.Should().BeGreaterThanOrEqualTo(0);
 
-            _customerBankInfoServiceMock.Verify(p => p.GetBalance(It.IsAny<long>()), Times.Once);
+            _customerBankInfoServiceMock.Verify(p => p.GetBalanceAsync(It.IsAny<long>()), Times.Once);
         }
 
         [Fact]
-        public void Should_Withdraw_Sucessfully()
+        public async void Should_Withdraw_Sucessfully()
         {
             long customerId = 1;
             decimal amount = 100;
 
             _customerBankInfoServiceMock.Setup(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()));
 
-            _customerBankInfoAppService.Withdraw(customerId, amount);
+            await _customerBankInfoAppService.WithdrawAsync(customerId, amount);
 
             _customerBankInfoServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
         }
 
         [Fact]
-        public void Should_DeleteAsync_Sucessfully()
+        public async void Should_DeleteAsync_Sucessfully()
         {
             long customerId = 1;
 
             _customerBankInfoServiceMock.Setup(p => p.DeleteAsync(It.IsAny<long>()));
 
-            _customerBankInfoAppService.Delete(customerId);
+            await _customerBankInfoAppService.DeleteAsync(customerId);
 
             _customerBankInfoServiceMock.Verify(p => p.DeleteAsync(It.IsAny<long>()), Times.Once);
         }

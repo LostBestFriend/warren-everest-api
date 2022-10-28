@@ -37,19 +37,19 @@ namespace AppServices.Services
         {
             var mapped = _mapper.Map<Customer>(model);
             long customerId = await _customerServices.CreateAsync(mapped).ConfigureAwait(false);
-            _customerBankInfoAppService.Create(customerId);
+            await _customerBankInfoAppService.CreateAsync(customerId);
             return customerId;
         }
 
-        public void Delete(long id)
+        public async Task DeleteAsync(long id)
         {
-            _customerServices.Delete(id);
-            _customerBankInfoAppService.Delete(id);
+            await _customerServices.DeleteAsync(id);
+            await _customerBankInfoAppService.DeleteAsync(id);
         }
 
-        public IEnumerable<CustomerResponse> GetAll()
+        public async Task<IEnumerable<CustomerResponse>> GetAllAsync()
         {
-            var result = _customerServices.GetAll();
+            var result = await _customerServices.GetAllAsync();
             return _mapper.Map<IEnumerable<CustomerResponse>>(result);
         }
 

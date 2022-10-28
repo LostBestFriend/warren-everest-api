@@ -55,7 +55,7 @@ namespace DomainServices.Services
         public async Task<IList<Order>> GetExecutableOrdersAsync()
         {
             var repository = _repositoryFactory.Repository<Order>();
-            var query = repository.MultipleResultQuery().AndFilter(order => order.LiquidateAt.Date <= DateTime.Now.Date);
+            var query = repository.MultipleResultQuery().AndFilter(order => order.LiquidateAt.Date == DateTime.Now.Date);
             var orders = await repository.SearchAsync(query);
 
             return orders;
@@ -69,11 +69,11 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public int GetQuotesAvaliable(long portfolioId, long productId)
+        public async Task<int> GetQuotesAvaliableAsync(long portfolioId, long productId)
         {
             var repository = _repositoryFactory.Repository<Order>();
-            var query = repository.MultipleResultQuery().AndFilter(order => order.ProductId == productId);
-            var allOrders = repository.Search(query);
+            var query = repository.MultipleResultQuery().AndFilter(order => order.ProductId == productId && order.PortfolioId == portfolioId);
+            var allOrders = await repository.SearchAsync(query);
 
             if (!allOrders.Any())
                 throw new ArgumentNullException($"Nenhuma cota disponível para o produto de Id: {productId} na carteira de Id {portfolioId}");

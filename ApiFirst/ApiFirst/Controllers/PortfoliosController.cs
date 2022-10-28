@@ -20,7 +20,7 @@ namespace ApiFirst.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            var portolios = await _portfolioAppService.GetAllAsync();
+            var portolios = await _portfolioAppService.GetAllAsync().ConfigureAwait(false);
             return Ok(portolios);
         }
 
@@ -47,7 +47,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                long portfolioId = await _portfolioAppService.CreateAsync(model);
+                long portfolioId = await _portfolioAppService.CreateAsync(model).ConfigureAwait(false);
                 return Ok(portfolioId);
             }
             catch (Exception exception)
@@ -57,11 +57,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("deposit")]
-        public IActionResult Deposit(decimal amount, long customerId, long portfolioId)
+        public async Task<IActionResult> DepositAsync(decimal amount, long customerId, long portfolioId)
         {
             try
             {
-                _portfolioAppService.Deposit(amount, customerId, portfolioId);
+                await _portfolioAppService.DepositAsync(amount, customerId, portfolioId).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)
@@ -83,7 +83,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
+                _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)
@@ -105,7 +105,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                await _portfolioAppService.InvestAsync(quotes, liquidateAt, productId, portfolioId);
+                await _portfolioAppService.InvestAsync(quotes, liquidateAt, productId, portfolioId).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)
@@ -127,7 +127,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                await _portfolioAppService.WithdrawProduct(quotes, liquidateAt, productId, portfolioId);
+                await _portfolioAppService.WithdrawProductAsync(quotes, liquidateAt, productId, portfolioId).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)
@@ -145,11 +145,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
             try
             {
-                _portfolioAppService.Delete(id);
+                await _portfolioAppService.DeleteAsync(id).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)

@@ -1,11 +1,13 @@
-﻿namespace AppServices.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace AppServices.Interfaces
 {
     public interface ICustomerBankInfoAppService
     {
-        void Create(long customerId);
-        decimal GetBalance(long customerId);
-        void Deposit(long customerId, decimal amount);
-        void Withdraw(long customerId, decimal amount);
-        void Delete(long customerId);
+        Task CreateAsync(long customerId);
+        Task<decimal> GetBalanceAsync(long customerId);
+        Task DepositAsync(long customerId, decimal amount);
+        Task WithdrawAsync(long customerId, decimal amount);
+        Task DeleteAsync(long customerId);
     }
 }

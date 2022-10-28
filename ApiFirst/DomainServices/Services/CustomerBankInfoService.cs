@@ -19,11 +19,11 @@ namespace DomainServices.Services
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
-        public void Create(long customerId)
+        public async Task CreateAsync(long customerId)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
 
-            repository.Add(new CustomerBankInfo(customerId));
+            await repository.AddAsync(new CustomerBankInfo(customerId));
             _unitOfWork.SaveChanges();
         }
 
@@ -31,10 +31,10 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
 
-            _ = await repository.RemoveAsync(bankInfo => bankInfo.CustomerId == customerId);
+            await repository.RemoveAsync(bankInfo => bankInfo.CustomerId == customerId);
         }
 
-        public decimal GetBalance(long customerId)
+        public async Task<decimal> GetBalanceAsync(long customerId)
         {
             var repository = _repositoryFactory.Repository<CustomerBankInfo>();
 
@@ -42,7 +42,7 @@ namespace DomainServices.Services
                 throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");
 
             var query = repository.SingleResultQuery().AndFilter(bankinfo => bankinfo.CustomerId == customerId).Select(bankinfo => bankinfo.AccountBalance);
-            var accountBalance = repository.FirstOrDefault(query);
+            var accountBalance = await repository.FirstOrDefaultAsync(query);
 
             return accountBalance;
         }

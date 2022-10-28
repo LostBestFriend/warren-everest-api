@@ -4,7 +4,6 @@ using DomainServices.Interfaces;
 using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace AppServices.Tests.Services
@@ -21,43 +20,43 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_InitRelation_Sucessfully()
+        public async void Should_InitRelation_Sucessfully()
         {
             var portfolio = PortfolioFixture.GeneratePortfolioFixture();
             var product = ProductFixture.GenerateProductFixture();
 
             _portfolioProductServiceMock.Setup(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
-            _ = _portfolioProductAppService.InitRelationAsync(portfolio, product);
+            await _portfolioProductAppService.InitRelationAsync(portfolio, product);
 
             _portfolioProductServiceMock.Verify(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Once);
         }
 
         [Fact]
-        public void Should_DisposeRelation_Sucessfully()
+        public async void Should_DisposeRelation_Sucessfully()
         {
             var portfolio = PortfolioFixture.GeneratePortfolioFixture();
             var product = ProductFixture.GenerateProductFixture();
 
             _portfolioProductServiceMock.Setup(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
-            _portfolioProductAppService.DisposeRelation(portfolio, product);
+            await _portfolioProductAppService.DisposeRelationAsync(portfolio, product);
 
             _portfolioProductServiceMock.Verify(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Once);
         }
 
         [Fact]
-        public async Task Should_RelationAlreadyExistsAsync_Sucessfully()
+        public async void Should_RelationAlreadyExistsAsync_Sucessfully()
         {
             long portfolioId = 1;
             long productId = 1;
 
-            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(true);
+            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(true);
 
-            var result = await _portfolioProductAppService.RelationAlreadyExists(portfolioId, productId);
+            var result = await _portfolioProductAppService.RelationAlreadyExistsAsync(portfolioId, productId);
             result.Should().BeTrue();
 
-            _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>()));
+            _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>()));
         }
 
         [Fact]
@@ -66,12 +65,12 @@ namespace AppServices.Tests.Services
             long portfolioId = 1;
             long productId = 1;
 
-            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(false);
+            _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(false);
 
-            var result = await _portfolioProductAppService.RelationAlreadyExists(portfolioId, productId);
+            var result = await _portfolioProductAppService.RelationAlreadyExistsAsync(portfolioId, productId);
             result.Should().BeFalse();
 
-            _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExists(It.IsAny<long>(), It.IsAny<long>()));
+            _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>()));
         }
     }
 }

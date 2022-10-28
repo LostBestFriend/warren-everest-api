@@ -115,7 +115,7 @@ namespace DomainServices.Tests.Services
 
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().AnyAsync(It.IsAny<Expression<Func<PortfolioProduct, bool>>>(), default)).ReturnsAsync(true);
 
-            var result = await _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
+            var result = await _portfolioProductService.RelationAlreadyExistsAsync(portfolioId, productId);
 
             result.Should().BeTrue();
 
@@ -123,14 +123,14 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public async void Should_RelationDoesntExists_Sucessfully()
+        public async void Should_Not_RelationAlreadyExists_When_Relation_Doesnt_Exists()
         {
             long portfolioId = 1;
             long productId = 1;
 
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().AnyAsync(It.IsAny<Expression<Func<PortfolioProduct, bool>>>(), default)).ReturnsAsync(false);
 
-            var result = await _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
+            var result = await _portfolioProductService.RelationAlreadyExistsAsync(portfolioId, productId);
 
             result.Should().BeFalse();
 

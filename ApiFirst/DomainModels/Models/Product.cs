@@ -29,7 +29,7 @@ namespace DomainModels.Models
         public ProductType Type { get; set; }
         public ICollection<PortfolioProduct> PortfolioProducts { get; set; }
         public ICollection<Portfolio> Portfolios { get; set; }
-        public List<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; }
 
     }
 }

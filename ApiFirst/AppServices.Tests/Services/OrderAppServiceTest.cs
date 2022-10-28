@@ -71,18 +71,18 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetQuotesAvaliable_Sucessfully()
+        public async void Should_GetQuotesAvaliable_Sucessfully()
         {
             long portfolioId = 1;
             long productId = 1;
             int quantity = 1;
 
-            _orderServiceMock.Setup(p => p.GetQuotesAvaliable(It.IsAny<long>(), It.IsAny<long>())).Returns(quantity);
+            _orderServiceMock.Setup(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(quantity);
 
-            var result = _orderAppService.GetQuotesAvaliable(portfolioId, productId);
+            var result = await _orderAppService.GetQuotesAvaliableAsync(portfolioId, productId);
             result.Should().BeGreaterThanOrEqualTo(0);
 
-            _orderServiceMock.Verify(p => p.GetQuotesAvaliable(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
+            _orderServiceMock.Verify(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
         }
 
         [Fact]

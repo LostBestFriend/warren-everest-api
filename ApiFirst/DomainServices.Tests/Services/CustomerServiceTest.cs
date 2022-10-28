@@ -104,7 +104,7 @@ namespace DomainServices.Tests.Services
 
 
         [Fact]
-        public void Should_Delete_SucessFully()
+        public async void Should_Delete_SucessFully()
         {
             long id = 1;
             var customer = CustomerFixture.GenerateCustomerFixture();
@@ -114,7 +114,7 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(It.IsAny<IQuery<Customer>>());
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).ReturnsAsync(customer);
 
-            _customerService.Delete(id);
+            await _customerService.DeleteAsync(id);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Remove(It.IsAny<Customer>()), Times.Once);
@@ -123,17 +123,17 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetAll_SucessFully()
+        public async void Should_GetAll_SucessFully()
         {
             List<Customer> customerList = CustomerFixture.GenerateCustomerFixture(2);
 
-            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().Search(It.IsAny<IMultipleResultQuery<Customer>>())).Returns(customerList);
+            _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SearchAsync(It.IsAny<IMultipleResultQuery<Customer>>(), default)).ReturnsAsync(customerList);
 
-            var customers = _customerService.GetAll();
+            var customers = await _customerService.GetAllAsync();
 
             customers.Should().HaveCountGreaterThanOrEqualTo(0);
 
-            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().Search(It.IsAny<IMultipleResultQuery<Customer>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SearchAsync(It.IsAny<IMultipleResultQuery<Customer>>(), default), Times.Once);
         }
 
         [Fact]

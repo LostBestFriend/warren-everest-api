@@ -8,4 +8,8 @@
     <ProjectReference Include="..\..\Infrastructure.Data\Infrastructure.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
 </Project>

@@ -8,8 +8,8 @@ namespace DomainServices.Interfaces
     {
         Task<long> CreateAsync(Customer model);
         void Update(Customer model);
-        void Delete(long id);
-        IEnumerable<Customer> GetAll();
+        Task DeleteAsync(long id);
+        Task<IEnumerable<Customer>> GetAllAsync();
         Task<Customer> GetByIdAsync(long id);
         Task<Customer> GetByCpfAsync(string cpf);
     }

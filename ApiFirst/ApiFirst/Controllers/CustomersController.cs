@@ -36,9 +36,9 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var result = _customerAppService.GetAll();
+            var result = await _customerAppService.GetAllAsync().ConfigureAwait(false);
             return Ok(result);
         }
 
@@ -79,11 +79,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
             try
             {
-                _customerAppService.Delete(id);
+                await _customerAppService.DeleteAsync(id).ConfigureAwait(false);
                 return NoContent();
             }
             catch (ArgumentNullException e)

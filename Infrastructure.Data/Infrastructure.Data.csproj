@@ -17,4 +17,8 @@
     <ProjectReference Include="..\ApiFirst\DomainModels\DomainModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
 </Project>

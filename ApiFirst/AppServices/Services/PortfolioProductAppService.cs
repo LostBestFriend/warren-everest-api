@@ -21,14 +21,14 @@ namespace AppServices.Services
             await _portfolioProductService.InitRelationAsync(portfolio, product);
         }
 
-        public void DisposeRelation(Portfolio portfolio, Product product)
+        public async Task DisposeRelationAsync(Portfolio portfolio, Product product)
         {
-            _portfolioProductService.DisposeRelationAsync(portfolio, product);
+            await _portfolioProductService.DisposeRelationAsync(portfolio, product);
         }
 
-        public async Task<bool> RelationAlreadyExists(long portfolioId, long productId)
+        public async Task<bool> RelationAlreadyExistsAsync(long portfolioId, long productId)
         {
-            return await _portfolioProductService.RelationAlreadyExists(portfolioId, productId);
+            return await _portfolioProductService.RelationAlreadyExistsAsync(portfolioId, productId);
         }
     }
 }

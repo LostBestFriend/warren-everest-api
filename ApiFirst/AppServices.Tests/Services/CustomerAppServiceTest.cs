@@ -35,41 +35,41 @@ namespace AppServices.Tests.Services
             long id = 1;
 
             _customerServiceMock.Setup(p => p.CreateAsync(It.IsAny<Customer>())).ReturnsAsync(id);
-            _customerBankInfoServiceMock.Setup(p => p.Create(id));
+            _customerBankInfoServiceMock.Setup(p => p.CreateAsync(id));
 
             long idResult = await _customerAppService.CreateAsync(customer);
 
             idResult.Should().BeGreaterThanOrEqualTo(1);
 
             _customerServiceMock.Verify(p => p.CreateAsync(It.IsAny<Customer>()), Times.Once);
-            _customerBankInfoServiceMock.Verify(p => p.Create(id), Times.Once);
+            _customerBankInfoServiceMock.Verify(p => p.CreateAsync(id), Times.Once);
         }
 
         [Fact]
-        public void Should_Delete_SucessFully()
+        public async void Should_Delete_SucessFully()
         {
             long id = 1;
 
-            _customerServiceMock.Setup(p => p.Delete(It.IsAny<long>()));
+            _customerServiceMock.Setup(p => p.DeleteAsync(It.IsAny<long>()));
 
-            _customerAppService.Delete(id);
+            await _customerAppService.DeleteAsync(id);
 
-            _customerServiceMock.Verify(p => p.Delete(It.IsAny<long>()), Times.Once);
+            _customerServiceMock.Verify(p => p.DeleteAsync(It.IsAny<long>()), Times.Once);
         }
 
         [Fact]
-        public void Should_GetAll_SucessFully()
+        public async void Should_GetAll_SucessFully()
         {
             var customer = CustomerResponseFixture.GenerateCustomerResponseFixture(3);
             var customers = new List<Customer>();
 
-            _customerServiceMock.Setup(p => p.GetAll()).Returns(customers);
+            _customerServiceMock.Setup(p => p.GetAllAsync()).ReturnsAsync(customers);
 
-            var customersResponse = _customerAppService.GetAll();
+            var customersResponse = await _customerAppService.GetAllAsync();
 
             customersResponse.Should().HaveCountGreaterThanOrEqualTo(0);
 
-            _customerServiceMock.Verify(p => p.GetAll(), Times.Once);
+            _customerServiceMock.Verify(p => p.GetAllAsync(), Times.Once);
         }
 
         [Fact]

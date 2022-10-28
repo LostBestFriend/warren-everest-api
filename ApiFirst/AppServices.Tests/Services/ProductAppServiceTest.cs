@@ -84,13 +84,13 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_Delete_Sucessfully()
+        public async void Should_Delete_Sucessfully()
         {
             long id = 1;
 
             _productServiceMock.Setup(p => p.DeleteAsync(It.IsAny<long>()));
 
-            _productAppService.Delete(id);
+            await _productAppService.DeleteAsync(id);
 
             _productServiceMock.Verify(p => p.DeleteAsync(It.IsAny<long>()), Times.Once);
         }

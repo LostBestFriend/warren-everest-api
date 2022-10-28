@@ -1,6 +1,7 @@
 ﻿using AppServices.Interfaces;
 using DomainServices.Interfaces;
 using System;
+using System.Threading.Tasks;
 
 namespace AppServices.Services
 {
@@ -14,29 +15,29 @@ namespace AppServices.Services
                 throw new ArgumentNullException(nameof(customerBankInfoServices));
         }
 
-        public void Create(long customerId)
+        public async Task CreateAsync(long customerId)
         {
-            _customerBankInfoServices.Create(customerId);
+            await _customerBankInfoServices.CreateAsync(customerId);
         }
 
-        public void Deposit(long customerId, decimal amount)
+        public async Task DepositAsync(long customerId, decimal amount)
         {
-            _customerBankInfoServices.DepositAsync(customerId, amount);
+            await _customerBankInfoServices.DepositAsync(customerId, amount);
         }
 
-        public decimal GetBalance(long customerId)
+        public async Task<decimal> GetBalanceAsync(long customerId)
         {
-            return _customerBankInfoServices.GetBalance(customerId);
+            return await _customerBankInfoServices.GetBalanceAsync(customerId);
         }
 
-        public void Withdraw(long customerId, decimal amount)
+        public async Task WithdrawAsync(long customerId, decimal amount)
         {
-            _customerBankInfoServices.WithdrawAsync(customerId, amount);
+            await _customerBankInfoServices.WithdrawAsync(customerId, amount);
         }
 
-        public void Delete(long customerId)
+        public async Task DeleteAsync(long customerId)
         {
-            _customerBankInfoServices.DeleteAsync(customerId);
+            await _customerBankInfoServices.DeleteAsync(customerId);
         }
     }
 }

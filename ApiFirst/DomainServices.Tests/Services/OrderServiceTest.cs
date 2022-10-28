@@ -109,26 +109,26 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetQuotesAvaliable_Sucessfully()
+        public async void Should_GetQuotesAvaliable_Sucessfully()
         {
             long portfolioId = 1;
             long productId = 1;
             var orders = OrderFixture.GenerateOrderFixture(3);
 
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>())).Returns(It.IsAny<IQuery<Order>>());
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>())).Returns(orders);
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().SearchAsync(It.IsAny<IQuery<Order>>(), default)).ReturnsAsync(orders);
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().Any(null)).Returns(true);
 
-            var result = _orderService.GetQuotesAvaliable(portfolioId, productId);
+            var result = await _orderService.GetQuotesAvaliableAsync(portfolioId, productId);
             result.Should().BeGreaterThanOrEqualTo(0);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().SearchAsync(It.IsAny<IQuery<Order>>(), default), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().Any(null), Times.Never);
         }
 
         [Fact]
-        public void Should_Not_GetQuotesAvaliable_When_Avaliable_Quotes_Doesnt_Exist()
+        public async void Should_Not_GetQuotesAvaliable_When_Avaliable_Quotes_Doesnt_Exist()
         {
             long portfolioId = 1;
             long productId = 1;
@@ -136,11 +136,11 @@ namespace DomainServices.Tests.Services
             List<Order> list = new();
 
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>())).Returns(It.IsAny<IQuery<Order>>());
-            _repositoryFactoryMock.Setup(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>())).Returns(list);
+            _repositoryFactoryMock.Setup(p => p.Repository<Order>().SearchAsync(It.IsAny<IQuery<Order>>(), default)).ReturnsAsync(list);
 
             try
             {
-                var result = _orderService.GetQuotesAvaliable(portfolioId, productId);
+                var result = await _orderService.GetQuotesAvaliableAsync(portfolioId, productId);
                 result.Should().BeGreaterThanOrEqualTo(0);
             }
             catch (ArgumentNullException e)
@@ -149,7 +149,7 @@ namespace DomainServices.Tests.Services
             }
 
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
-            _repositoryFactoryMock.Verify(p => p.Repository<Order>().Search(It.IsAny<IQuery<Order>>()), Times.Once);
+            _repositoryFactoryMock.Verify(p => p.Repository<Order>().SearchAsync(It.IsAny<IQuery<Order>>(), default), Times.Once);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace AppServices.Interfaces
         Task<IEnumerable<OrderResponse>> GetAllAsync();
         Task<OrderResponse> GetByIdAsync(long id);
         Task<IEnumerable<OrderResponse>> GetExecutableOrdersAsync();
-        int GetQuotesAvaliable(long portfolioId, long productId);
+        Task<int> GetQuotesAvaliableAsync(long portfolioId, long productId);
         void Update(long id, UpdateOrder model);
     }
 }
