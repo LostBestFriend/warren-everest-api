@@ -18,7 +18,7 @@ namespace AppServices.Interfaces
         Task ExecuteBuyOrderAsync(OrderResponse order);
         Task ExecuteSellOrderAsync(OrderResponse order);
         Task InvestAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId);
-        Task WithdrawProduct(int quotes, DateTime liquidateAt, long productId, long portfolioId);
+        Task WithdrawProductAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId);
         void Delete(long portfolioId);
     }
 }
