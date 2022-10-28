@@ -20,7 +20,7 @@ namespace ApiFirst.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            var portolios = await _portfolioAppService.GetAllAsync();
+            var portolios = await _portfolioAppService.GetAllAsync().ConfigureAwait(false);
             return Ok(portolios);
         }
 
