@@ -10,6 +10,6 @@ namespace AppServices.Interfaces
         Task<ProductResponse> GetByIdAsync(long id);
         Task<long> CreateAsync(CreateProduct model);
         void Update(long id, UpdateProduct model);
-        void Delete(long id);
+        Task DeleteAsync(long id);
     }
 }

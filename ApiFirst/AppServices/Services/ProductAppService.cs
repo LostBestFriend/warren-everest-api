@@ -36,20 +36,20 @@ namespace AppServices.Services
 
         public async Task<long> CreateAsync(CreateProduct model)
         {
-            Product product = _mapper.Map<Product>(model);
+            var product = _mapper.Map<Product>(model);
             return await _productService.CreateAsync(product);
         }
 
         public void Update(long productId, UpdateProduct model)
         {
-            Product product = _mapper.Map<Product>(model);
+            var product = _mapper.Map<Product>(model);
             product.Id = productId;
             _productService.Update(product);
         }
 
-        public void Delete(long id)
+        public async Task DeleteAsync(long id)
         {
-            _productService.DeleteAsync(id);
+            await _productService.DeleteAsync(id);
         }
     }
 }

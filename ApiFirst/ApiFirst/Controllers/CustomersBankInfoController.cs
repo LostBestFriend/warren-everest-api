@@ -1,6 +1,7 @@
 ﻿using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace ApiFirst.Controllers
 {
@@ -16,11 +17,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet("{customerId}")]
-        public IActionResult GetAccountBalance(long customerId)
+        public async Task<IActionResult> GetAccountBalance(long customerId)
         {
             try
             {
-                decimal accountBalance = _customerBankInfoAppService.GetBalance(customerId);
+                decimal accountBalance = await _customerBankInfoAppService.GetBalanceAsync(customerId).ConfigureAwait(false);
                 return Ok(accountBalance);
             }
             catch (ArgumentNullException exception)
@@ -38,11 +39,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("{customerId}/deposit")]
-        public IActionResult Deposit(long customerId, decimal amount)
+        public async Task<IActionResult> DepositAsync(long customerId, decimal amount)
         {
             try
             {
-                _customerBankInfoAppService.Deposit(customerId, amount);
+                await _customerBankInfoAppService.DepositAsync(customerId, amount).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)
@@ -60,11 +61,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("{customerId}/withdraw")]
-        public IActionResult Withdraw(long customerId, decimal amount)
+        public async Task<IActionResult> WithdrawAsync(long customerId, decimal amount)
         {
             try
             {
-                _customerBankInfoAppService.Withdraw(customerId, amount);
+                await _customerBankInfoAppService.WithdrawAsync(customerId, amount).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)

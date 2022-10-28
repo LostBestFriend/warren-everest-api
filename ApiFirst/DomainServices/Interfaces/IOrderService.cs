@@ -7,7 +7,7 @@ namespace DomainServices.Interfaces
     public interface IOrderService
     {
         Task<IEnumerable<Order>> GetAllAsync();
-        int GetQuotesAvaliable(long portfolioId, long productId);
+        Task<int> GetQuotesAvaliableAsync(long portfolioId, long productId);
         Task<Order> GetByIdAsync(long id);
         Task<long> CreateAsync(Order model);
         Task<IList<Order>> GetExecutableOrdersAsync();

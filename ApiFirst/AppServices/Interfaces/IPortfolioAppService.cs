@@ -12,13 +12,13 @@ namespace AppServices.Interfaces
         Task<IEnumerable<PortfolioResponse>> GetAllAsync();
         Task<PortfolioResponse> GetByIdAsync(long id);
         Task<decimal> GetAccountBalanceAsync(long portfolioId);
-        void Deposit(decimal amount, long customerId, long portfolioId);
-        void WithdrawAsync(decimal amount, long customerId, long portfolioId);
+        Task DepositAsync(decimal amount, long customerId, long portfolioId);
+        Task WithdrawAsync(decimal amount, long customerId, long portfolioId);
         Task ExecuteNowOrdersAsync();
         Task ExecuteBuyOrderAsync(OrderResponse order);
         Task ExecuteSellOrderAsync(OrderResponse order);
         Task InvestAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId);
         Task WithdrawProductAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId);
-        void Delete(long portfolioId);
+        Task DeleteAsync(long portfolioId);
     }
 }

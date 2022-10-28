@@ -19,22 +19,22 @@ namespace DomainServices.Services
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
-        public void Create(long customerId)
+        public async Task CreateAsync(long customerId)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
 
-            repository.Add(new CustomerBankInfo(customerId));
+            await repository.AddAsync(new CustomerBankInfo(customerId));
             _unitOfWork.SaveChanges();
         }
 
-        public void DeleteAsync(long customerId)
+        public async Task DeleteAsync(long customerId)
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
 
-            repository.RemoveAsync(bankInfo => bankInfo.CustomerId == customerId);
+            await repository.RemoveAsync(bankInfo => bankInfo.CustomerId == customerId);
         }
 
-        public decimal GetBalance(long customerId)
+        public async Task<decimal> GetBalanceAsync(long customerId)
         {
             var repository = _repositoryFactory.Repository<CustomerBankInfo>();
 
@@ -42,7 +42,7 @@ namespace DomainServices.Services
                 throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");
 
             var query = repository.SingleResultQuery().AndFilter(bankinfo => bankinfo.CustomerId == customerId).Select(bankinfo => bankinfo.AccountBalance);
-            var accountBalance = repository.FirstOrDefault(query);
+            var accountBalance = await repository.FirstOrDefaultAsync(query);
 
             return accountBalance;
         }
@@ -51,9 +51,6 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
             var bankInfo = await GetByCustomerIdAsync(customerId);
-
-            if (bankInfo is null)
-                throw new ArgumentNullException($"Cliente não encontrado para o id {customerId}");
 
             bankInfo.AccountBalance += amount;
             repository.Update(bankInfo, bankinfo => bankinfo.AccountBalance);
@@ -77,8 +74,6 @@ namespace DomainServices.Services
             var repository = _unitOfWork.Repository<CustomerBankInfo>();
             var bankInfo = await GetByCustomerIdAsync(customerId);
 
-            if (bankInfo is null)
-                throw new ArgumentNullException($"Cliente não encontrato para o id {customerId}");
             if (bankInfo.AccountBalance < amount)
                 throw new ArgumentException("Não é possível sacar o valor informado pois não há saldo suficiente");
 

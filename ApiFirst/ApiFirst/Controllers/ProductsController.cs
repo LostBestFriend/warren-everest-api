@@ -54,7 +54,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                long productId = await _productAppService.CreateAsync(model);
+                long productId = await _productAppService.CreateAsync(model).ConfigureAwait(false);
                 return CreatedAtAction(nameof(GetByIdAsync), new { id = productId }, productId);
             }
             catch (Exception exception)
@@ -82,11 +82,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
             try
             {
-                _productAppService.Delete(id);
+                await _productAppService.DeleteAsync(id).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)

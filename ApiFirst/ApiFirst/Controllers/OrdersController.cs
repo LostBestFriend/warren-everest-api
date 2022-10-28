@@ -22,7 +22,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                var orders = await _orderAppService.GetAllAsync();
+                var orders = await _orderAppService.GetAllAsync().ConfigureAwait(false);
                 return Ok(orders);
             }
             catch (Exception exception)
@@ -54,7 +54,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                long orderId = await _orderAppService.CreateAsync(model);
+                long orderId = await _orderAppService.CreateAsync(model).ConfigureAwait(false);
                 return CreatedAtAction(nameof(GetByIdAsync), new { id = orderId }, orderId);
             }
             catch (Exception ex)

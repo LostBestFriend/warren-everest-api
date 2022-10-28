@@ -24,7 +24,7 @@ namespace AppServices.Services
 
         public async Task<long> CreateAsync(CreateOrder model)
         {
-            Order order = _mapper.Map<Order>(model);
+            var order = _mapper.Map<Order>(model);
             return await _orderServices.CreateAsync(order);
         }
 
@@ -40,9 +40,9 @@ namespace AppServices.Services
             return _mapper.Map<OrderResponse>(result);
         }
 
-        public int GetQuotesAvaliable(long portfolioId, long productId)
+        public async Task<int> GetQuotesAvaliableAsync(long portfolioId, long productId)
         {
-            return _orderServices.GetQuotesAvaliable(portfolioId, productId);
+            return await _orderServices.GetQuotesAvaliableAsync(portfolioId, productId);
         }
 
         public async Task<IEnumerable<OrderResponse>> GetExecutableOrdersAsync()

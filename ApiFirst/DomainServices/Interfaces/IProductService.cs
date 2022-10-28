@@ -10,6 +10,6 @@ namespace DomainServices.Interfaces
         Task<Product> GetByIdAsync(long id);
         Task<long> CreateAsync(Product model);
         void Update(Product model);
-        void DeleteAsync(long id);
+        Task DeleteAsync(long id);
     }
 }

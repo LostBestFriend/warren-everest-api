@@ -46,7 +46,7 @@ namespace AppServices.Services
 
         public async Task<long> CreateAsync(CreatePortfolio model)
         {
-            Portfolio portfolio = _mapper.Map<Portfolio>(model);
+            var portfolio = _mapper.Map<Portfolio>(model);
             return await _portfolioService.CreateAsync(portfolio).ConfigureAwait(false);
         }
 
@@ -67,25 +67,25 @@ namespace AppServices.Services
             return await _portfolioService.GetAccountBalanceAsync(portfolioId);
         }
 
-        public void Deposit(decimal amount, long customerId, long portfolioId)
+        public async Task DepositAsync(decimal amount, long customerId, long portfolioId)
         {
-            if (_customerBankInfoAppService.GetBalance(customerId) < amount)
+            if (await _customerBankInfoAppService.GetBalanceAsync(customerId) < amount)
                 throw new ArgumentException("Não há saldo suficiente na conta corrente para realizar este depósito");
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
-            _customerBankInfoAppService.Withdraw(customerId, amount);
-            _portfolioService.DepositAsync(amount, portfolioId);
+            await _customerBankInfoAppService.WithdrawAsync(customerId, amount);
+            await _portfolioService.DepositAsync(amount, portfolioId);
             transactionScope.Complete();
         }
 
-        public async void WithdrawAsync(decimal amount, long customerId, long portfolioId)
+        public async Task WithdrawAsync(decimal amount, long customerId, long portfolioId)
         {
             if (await _portfolioService.GetAccountBalanceAsync(portfolioId) < amount)
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar o saque requerido");
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
-            _portfolioService.WithdrawAsync(amount, portfolioId);
-            _customerBankInfoAppService.Deposit(customerId, amount);
+            await _portfolioService.WithdrawAsync(amount, portfolioId);
+            await _customerBankInfoAppService.DepositAsync(customerId, amount);
             transactionScope.Complete();
         }
 
@@ -108,12 +108,12 @@ namespace AppServices.Services
             transactionScope.Complete();
         }
 
-        public async Task WithdrawProduct(int quotes, DateTime liquidateAt, long productId, long portfolioId)
+        public async Task WithdrawProductAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId)
         {
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var product = await _productAppService.GetByIdAsync(productId).ConfigureAwait(false);
             var portfolio = await _portfolioService.GetByIdAsync(portfolioId).ConfigureAwait(false);
-            int availableQuotes = _orderAppService.GetQuotesAvaliable(portfolioId, productId);
+            int availableQuotes = await _orderAppService.GetQuotesAvaliableAsync(portfolioId, productId);
 
             if (quotes > availableQuotes)
                 throw new ArgumentException("A quantidade de cotas informada é maior do que as cotas existentes na carteira");
@@ -154,11 +154,9 @@ namespace AppServices.Services
             var productResult = await _productAppService.GetByIdAsync(order.ProductId);
             var product = _mapper.Map<Product>(productResult);
 
-            _portfolioService.ExecuteBuyOrderAsync(order.NetValue, order.PortfolioId);
+            await _portfolioService.ExecuteBuyOrderAsync(order.NetValue, order.PortfolioId);
 
-            bool condition = await _portfolioProductService.RelationAlreadyExists(order.PortfolioId, order.ProductId);
-
-            if (!condition)
+            if (!await _portfolioProductService.RelationAlreadyExistsAsync(order.PortfolioId, order.ProductId))
             {
                 await _portfolioProductService.InitRelationAsync(portfolio, product);
             }
@@ -172,9 +170,9 @@ namespace AppServices.Services
             var productResult = await _productAppService.GetByIdAsync(order.ProductId);
             var product = _mapper.Map<Product>(productResult);
 
-            _portfolioService.ExecuteSellOrderAsync(order.NetValue, order.PortfolioId);
+            await _portfolioService.ExecuteSellOrderAsync(order.NetValue, order.PortfolioId);
 
-            int availableQuotes = _orderAppService.GetQuotesAvaliable(order.PortfolioId, order.ProductId);
+            int availableQuotes = await _orderAppService.GetQuotesAvaliableAsync(order.PortfolioId, order.ProductId);
 
             if (availableQuotes == 0)
             {
@@ -184,9 +182,9 @@ namespace AppServices.Services
             transactionScope.Complete();
         }
 
-        public void Delete(long portfolioId)
+        public async Task DeleteAsync(long portfolioId)
         {
-            _portfolioService.DeleteAsync(portfolioId);
+            await _portfolioService.DeleteAsync(portfolioId);
         }
     }
 }

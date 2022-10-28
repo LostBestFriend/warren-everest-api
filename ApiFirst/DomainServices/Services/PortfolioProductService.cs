@@ -50,7 +50,7 @@ namespace DomainServices.Services
             return relation;
         }
 
-        public async Task<bool> RelationAlreadyExists(long portfolioId, long productId)
+        public async Task<bool> RelationAlreadyExistsAsync(long portfolioId, long productId)
         {
             var repository = _repositoryFactory.Repository<PortfolioProduct>();
 

@@ -73,7 +73,7 @@ namespace DomainServices.Services
             return portfolio;
         }
 
-        public async void DepositAsync(decimal amount, long portfolioId)
+        public async Task DepositAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
@@ -126,7 +126,7 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public async void ExecuteBuyOrderAsync(decimal amount, long portfolioId)
+        public async Task ExecuteBuyOrderAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
@@ -138,7 +138,7 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public async void ExecuteSellOrderAsync(decimal amount, long portfolioId)
+        public async Task ExecuteSellOrderAsync(decimal amount, long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 

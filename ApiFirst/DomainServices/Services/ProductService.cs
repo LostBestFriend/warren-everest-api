@@ -58,7 +58,7 @@ namespace DomainServices.Services
             _unitOfWork.SaveChanges();
         }
 
-        public async void DeleteAsync(long id)
+        public async Task DeleteAsync(long id)
         {
             var repository = _unitOfWork.Repository<Product>();
 
