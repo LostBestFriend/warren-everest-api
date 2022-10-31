@@ -62,7 +62,7 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<Product>();
 
-            var product = await GetByIdAsync(id);
+            var product = await GetByIdAsync(id).ConfigureAwait(false);
 
             repository.Remove(product);
         }

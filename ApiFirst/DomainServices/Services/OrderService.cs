@@ -52,7 +52,7 @@ namespace DomainServices.Services
             return order;
         }
 
-        public async Task<IList<Order>> GetExecutableOrdersAsync()
+        public async Task<IEnumerable<Order>> GetExecutableOrdersAsync()
         {
             var repository = _repositoryFactory.Repository<Order>();
             var query = repository.MultipleResultQuery().AndFilter(order => order.LiquidateAt.Date == DateTime.Now.Date);

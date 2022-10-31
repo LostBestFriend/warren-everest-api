@@ -25,32 +25,31 @@ namespace AppServices.Services
         public async Task<long> CreateAsync(CreateOrder model)
         {
             var order = _mapper.Map<Order>(model);
-            return await _orderServices.CreateAsync(order);
+            return await _orderServices.CreateAsync(order).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<OrderResponse>> GetAllAsync()
         {
-            var result = await _orderServices.GetAllAsync();
+            var result = await _orderServices.GetAllAsync().ConfigureAwait(false);
             return _mapper.Map<IList<OrderResponse>>(result);
         }
 
         public async Task<OrderResponse> GetByIdAsync(long id)
         {
-            var result = await _orderServices.GetByIdAsync(id);
+            var result = await _orderServices.GetByIdAsync(id).ConfigureAwait(false);
             return _mapper.Map<OrderResponse>(result);
         }
 
         public async Task<int> GetQuotesAvaliableAsync(long portfolioId, long productId)
         {
-            return await _orderServices.GetQuotesAvaliableAsync(portfolioId, productId);
+            return await _orderServices.GetQuotesAvaliableAsync(portfolioId, productId).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<OrderResponse>> GetExecutableOrdersAsync()
         {
-            var orders = await _orderServices.GetExecutableOrdersAsync();
+            var orders = await _orderServices.GetExecutableOrdersAsync().ConfigureAwait(false);
 
             return _mapper.Map<IEnumerable<OrderResponse>>(orders);
-
         }
 
         public void Update(long id, UpdateOrder model)

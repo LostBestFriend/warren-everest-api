@@ -12,9 +12,4 @@
   <ItemGroup>
     <ProjectReference Include="..\AppServices\AppServices.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
 </Project>

@@ -37,19 +37,19 @@ namespace AppServices.Services
         {
             var mapped = _mapper.Map<Customer>(model);
             long customerId = await _customerServices.CreateAsync(mapped).ConfigureAwait(false);
-            await _customerBankInfoAppService.CreateAsync(customerId);
+            await _customerBankInfoAppService.CreateAsync(customerId).ConfigureAwait(false);
             return customerId;
         }
 
         public async Task DeleteAsync(long id)
         {
-            await _customerServices.DeleteAsync(id);
-            await _customerBankInfoAppService.DeleteAsync(id);
+            await _customerServices.DeleteAsync(id).ConfigureAwait(false);
+            await _customerBankInfoAppService.DeleteAsync(id).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<CustomerResponse>> GetAllAsync()
         {
-            var result = await _customerServices.GetAllAsync();
+            var result = await _customerServices.GetAllAsync().ConfigureAwait(false);
             return _mapper.Map<IEnumerable<CustomerResponse>>(result);
         }
 
@@ -58,6 +58,7 @@ namespace AppServices.Services
             var result = await _customerServices.GetByIdAsync(id).ConfigureAwait(false);
             return _mapper.Map<CustomerResponse>(result);
         }
+
         public void Update(UpdateCustomer model)
         {
             var mapped = _mapper.Map<Customer>(model);

@@ -24,20 +24,20 @@ namespace AppServices.Services
 
         public async Task<IEnumerable<ProductResponse>> GetAllAsync()
         {
-            var result = await _productService.GetAllAsync();
+            var result = await _productService.GetAllAsync().ConfigureAwait(false);
             return _mapper.Map<IEnumerable<ProductResponse>>(result);
         }
 
         public async Task<ProductResponse> GetByIdAsync(long id)
         {
-            var result = await _productService.GetByIdAsync(id);
+            var result = await _productService.GetByIdAsync(id).ConfigureAwait(false);
             return _mapper.Map<ProductResponse>(result);
         }
 
         public async Task<long> CreateAsync(CreateProduct model)
         {
             var product = _mapper.Map<Product>(model);
-            return await _productService.CreateAsync(product);
+            return await _productService.CreateAsync(product).ConfigureAwait(false);
         }
 
         public void Update(long productId, UpdateProduct model)
@@ -49,7 +49,7 @@ namespace AppServices.Services
 
         public async Task DeleteAsync(long id)
         {
-            await _productService.DeleteAsync(id);
+            await _productService.DeleteAsync(id).ConfigureAwait(false);
         }
     }
 }

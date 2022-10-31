@@ -37,7 +37,7 @@ namespace DomainServices.Services
         public async Task DeleteAsync(long id)
         {
             var repository = _unitOfWork.Repository<Customer>();
-            var response = await GetByIdAsync(id);
+            var response = await GetByIdAsync(id).ConfigureAwait(false);
 
             repository.Remove(response);
             _unitOfWork.SaveChanges();
@@ -67,8 +67,10 @@ namespace DomainServices.Services
             var repository = _unitOfWork.Repository<Customer>();
             if (!repository.Any(customer => customer.Id == model.Id))
                 throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {model.Id}");
+
             if (repository.Any(customer => customer.Email == model.Email && customer.Id != model.Id))
                 throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
+
             if (repository.Any(customer => customer.Cpf == model.Cpf && customer.Id != model.Id))
                 throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
 
