@@ -15,6 +15,7 @@ namespace AppModels.AppModels.Orders
             ProductId = productId;
             PortfolioId = portfolioId;
         }
+
         public int Quotes { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal NetValue { get; set; }

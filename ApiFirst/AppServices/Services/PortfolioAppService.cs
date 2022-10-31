@@ -52,7 +52,7 @@ namespace AppServices.Services
 
         public async Task<IEnumerable<PortfolioResponse>> GetAllAsync()
         {
-            var result = await _portfolioService.GetAllAsync();
+            var result = await _portfolioService.GetAllAsync().ConfigureAwait(false);
             return _mapper.Map<IEnumerable<PortfolioResponse>>(result);
         }
 
@@ -64,7 +64,7 @@ namespace AppServices.Services
 
         public async Task<decimal> GetAccountBalanceAsync(long portfolioId)
         {
-            return await _portfolioService.GetAccountBalanceAsync(portfolioId);
+            return await _portfolioService.GetAccountBalanceAsync(portfolioId).ConfigureAwait(false);
         }
 
         public async Task DepositAsync(decimal amount, long customerId, long portfolioId)
@@ -73,8 +73,8 @@ namespace AppServices.Services
                 throw new ArgumentException("Não há saldo suficiente na conta corrente para realizar este depósito");
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
-            await _customerBankInfoAppService.WithdrawAsync(customerId, amount);
-            await _portfolioService.DepositAsync(amount, portfolioId);
+            await _customerBankInfoAppService.WithdrawAsync(customerId, amount).ConfigureAwait(false);
+            await _portfolioService.DepositAsync(amount, portfolioId).ConfigureAwait(false);
             transactionScope.Complete();
         }
 
@@ -84,26 +84,26 @@ namespace AppServices.Services
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar o saque requerido");
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
-            await _portfolioService.WithdrawAsync(amount, portfolioId);
-            await _customerBankInfoAppService.DepositAsync(customerId, amount);
+            await _portfolioService.WithdrawAsync(amount, portfolioId).ConfigureAwait(false);
+            await _customerBankInfoAppService.DepositAsync(customerId, amount).ConfigureAwait(false);
             transactionScope.Complete();
         }
 
         public async Task InvestAsync(int quotes, DateTime liquidateAt, long productId, long portfolioId)
         {
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            var product = await _productAppService.GetByIdAsync(productId);
+            var product = await _productAppService.GetByIdAsync(productId).ConfigureAwait(false);
             var order = new CreateOrder(quotes, product.UnitPrice,
                                         liquidateAt, OrderDirection.Buy, productId, portfolioId);
             var orderId = await _orderAppService.CreateAsync(order).ConfigureAwait(false);
 
-            if (await GetAccountBalanceAsync(portfolioId) < order.NetValue)
+            if (await GetAccountBalanceAsync(portfolioId).ConfigureAwait(false) < order.NetValue)
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar este investimento");
 
             if (DateTime.Now.Date >= liquidateAt.Date)
             {
-                var orderResult = await _orderAppService.GetByIdAsync(orderId);
-                await ExecuteBuyOrderAsync(orderResult);
+                var orderResult = await _orderAppService.GetByIdAsync(orderId).ConfigureAwait(false);
+                await ExecuteBuyOrderAsync(orderResult).ConfigureAwait(false);
             }
             transactionScope.Complete();
         }
@@ -113,7 +113,7 @@ namespace AppServices.Services
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var product = await _productAppService.GetByIdAsync(productId).ConfigureAwait(false);
             var portfolio = await _portfolioService.GetByIdAsync(portfolioId).ConfigureAwait(false);
-            int availableQuotes = await _orderAppService.GetQuotesAvaliableAsync(portfolioId, productId);
+            int availableQuotes = await _orderAppService.GetQuotesAvaliableAsync(portfolioId, productId).ConfigureAwait(false);
 
             if (quotes > availableQuotes)
                 throw new ArgumentException("A quantidade de cotas informada é maior do que as cotas existentes na carteira");
@@ -124,25 +124,25 @@ namespace AppServices.Services
 
             if (DateTime.Now.Date >= liquidateAt.Date)
             {
-                var orderResult = await _orderAppService.GetByIdAsync(orderId);
-                await ExecuteSellOrderAsync(orderResult);
+                var orderResult = await _orderAppService.GetByIdAsync(orderId).ConfigureAwait(false);
+                await ExecuteSellOrderAsync(orderResult).ConfigureAwait(false);
             }
             transactionScope.Complete();
         }
 
         public async Task ExecuteNowOrdersAsync()
         {
-            var orders = await _orderAppService.GetExecutableOrdersAsync();
+            var orders = await _orderAppService.GetExecutableOrdersAsync().ConfigureAwait(false);
 
             foreach (var order in orders)
             {
                 if (order.Direction == OrderDirection.Buy)
                 {
-                    await ExecuteBuyOrderAsync(order);
+                    await ExecuteBuyOrderAsync(order).ConfigureAwait(false);
                 }
                 else
                 {
-                    await ExecuteSellOrderAsync(order);
+                    await ExecuteSellOrderAsync(order).ConfigureAwait(false);
                 }
             }
         }

@@ -18,17 +18,17 @@ namespace AppServices.Services
 
         public async Task InitRelationAsync(Portfolio portfolio, Product product)
         {
-            await _portfolioProductService.InitRelationAsync(portfolio, product);
+            await _portfolioProductService.InitRelationAsync(portfolio, product).ConfigureAwait(false);
         }
 
         public async Task DisposeRelationAsync(Portfolio portfolio, Product product)
         {
-            await _portfolioProductService.DisposeRelationAsync(portfolio, product);
+            await _portfolioProductService.DisposeRelationAsync(portfolio, product).ConfigureAwait(false);
         }
 
         public async Task<bool> RelationAlreadyExistsAsync(long portfolioId, long productId)
         {
-            return await _portfolioProductService.RelationAlreadyExistsAsync(portfolioId, productId);
+            return await _portfolioProductService.RelationAlreadyExistsAsync(portfolioId, productId).ConfigureAwait(false);
         }
     }
 }

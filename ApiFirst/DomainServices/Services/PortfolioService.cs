@@ -68,7 +68,7 @@ namespace DomainServices.Services
             var portfolio = await repository.SingleOrDefaultAsync(query);
 
             if (portfolio is null)
-                throw new ArgumentNullException($"Carteira não encontrada para o id: {id}");
+                throw new ArgumentNullException($"Carteira não encontrada para o Id: {id}");
 
             return portfolio;
         }

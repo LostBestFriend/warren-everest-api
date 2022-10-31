@@ -14,6 +14,7 @@ namespace DomainModels.Models
             DaysToExpire = (expirationAt.Date - issuanceAt.Date).Days;
             Type = type;
         }
+
         public string Symbol { get; set; }
         public decimal UnitPrice { get; set; }
         public DateTime IssuanceAt { get; set; }

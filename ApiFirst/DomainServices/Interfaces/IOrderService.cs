@@ -10,7 +10,7 @@ namespace DomainServices.Interfaces
         Task<int> GetQuotesAvaliableAsync(long portfolioId, long productId);
         Task<Order> GetByIdAsync(long id);
         Task<long> CreateAsync(Order model);
-        Task<IList<Order>> GetExecutableOrdersAsync();
+        Task<IEnumerable<Order>> GetExecutableOrdersAsync();
         void Update(Order model);
     }
 }
