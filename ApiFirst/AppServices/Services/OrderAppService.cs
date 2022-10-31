@@ -25,7 +25,7 @@ namespace AppServices.Services
         public async Task<long> CreateAsync(CreateOrder model)
         {
             var order = _mapper.Map<Order>(model);
-            return await _orderServices.CreateAsync(order);
+            return await _orderServices.CreateAsync(order).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<OrderResponse>> GetAllAsync()
