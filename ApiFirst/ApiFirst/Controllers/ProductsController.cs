@@ -82,11 +82,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
             try
             {
-                _productAppService.DeleteAsync(id).ConfigureAwait(false);
+                await _productAppService.DeleteAsync(id).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)

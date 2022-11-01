@@ -70,6 +70,7 @@ namespace AppServices.Services
         public async Task DepositAsync(decimal amount, long customerId, long portfolioId)
         {
             if (await _customerBankInfoAppService.GetBalanceAsync(customerId).ConfigureAwait(false) < amount)
+
                 throw new ArgumentException("Não há saldo suficiente na conta corrente para realizar este depósito");
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();

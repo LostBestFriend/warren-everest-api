@@ -5,7 +5,6 @@ namespace AppModels.AppModels.Orders
 {
     public class UpdateOrder
     {
-
         public UpdateOrder(int quotes, decimal unitPrice, DateTime liquidateAt, OrderDirection direction, long productId, long portfolioId)
         {
             Quotes = quotes;

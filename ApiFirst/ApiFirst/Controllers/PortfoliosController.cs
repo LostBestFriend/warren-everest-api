@@ -79,11 +79,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpPatch("withdraw")]
-        public IActionResult WithdrawAsync(decimal amount, long customerId, long portfolioId)
+        public async Task<IActionResult> WithdrawAsync(decimal amount, long customerId, long portfolioId)
         {
             try
             {
-                _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId).ConfigureAwait(false);
+                await _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId).ConfigureAwait(false);
                 return Ok();
             }
             catch (ArgumentNullException exception)

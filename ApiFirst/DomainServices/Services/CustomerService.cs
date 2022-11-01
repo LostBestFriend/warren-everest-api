@@ -37,6 +37,7 @@ namespace DomainServices.Services
         public async Task DeleteAsync(long id)
         {
             var repository = _unitOfWork.Repository<Customer>();
+
             var response = await GetByIdAsync(id).ConfigureAwait(false);
 
             repository.Remove(response);

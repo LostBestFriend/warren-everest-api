@@ -21,6 +21,7 @@ namespace DomainModels.Models
 
         }
 
+
         public string Symbol { get; set; }
         public decimal UnitPrice { get; set; }
         public DateTime IssuanceAt { get; set; }
