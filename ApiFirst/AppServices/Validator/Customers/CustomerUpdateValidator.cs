@@ -1,13 +1,13 @@
-﻿using AppModels.AppModels;
+using AppModels.AppModels.Customers;
 using FluentValidation;
 using System;
 using System.Linq;
 
-namespace AppServices.Validator
+namespace AppServices.Validator.Customers
 {
-    public class CustomerCreateValidator : AbstractValidator<CreateCustomer>
+    public class CustomerUpdateValidator : AbstractValidator<UpdateCustomer>
     {
-        public CustomerCreateValidator()
+        public CustomerUpdateValidator()
         {
             RuleFor(x => x.Cpf)
                 .NotEmpty()
@@ -17,14 +17,12 @@ namespace AppServices.Validator
 
             RuleFor(x => x.Email)
                 .EmailAddress()
-                .Equal(x => x.EmailConfirmation)
                 .MinimumLength(12)
                 .MaximumLength(50)
                 .NotEmpty();
 
             RuleFor(x => x.DateOfBirth)
                 .NotEmpty()
-                .LessThan(DateTime.Now.AddYears(-18))
                 .GreaterThan(DateTime.MinValue);
 
             RuleFor(x => x.FullName)
@@ -75,7 +73,7 @@ namespace AppServices.Validator
             {
                 input = input.Trim();
                 var chars = input.First();
-                return Char.IsUpper(chars);
+                return char.IsUpper(chars);
             }
 
             bool IsValidCpf(string cpf)

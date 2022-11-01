@@ -15,74 +15,77 @@ namespace DomainServices.Services
 
         public CustomerService(IUnitOfWork<WarrenContext> unitOfWork, IRepositoryFactory<WarrenContext> repository)
         {
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _unitOfWork = unitOfWork ??
+                throw new ArgumentNullException(nameof(unitOfWork));
             _repositoryFactory = repository ?? (IRepositoryFactory)_unitOfWork;
         }
 
         public async Task<long> CreateAsync(Customer model)
         {
-            var repo = _unitOfWork.Repository<Customer>();
+            var repository = _unitOfWork.Repository<Customer>();
 
-            if (repo.Any(customer => customer.Email == model.Email)) 
-                        throw new ArgumentException("Email já está sendo usado.");
-            if (repo.Any(customer => customer.Cpf == model.Cpf)) 
-                        throw new ArgumentException("O CPF já está sendo usado.");
+            if (repository.Any(customer => customer.Email == model.Email))
+                throw new ArgumentException("Email já está sendo usado.");
+            if (repository.Any(customer => customer.Cpf == model.Cpf))
+                throw new ArgumentException("O CPF já está sendo usado.");
 
-            await repo.AddAsync(model).ConfigureAwait(false);
+            await repository.AddAsync(model).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             return model.Id;
         }
 
-        public async void Delete(long id)
+        public async Task DeleteAsync(long id)
         {
             var repository = _unitOfWork.Repository<Customer>();
-            var customer = await GetByIdAsync(id);
+            var response = await GetByIdAsync(id);
 
-            repository.Remove(customer);
+            repository.Remove(response);
             _unitOfWork.SaveChanges();
         }
 
-        public IEnumerable<Customer> GetAll()
+        public async Task<IEnumerable<Customer>> GetAllAsync()
         {
-            var repo = _repositoryFactory.Repository<Customer>();
-            var query = repo.MultipleResultQuery();
+            var repository = _repositoryFactory.Repository<Customer>();
+            var query = repository.MultipleResultQuery();
 
-            return repo.Search(query);
+            return await repository.SearchAsync(query);
         }
 
         public async Task<Customer> GetByCpfAsync(string cpf)
         {
-            var repo = _repositoryFactory.Repository<Customer>();
-            var query = repo.SingleResultQuery().AndFilter(customer => customer.Cpf == cpf);
-            var response = await repo.FirstOrDefaultAsync(query).ConfigureAwait(false);
+            var repository = _repositoryFactory.Repository<Customer>();
+            var query = repository.SingleResultQuery().AndFilter(customer => customer.Cpf == cpf);
+            var response = await repository.FirstOrDefaultAsync(query).ConfigureAwait(false);
 
-            if (response is null) 
-                        throw new ArgumentNullException($"Não foi encontrado Customer para o CPF: {cpf}");
+            if (response is null)
+                throw new ArgumentNullException($"Não foi encontrado Customer para o CPF: {cpf}");
             return response;
         }
 
         public void Update(Customer model)
         {
-            var repo = _unitOfWork.Repository<Customer>();
-            if (!repo.Any(customer => customer.Id == model.Id)) 
-                        throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {model.Id}");
-            if (repo.Any(customer => customer.Email == model.Email && customer.Id != model.Id)) 
-                        throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
-            if (repo.Any(customer => customer.Cpf == model.Cpf && customer.Id != model.Id)) 
-                        throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+            var repository = _unitOfWork.Repository<Customer>();
+            if (!repository.Any(customer => customer.Id == model.Id))
+                throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {model.Id}");
 
-            repo.Update(model);
+            if (repository.Any(customer => customer.Email == model.Email && customer.Id != model.Id))
+                throw new ArgumentException($"Já existe usuário com o Email {model.Email}");
+
+            if (repository.Any(customer => customer.Cpf == model.Cpf && customer.Id != model.Id))
+                throw new ArgumentException($"Já existe usuário com o CPF {model.Cpf}");
+
+            repository.Update(model);
             _unitOfWork.SaveChanges();
         }
 
         public async Task<Customer> GetByIdAsync(long id)
         {
-            var repo = _repositoryFactory.Repository<Customer>();
-            var query = repo.SingleResultQuery().AndFilter(customer => customer.Id == id);
-            var response = await repo.FirstOrDefaultAsync(query).ConfigureAwait(false);
+            var repository = _repositoryFactory.Repository<Customer>();
+            var query = repository.SingleResultQuery().AndFilter(customer => customer.Id == id);
+            var response = await repository.FirstOrDefaultAsync(query).ConfigureAwait(false);
 
-            if (response is null) 
-                        throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
+            if (response is null)
+                throw new ArgumentNullException($"Não foi encontrado Customer para o Id: {id}");
             return response;
         }
     }

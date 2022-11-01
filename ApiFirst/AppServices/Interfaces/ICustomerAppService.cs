@@ -1,4 +1,4 @@
-using AppModels.AppModels;
+using AppModels.AppModels.Customers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,8 +8,8 @@ namespace AppServices.Interfaces
     {
         Task<long> CreateAsync(CreateCustomer model);
         void Update(UpdateCustomer model);
-        void Delete(long id);
-        IEnumerable<CustomerResponse> GetAll();
+        Task DeleteAsync(long id);
+        Task<IEnumerable<CustomerResponse>> GetAllAsync();
         Task<CustomerResponse> GetByIdAsync(long id);
         Task<CustomerResponse> GetByCpfAsync(string cpf);
     }

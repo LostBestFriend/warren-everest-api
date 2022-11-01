@@ -1,5 +1,6 @@
 using Infrastructure.CrossCutting.ExtensionMethods;
 using System;
+using System.Collections.Generic;
 
 namespace DomainModels.Models
 {
@@ -46,5 +47,7 @@ namespace DomainModels.Models
         public string PostalCode { get; set; }
         public string Address { get; set; }
         public int Number { get; set; }
+        public ICollection<Portfolio> Portfolios { get; set; }
+        public CustomerBankInfo CustomerBankInfo { get; set; }
     }
 }

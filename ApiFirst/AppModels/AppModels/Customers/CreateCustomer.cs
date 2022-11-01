@@ -1,13 +1,14 @@
 ﻿using Infrastructure.CrossCutting.ExtensionMethods;
 using System;
 
-namespace AppModels.AppModels
+namespace AppModels.AppModels.Customers
 {
-    public class UpdateCustomer
+    public class CreateCustomer
     {
-        public UpdateCustomer(
+        public CreateCustomer(
             string fullName,
             string email,
+            string emailConfirmation,
             string cpf,
             string cellphone,
             DateTime dateOfBirth,
@@ -22,6 +23,7 @@ namespace AppModels.AppModels
         {
             FullName = fullName;
             Email = email;
+            EmailConfirmation = emailConfirmation;
             Cpf = cpf.FormatString();
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
@@ -36,6 +38,7 @@ namespace AppModels.AppModels
 
         public string FullName { get; set; }
         public string Email { get; set; }
+        public string EmailConfirmation { get; set; }
         public string Cpf { get; set; }
         public string Cellphone { get; set; }
         public DateTime DateOfBirth { get; set; }

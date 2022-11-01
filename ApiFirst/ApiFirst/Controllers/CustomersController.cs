@@ -1,4 +1,4 @@
-using AppModels.AppModels;
+using AppModels.AppModels.Customers;
 using AppServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,11 +10,11 @@ namespace ApiFirst.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerAppService _customerAppServices;
+        private readonly ICustomerAppService _customerAppService;
 
         public CustomersController(ICustomerAppService customerAppServices)
         {
-            _customerAppServices = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
+            _customerAppService = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
         }
 
         [HttpGet("cpf/{cpf}")]
@@ -22,7 +22,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                var response = await _customerAppServices.GetByCpfAsync(cpf).ConfigureAwait(false);
+                var response = await _customerAppService.GetByCpfAsync(cpf).ConfigureAwait(false);
                 return Ok(response);
             }
             catch (ArgumentNullException e)
@@ -36,9 +36,9 @@ namespace ApiFirst.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var result = _customerAppServices.GetAll();
+            var result = await _customerAppService.GetAllAsync().ConfigureAwait(false);
             return Ok(result);
         }
 
@@ -47,7 +47,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                var response = await _customerAppServices.GetByIdAsync(id).ConfigureAwait(false);
+                var response = await _customerAppService.GetByIdAsync(id).ConfigureAwait(false);
                 return Ok(response);
             }
             catch (ArgumentNullException e)
@@ -65,7 +65,7 @@ namespace ApiFirst.Controllers
         {
             try
             {
-                long id = await _customerAppServices.CreateAsync(model).ConfigureAwait(false);
+                long id = await _customerAppService.CreateAsync(model).ConfigureAwait(false);
                 return Created("", id);
             }
             catch (ArgumentException e)
@@ -79,11 +79,11 @@ namespace ApiFirst.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
             try
             {
-                _customerAppServices.Delete(id);
+                await _customerAppService.DeleteAsync(id).ConfigureAwait(false);
                 return NoContent();
             }
             catch (ArgumentNullException e)
@@ -96,12 +96,12 @@ namespace ApiFirst.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult Update(UpdateCustomer model)
         {
             try
             {
-                _customerAppServices.Update(model);
+                _customerAppService.Update(model);
                 return Ok();
             }
             catch (ArgumentNullException ex)

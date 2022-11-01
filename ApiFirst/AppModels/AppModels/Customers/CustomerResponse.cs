@@ -1,14 +1,13 @@
-﻿using Infrastructure.CrossCutting.ExtensionMethods;
-using System;
+﻿using System;
 
-namespace AppModels.AppModels
+namespace AppModels.AppModels.Customers
 {
-    public class CreateCustomer
+    public class CustomerResponse
     {
-        public CreateCustomer(
+        public CustomerResponse(
+            long id,
             string fullName,
             string email,
-            string emailConfirmation,
             string cpf,
             string cellphone,
             DateTime dateOfBirth,
@@ -21,24 +20,24 @@ namespace AppModels.AppModels
             int number
         )
         {
+            Id = id;
             FullName = fullName;
             Email = email;
-            EmailConfirmation = emailConfirmation;
-            Cpf = cpf.FormatString();
+            Cpf = cpf;
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = postalCode.FormatString();
+            PostalCode = postalCode;
             Address = address;
             Number = number;
         }
 
+        public long Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-        public string EmailConfirmation { get; set; }
         public string Cpf { get; set; }
         public string Cellphone { get; set; }
         public DateTime DateOfBirth { get; set; }
