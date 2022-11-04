@@ -3,8 +3,8 @@ using AppModels.EnumModels;
 using AppServices.Profiles;
 using AutoMapper;
 using DomainModels.Models;
+using DomainServices.Tests.Fixtures;
 using FluentAssertions;
-using System;
 using Xunit;
 
 namespace AppServices.Tests.Profiles
@@ -21,15 +21,15 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_UpdateOrder_Sucessfully()
         {
-            var order = new Order(quotes: 1, unitPrice: 1, liquidateAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: DomainModels.Enums.OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var order = OrderFixture.GenerateOrderFixture();
 
-            var updateOrder = new UpdateOrder(quotes: 1, unitPrice: 1, liquidateAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+            var updateOrder = new UpdateOrder(
+                quotes: order.Quotes,
+                unitPrice: order.NetValue / order.Quotes,
+                liquidatedAt: order.LiquidatedAt,
                 direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+                productId: order.ProductId,
+                portfolioId: order.PortfolioId);
 
             var result = _mapper.Map<Order>(updateOrder);
 
@@ -39,14 +39,15 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_CreateOrder_Sucessfully()
         {
-            var order = new Order(quotes: 1, unitPrice: 1, liquidateAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: DomainModels.Enums.OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
-            var createOrder = new CreateOrder(quotes: 1, unitPrice: 1, liquidateAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+            var order = OrderFixture.GenerateOrderFixture();
+
+            var createOrder = new CreateOrder(
+                quotes: order.Quotes,
+                unitPrice: order.NetValue / order.Quotes,
+                liquidatedAt: order.LiquidatedAt,
                 direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+                productId: order.ProductId,
+                portfolioId: order.PortfolioId);
 
 
             var result = _mapper.Map<Order>(createOrder);
@@ -57,14 +58,7 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_OrderResponse_Sucessfully()
         {
-            var order = new Order(quotes: 1, unitPrice: 1, liquidateAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: DomainModels.Enums.OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
-            var orderResponse = new OrderResponse(id: 1, quotes: 1,
-                unitPrice: 1, liquidateAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var order = OrderFixture.GenerateOrderFixture();
 
             var result = _mapper.Map<OrderResponse>(order);
 

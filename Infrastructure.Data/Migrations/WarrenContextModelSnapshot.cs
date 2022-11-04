@@ -110,7 +110,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
 
                     b.ToTable("CustomerBankInfos", (string)null);
                 });
@@ -126,13 +127,12 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Direction");
 
-                    b.Property<DateTime>("LiquidateAt")
+                    b.Property<DateTime>("LiquidatedAt")
                         .HasColumnType("datetime(6)")
-                        .HasColumnName("LiquidateAt");
+                        .HasColumnName("LiquidatedAt");
 
                     b.Property<decimal>("NetValue")
-                        .HasColumnType("decimal(65,30)")
-                        .HasColumnName("NetValue");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<long>("PortfolioId")
                         .HasColumnType("bigint")
@@ -146,13 +146,9 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Quotes");
 
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(65,30)")
-                        .HasColumnName("UnitPrice");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("LiquidateAt");
+                    b.HasIndex("LiquidatedAt");
 
                     b.HasIndex("PortfolioId");
 
@@ -238,9 +234,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("IssuanceAt");
 
-                    b.Property<long?>("PortfolioId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Symbol")
                         .IsRequired()
                         .HasColumnType("varchar(15)")
@@ -256,8 +249,6 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PortfolioId");
-
                     b.HasIndex("Symbol");
 
                     b.HasIndex("Type");
@@ -265,11 +256,26 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Products", (string)null);
                 });
 
+            modelBuilder.Entity("PortfolioProduct", b =>
+                {
+                    b.Property<long>("PortfoliosId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProductsId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("PortfoliosId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("PortfolioProduct");
+                });
+
             modelBuilder.Entity("DomainModels.Models.CustomerBankInfo", b =>
                 {
                     b.HasOne("DomainModels.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
+                        .WithOne("CustomerBankInfo")
+                        .HasForeignKey("DomainModels.Models.CustomerBankInfo", "CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -285,7 +291,7 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("DomainModels.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -298,7 +304,7 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("DomainModels.Models.Portfolio", b =>
                 {
                     b.HasOne("DomainModels.Models.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("Portfolios")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -325,11 +331,26 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("DomainModels.Models.Product", b =>
+            modelBuilder.Entity("PortfolioProduct", b =>
                 {
                     b.HasOne("DomainModels.Models.Portfolio", null)
-                        .WithMany("Products")
-                        .HasForeignKey("PortfolioId");
+                        .WithMany()
+                        .HasForeignKey("PortfoliosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DomainModels.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DomainModels.Models.Customer", b =>
+                {
+                    b.Navigation("CustomerBankInfo");
+
+                    b.Navigation("Portfolios");
                 });
 
             modelBuilder.Entity("DomainModels.Models.Portfolio", b =>
@@ -337,12 +358,12 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("PortfolioProducts");
-
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("DomainModels.Models.Product", b =>
                 {
+                    b.Navigation("Orders");
+
                     b.Navigation("PortfolioProducts");
                 });
 #pragma warning restore 612, 618

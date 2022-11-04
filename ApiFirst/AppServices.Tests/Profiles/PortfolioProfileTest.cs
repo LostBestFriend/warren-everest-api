@@ -1,10 +1,8 @@
 ﻿using AppModels.AppModels.Portfolios;
 using AppServices.Profiles;
-using AppServices.Tests.Fixtures.Customer;
-using AppServices.Tests.Fixtures.Order;
-using AppServices.Tests.Fixtures.PortfolioProduct;
 using AutoMapper;
 using DomainModels.Models;
+using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Xunit;
 
@@ -23,11 +21,12 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_UpdatePortfolio_Sucessfully()
         {
-            var portfolio = new Portfolio(name: "João", description:
-                "aaa", totalBalance: 1000, customerId: 1);
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
 
-            var updatePortfolio = new UpdatePortfolio(name: "João",
-                description: "aaa", customerId: 1);
+            var updatePortfolio = new UpdatePortfolio(
+                name: portfolio.Name,
+                description: portfolio.Description,
+                customerId: portfolio.CustomerId);
 
             var result = _mapper.Map<Portfolio>(updatePortfolio);
 
@@ -37,10 +36,12 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_CreatePortfolio_Sucessfully()
         {
-            var portfolio = new Portfolio(name: "João", description:
-                "aaa", totalBalance: 1000, customerId: 1);
-            var createPortfolio = new CreatePortfolio(name: "João",
-                description: "aaa", customerId: 1);
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
+
+            var createPortfolio = new CreatePortfolio(
+                name: portfolio.Name,
+                description: portfolio.Description,
+                customerId: portfolio.CustomerId);
 
             var result = _mapper.Map<Portfolio>(createPortfolio);
 
@@ -50,14 +51,7 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_PortfolioResponse_Sucessfully()
         {
-            var portfolio = new Portfolio(name: "João", description:
-                "aaa", totalBalance: 1000, customerId: 1);
-            var portfolioResponse = new PortfolioResponse(id: 1,
-                name: "João", description: "aaa", totalBalance: 1000,
-                accountBalance: 1000,
-                customer: CustomerResponseFixture.GenerateCustomerResponseFixture(),
-                products: PortfolioProductResponseFixture.GeneratePortfolioProductResponseFixture(3),
-                orders: OrderResponseFixture.GenerateOrderResponseFixture(3));
+            var portfolio = PortfolioFixture.GeneratePortfolioFixture();
 
             var result = _mapper.Map<PortfolioResponse>(portfolio);
 

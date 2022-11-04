@@ -1,8 +1,7 @@
 ﻿using AppModels.AppModels.PortfolioProducts;
 using AppServices.Profiles;
-using AppServices.Tests.Fixtures.Product;
 using AutoMapper;
-using DomainModels.Models;
+using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Xunit;
 
@@ -19,10 +18,7 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_PortfolioProductResponse_Sucessfully()
         {
-            var portfolioProduct = new PortfolioProduct(
-                productId: 1, portfolioId: 1);
-            var portfolioProductResponse = new PortfolioProductResponse(
-                product: ProductResponseFixture.GenerateProductResponseFixture());
+            var portfolioProduct = PortfolioProductFixture.GeneratePortfolioProductFixture();
 
             var result = _mapperResponse.Map<PortfolioProductResponse>(portfolioProduct);
 

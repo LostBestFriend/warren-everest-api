@@ -3,8 +3,8 @@ using AppModels.EnumModels;
 using AppServices.Profiles;
 using AutoMapper;
 using DomainModels.Models;
+using DomainServices.Tests.Fixtures;
 using FluentAssertions;
-using System;
 using Xunit;
 
 namespace AppServices.Tests.Profiles
@@ -22,17 +22,14 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_UpdateProduct_Sucessfully()
         {
-            var product = new Product(symbol: "aaa",
-                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                type: DomainModels.Enums.ProductType.FixedIncome,
-                unitPrice: 1);
+            var product = ProductFixture.GenerateProductFixture();
 
-            var updateProduct = new UpdateProduct(symbol: "aaa",
-                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                type: ProductType.FixedIncome,
-                unitPrice: 1);
+            var updateProduct = new UpdateProduct(
+               symbol: product.Symbol,
+               issuanceAt: product.IssuanceAt,
+               expirationAt: product.ExpirationAt,
+               type: ProductType.FixedIncome,
+               unitPrice: product.UnitPrice);
 
             var result = _mapper.Map<Product>(updateProduct);
 
@@ -42,16 +39,14 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_CreateProduct_Sucessfully()
         {
-            var product = new Product(symbol: "aaa",
-                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                type: DomainModels.Enums.ProductType.FixedIncome,
-                unitPrice: 1);
-            var createProduct = new CreateProduct(symbol: "aaa",
-                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+            var product = ProductFixture.GenerateProductFixture();
+
+            var createProduct = new CreateProduct(
+                symbol: product.Symbol,
+                issuanceAt: product.IssuanceAt,
+                expirationAt: product.ExpirationAt,
                 type: ProductType.FixedIncome,
-                unitPrice: 1);
+                unitPrice: product.UnitPrice);
 
             var result = _mapper.Map<Product>(createProduct);
 
@@ -61,38 +56,37 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_ProductResponse_Sucessfully()
         {
-            var product = new Product(symbol: "aaa",
-                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                type: DomainModels.Enums.ProductType.FixedIncome,
-                unitPrice: 1);
-            var productResponse = new ProductResponse(id: 1,
-                symbol: "aaa", issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+            var product = ProductFixture.GenerateProductFixture();
+
+            var productResponse = new ProductResponse(
+                id: 1,
+                symbol: product.Symbol,
+                issuanceAt: product.IssuanceAt,
+                expirationAt: product.ExpirationAt,
                 type: ProductType.FixedIncome,
-                unitPrice: 1);
+                unitPrice: product.UnitPrice);
 
             var result = _mapper.Map<ProductResponse>(product);
 
             result.Should().NotBeNull();
         }
+
         [Fact]
         public void Should_Map_ProductResponse_Reverse_Sucessfully()
         {
-            var product = new Product(symbol: "aaa",
-                issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                type: DomainModels.Enums.ProductType.FixedIncome,
-                unitPrice: 1);
-            var productResponse = new ProductResponse(id: 1,
-                symbol: "aaa", issuanceAt: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                expirationAt: new DateTime(year: 2200, month: 2, day: 2, hour: 14, minute: 22, second: 2),
+            var product = ProductFixture.GenerateProductFixture();
+
+            var productResponse = new ProductResponse(
+                id: 1,
+                symbol: product.Symbol,
+                issuanceAt: product.IssuanceAt,
+                expirationAt: product.ExpirationAt,
                 type: ProductType.FixedIncome,
-                unitPrice: 1);
+                unitPrice: product.UnitPrice);
 
             var result = _mapper.Map<Product>(productResponse);
 
-            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(productResponse);
         }
     }
 }

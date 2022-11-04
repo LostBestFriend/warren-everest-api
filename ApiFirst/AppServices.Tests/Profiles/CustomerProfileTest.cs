@@ -2,8 +2,8 @@
 using AppServices.Profiles;
 using AutoMapper;
 using DomainModels.Models;
+using DomainServices.Tests.Fixtures;
 using FluentAssertions;
-using System;
 using Xunit;
 
 namespace AppServices.Tests.Profiles
@@ -21,19 +21,21 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_UpdateCustomer_Sucessfully()
         {
-            var customer = new Customer(fullName: "João", email: "a@g",
-                cpf: "42713070848", cellphone: "991541506",
-                dateOfBirth: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                emailSms: true, whatsapp: true, country: "Brazil",
-                city: "Blumenau", postalCode: "89035360",
-                address: "Rua Prudente", number: 1234567890);
+            var customer = CustomerFixture.GenerateCustomerFixture();
 
-            var updateCustomer = new UpdateCustomer(fullName: "João", email: "a@g",
-                cpf: "42713070848", cellphone: "991541506",
-                dateOfBirth: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                emailSms: true, whatsapp: true, country: "Brazil",
-                city: "Blumenau", postalCode: "89035360",
-                address: "Rua Prudente", number: 1234567890);
+            var updateCustomer = new UpdateCustomer(
+                fullName: customer.FullName,
+                email: customer.Email,
+                cpf: customer.Cpf,
+                cellphone: customer.Cellphone,
+                dateOfBirth: customer.DateOfBirth,
+                emailSms: customer.EmailSms,
+                whatsapp: customer.Whatsapp,
+                country: customer.Country,
+                city: customer.City,
+                postalCode: customer.PostalCode,
+                address: customer.Address,
+                number: customer.Number);
 
             var result = _mapper.Map<Customer>(updateCustomer);
 
@@ -44,18 +46,22 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_CreateCustomer_Sucessfully()
         {
-            var customer = new Customer(fullName: "João", email: "a@g",
-                cpf: "42713070848", cellphone: "991541506",
-                dateOfBirth: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                emailSms: true, whatsapp: true, country: "Brazil",
-                city: "Blumenau", postalCode: "89035360",
-                address: "Rua Prudente", number: 1234567890);
-            var createCustomer = new CreateCustomer(fullName: "João", email: "a@g", emailConfirmation: "a@g",
-                cpf: "42713070848", cellphone: "991541506",
-                dateOfBirth: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                emailSms: true, whatsapp: true, country: "Brazil",
-                city: "Blumenau", postalCode: "89035360",
-                address: "Rua Prudente", number: 1234567890);
+            var customer = CustomerFixture.GenerateCustomerFixture();
+
+            var createCustomer = new CreateCustomer(
+                fullName: customer.FullName,
+                email: customer.Email,
+                emailConfirmation: customer.Email,
+                cpf: customer.Cpf,
+                cellphone: customer.Cellphone,
+                dateOfBirth: customer.DateOfBirth,
+                emailSms: customer.EmailSms,
+                whatsapp: customer.Whatsapp,
+                country: customer.Country,
+                city: customer.City,
+                postalCode: customer.PostalCode,
+                address: customer.Address,
+                number: customer.Number);
 
             var result = _mapper.Map<Customer>(createCustomer);
 
@@ -65,18 +71,7 @@ namespace AppServices.Tests.Profiles
         [Fact]
         public void Should_Map_CustomerResponse_Sucessfully()
         {
-            var customer = new Customer(fullName: "João", email: "a@g",
-                cpf: "42713070848", cellphone: "991541506",
-                dateOfBirth: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                emailSms: true, whatsapp: true, country: "Brazil",
-                city: "Blumenau", postalCode: "89035360",
-                address: "Rua Prudente", number: 1234567890);
-            var customerResponse = new CustomerResponse(id: 1, fullName: "João", email: "a@g",
-                cpf: "42713070848", cellphone: "991541506",
-                dateOfBirth: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                emailSms: true, whatsapp: true, country: "Brazil",
-                city: "Blumenau", postalCode: "89035360",
-                address: "Rua Prudente", number: 1234567890);
+            var customer = CustomerFixture.GenerateCustomerFixture();
 
             var result = _mapper.Map<CustomerResponse>(customer);
 

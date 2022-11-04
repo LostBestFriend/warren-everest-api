@@ -15,7 +15,7 @@ namespace AppServices.Validator.Orders
                 .IsInEnum()
                 .NotEmpty();
 
-            RuleFor(order => order.LiquidateAt)
+            RuleFor(order => order.LiquidatedAt)
                 .NotEmpty();
 
             RuleFor(order => order.PortfolioId)

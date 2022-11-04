@@ -5,10 +5,10 @@ namespace AppModels.AppModels.Orders
 {
     public class UpdateOrder
     {
-        public UpdateOrder(int quotes, decimal unitPrice, DateTime liquidateAt, OrderDirection direction, long productId, long portfolioId)
+        public UpdateOrder(int quotes, decimal unitPrice, DateTime liquidatedAt, OrderDirection direction, long productId, long portfolioId)
         {
             Quotes = quotes;
-            LiquidateAt = liquidateAt;
+            LiquidatedAt = liquidatedAt;
             NetValue = quotes * unitPrice;
             Direction = direction;
             ProductId = productId;
@@ -20,7 +20,7 @@ namespace AppModels.AppModels.Orders
 
         public int Quotes { get; set; }
         public decimal NetValue { get; set; }
-        public DateTime LiquidateAt { get; set; }
+        public DateTime LiquidatedAt { get; set; }
         public OrderDirection Direction { get; set; }
         public long ProductId { get; set; }
         public long PortfolioId { get; set; }

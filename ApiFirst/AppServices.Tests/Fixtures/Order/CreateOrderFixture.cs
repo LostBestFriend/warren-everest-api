@@ -11,17 +11,25 @@ namespace AppServices.Tests.Fixtures.Order
         public static List<CreateOrder> GenerateCreateOrderFixture(int quantity)
         {
             return new Faker<CreateOrder>("en_US")
-                .CustomInstantiator(p => new CreateOrder(quotes: 1, unitPrice: 1,
-                liquidateAt: DateTime.Now.AddDays(-2), direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1))
+                .CustomInstantiator(p => new CreateOrder(
+                    quotes: 1,
+                    unitPrice: 1,
+                    liquidatedAt: DateTime.Now.AddDays(-2),
+                    direction: OrderDirection.Buy,
+                    productId: 1,
+                    portfolioId: 1))
                 .Generate(quantity);
         }
         public static CreateOrder GenerateCreateOrderFixture()
         {
             return new Faker<CreateOrder>("en_US")
-                .CustomInstantiator(p => new CreateOrder(quotes: 1, unitPrice: 1,
-                liquidateAt: DateTime.Now.AddDays(-2), direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1))
+                .CustomInstantiator(p => new CreateOrder(
+                    quotes: 1,
+                    unitPrice: 1,
+                    liquidatedAt: DateTime.Now.AddDays(-2),
+                    direction: OrderDirection.Buy,
+                    productId: 1,
+                    portfolioId: 1))
                 .Generate();
         }
     }
