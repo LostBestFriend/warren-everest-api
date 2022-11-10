@@ -7,14 +7,23 @@ namespace AppServices.Tests.Validator
 {
     public class PortfolioValidatorTest
     {
+
+        public readonly CreatePortfolioValidator validatorCreate;
+        public readonly UpdatePortfolioValidator validatorUpdate;
+
+        public PortfolioValidatorTest()
+        {
+            validatorCreate = new CreatePortfolioValidator();
+            validatorUpdate = new UpdatePortfolioValidator();
+        }
+
         [Fact]
         public void Should_Validate_CreatePortfolio_Sucessfully()
         {
             var createPortfolio = new CreatePortfolio(name: "João",
                 description: "aaa", customerId: 1);
-            var validator = new CreatePortfolioValidator();
 
-            var result = validator.Validate(createPortfolio);
+            var result = validatorCreate.Validate(createPortfolio);
 
             result.IsValid.Should().BeTrue();
         }
@@ -24,8 +33,8 @@ namespace AppServices.Tests.Validator
         {
             var updatePortfolio = new UpdatePortfolio(name: "João",
                 description: "aaa", customerId: 1);
-            var validator = new UpdatePortfolioValidator();
-            var result = validator.Validate(updatePortfolio);
+
+            var result = validatorUpdate.Validate(updatePortfolio);
 
             result.IsValid.Should().BeTrue();
         }

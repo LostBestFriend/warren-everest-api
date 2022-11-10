@@ -73,6 +73,8 @@ namespace AppServices.Validator.Customers
 
             bool FirstLetterIsUpperCase(string input)
             {
+                if (input == null || input == "" || input == " ") return false;
+
                 input = input.Trim();
                 var chars = input.First();
                 return char.IsUpper(chars);

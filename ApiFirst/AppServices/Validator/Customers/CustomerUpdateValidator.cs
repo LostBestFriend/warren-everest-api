@@ -23,6 +23,7 @@ namespace AppServices.Validator.Customers
 
             RuleFor(x => x.DateOfBirth)
                 .NotEmpty()
+                .LessThan(DateTime.Now.AddYears(-18))
                 .GreaterThan(DateTime.MinValue);
 
             RuleFor(x => x.FullName)
@@ -71,6 +72,8 @@ namespace AppServices.Validator.Customers
 
             bool FirstLetterIsUpperCase(string input)
             {
+                if (input == null || input == "" || input == " ") return false;
+
                 input = input.Trim();
                 var chars = input.First();
                 return char.IsUpper(chars);
