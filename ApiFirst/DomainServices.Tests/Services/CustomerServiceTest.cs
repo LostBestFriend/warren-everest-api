@@ -43,7 +43,7 @@ namespace DomainServices.Tests.Services
 
             var result = await _customerService.CreateAsync(customer);
 
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(customer.Id);
 
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Exactly(2));
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default), Times.Once);
@@ -60,15 +60,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default));
             _unitOfWorkMock.Setup(p => p.SaveChangesAsync(true, false, default));
 
-            try
-            {
-                var result = await _customerService.CreateAsync(customer);
-                result.Should().BeGreaterThanOrEqualTo(0);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerService.CreateAsync(customer);
+
+            await action.Should().ThrowAsync<ArgumentException>("O CPF já está sendo usado.");
 
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Cpf == customer.Cpf), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Email == customer.Email), Times.Once);
@@ -86,15 +80,10 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default));
             _unitOfWorkMock.Setup(p => p.SaveChangesAsync(true, false, default));
 
-            try
-            {
-                var result = await _customerService.CreateAsync(customer);
-                result.Should().BeGreaterThanOrEqualTo(0);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerService.CreateAsync(customer);
+
+            await action.Should().ThrowAsync<ArgumentException>("Email já está sendo usado.");
+
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Email == customer.Email), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Cpf == customer.Cpf), Times.Never);
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().AddAsync(It.IsAny<Customer>(), default), Times.Never);
@@ -131,13 +120,13 @@ namespace DomainServices.Tests.Services
 
             var customers = await _customerService.GetAllAsync();
 
-            customers.Should().HaveCountGreaterThanOrEqualTo(0);
+            customers.Should().HaveCount(2);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SearchAsync(It.IsAny<IMultipleResultQuery<Customer>>(), default), Times.Once);
         }
 
         [Fact]
-        public void Should_GetByCpf_SucessFully()
+        public async void Should_GetByCpf_SucessFully()
         {
             var cpf = "42713070848";
             var customer = CustomerFixture.GenerateCustomerFixture();
@@ -145,16 +134,16 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(It.IsAny<IQuery<Customer>>());
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).ReturnsAsync(customer);
 
-            var customers = _customerService.GetByCpfAsync(cpf);
+            var result = await _customerService.GetByCpfAsync(cpf);
 
-            customers.Should().NotBeNull();
+            result.Should().Be(customer);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default), Times.Once);
         }
 
         [Fact]
-        public void Should_Not_GetByCpf_When_Cpf_Dismatch()
+        public async void Should_Not_GetByCpf_When_Cpf_Dismatch()
         {
             var cpf = "42713070848";
             var customer = CustomerFixture.GenerateCustomerFixture();
@@ -162,15 +151,9 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(It.IsAny<IQuery<Customer>>());
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default));
 
-            try
-            {
-                var customers = _customerService.GetByCpfAsync(cpf);
-                customers.Should().NotBeNull();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerService.GetByCpfAsync(cpf);
+
+            await action.Should().ThrowAsync<ArgumentNullException>($"Não foi encontrado Customer para o CPF: {cpf}");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default), Times.Once);
@@ -206,14 +189,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().Update(It.IsAny<Customer>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            try
-            {
-                _customerService.Update(customer);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerService.Update(customer);
+
+            action.Should().Throw<ArgumentNullException>($"Não foi encontrado Customer para o Id: {customer.Id}");
 
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Update(It.IsAny<Customer>()), Times.Never);
@@ -231,14 +209,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().Update(It.IsAny<Customer>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            try
-            {
-                _customerService.Update(customer);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerService.Update(customer);
+
+            action.Should().Throw<ArgumentException>($"Já existe usuário com o CPF {customer.Cpf}");
 
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Id == customer.Id), Times.Once);
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(custom => custom.Email == customer.Email && custom.Id != customer.Id), Times.Once);
@@ -256,14 +229,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Customer>().Update(It.IsAny<Customer>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            try
-            {
-                _customerService.Update(customer);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerService.Update(customer);
+
+            action.Should().Throw<ArgumentException>($"Já existe usuário com o Email {customer.Email}");
 
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Any(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Exactly(2));
             _unitOfWorkMock.Verify(p => p.Repository<Customer>().Update(It.IsAny<Customer>()), Times.Never);
@@ -271,7 +239,7 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_GetById_SucessFully()
+        public async void Should_GetById_SucessFully()
         {
             var id = 1;
             var customer = CustomerFixture.GenerateCustomerFixture();
@@ -279,16 +247,16 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(It.IsAny<IQuery<Customer>>());
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default)).ReturnsAsync(customer);
 
-            var customers = _customerService.GetByIdAsync(id);
+            var customers = await _customerService.GetByIdAsync(id);
 
-            customers.Should().NotBeNull();
+            customers.Should().Be(customer);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<IQuery<Customer>>(), default), Times.Once);
         }
 
         [Fact]
-        public void Should_Not_GetById_When_Id_Dismatch()
+        public async void Should_Not_GetById_When_Id_Dismatch()
         {
             var id = 0;
             var customer = CustomerFixture.GenerateCustomerFixture();
@@ -296,15 +264,9 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>())).Returns(It.IsAny<IQuery<Customer>>());
             _repositoryFactoryMock.Setup(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<SingleResultQuery<Customer>>(), default));
 
-            try
-            {
-                var customers = _customerService.GetByIdAsync(id);
-                customers.Should().NotBeNull();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerService.GetByIdAsync(id);
+
+            await action.Should().ThrowAsync<ArgumentNullException>($"Não foi encontrado Customer para o Id: {id}");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Customer, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Customer>().FirstOrDefaultAsync(It.IsAny<SingleResultQuery<Customer>>(), default), Times.Once);

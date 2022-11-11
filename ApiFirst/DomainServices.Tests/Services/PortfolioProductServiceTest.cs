@@ -77,7 +77,7 @@ namespace DomainServices.Tests.Services
 
             var result = await _portfolioProductService.GetByRelationAsync(portfolioId, productId);
 
-            result.Should().NotBeNull();
+            result.Should().Be(portfolioProduct);
 
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default), Times.Once);
@@ -93,15 +93,9 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>())).Returns(It.IsAny<IQuery<PortfolioProduct>>());
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default));
 
-            try
-            {
-                var result = await _portfolioProductService.GetByRelationAsync(portfolioId, productId);
-                result.Should().NotBeNull();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _portfolioProductService.GetByRelationAsync(portfolioId, productId);
+
+            await action.Should().ThrowAsync<ArgumentNullException>($"Nenhuma relação encontrada para ProductId: {productId} e PortfolioId: {portfolioId}");
 
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default), Times.Once);

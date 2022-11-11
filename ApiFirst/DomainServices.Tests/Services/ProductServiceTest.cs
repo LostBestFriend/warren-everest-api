@@ -40,7 +40,7 @@ namespace DomainServices.Tests.Services
 
             var result = await _productService.CreateAsync(product);
 
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(product.Id);
 
             _unitOfWorkMock.Verify(p => p.Repository<Product>().AddAsync(It.IsAny<Product>(), default), Times.Once);
             _unitOfWorkMock.Verify(p => p.SaveChangesAsync(true, false, default), Times.Once);
@@ -56,7 +56,8 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(P => P.Repository<Product>().FirstOrDefaultAsync(It.IsAny<IQuery<Product>>(), default)).ReturnsAsync(product);
 
             var result = await _productService.GetByIdAsync(productId);
-            result.Should().NotBeNull();
+
+            result.Should().Be(product);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Product>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Product, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(P => P.Repository<Product>().FirstOrDefaultAsync(It.IsAny<IQuery<Product>>(), default), Times.Once);
@@ -69,15 +70,10 @@ namespace DomainServices.Tests.Services
 
             _repositoryFactoryMock.Setup(p => p.Repository<Product>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Product, bool>>>())).Returns(It.IsAny<IQuery<Product>>());
             _repositoryFactoryMock.Setup(P => P.Repository<Product>().FirstOrDefaultAsync(It.IsAny<IQuery<Product>>(), default));
-            try
-            {
-                var result = await _productService.GetByIdAsync(productId);
-                result.Should().NotBeNull();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+
+            var action = () => _productService.GetByIdAsync(productId);
+
+            await action.Should().ThrowAsync<ArgumentNullException>($"Produto não encontrado para o Id: {productId}");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Product>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Product, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(P => P.Repository<Product>().FirstOrDefaultAsync(It.IsAny<IQuery<Product>>(), default), Times.Once);
@@ -93,7 +89,7 @@ namespace DomainServices.Tests.Services
 
             var result = await _productService.GetAllAsync();
 
-            result.Should().HaveCountGreaterThanOrEqualTo(0);
+            result.Should().HaveCount(3);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Product>().MultipleResultQuery(), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Product>().SearchAsync(It.IsAny<IQuery<Product>>(), default), Times.Once);

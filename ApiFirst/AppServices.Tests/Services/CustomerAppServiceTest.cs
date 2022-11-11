@@ -105,7 +105,6 @@ namespace AppServices.Tests.Services
         {
             var id = 1;
             var customer = CustomerFixture.GenerateCustomerFixture();
-            var customerResponse = CustomerResponseFixture.GenerateCustomerResponseFixture();
 
             _customerServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(customer);
 

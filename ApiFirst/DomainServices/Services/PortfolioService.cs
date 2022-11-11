@@ -156,10 +156,10 @@ namespace DomainServices.Services
             var portfolio = await GetByIdAsync(portfolioId).ConfigureAwait(false);
 
             if (portfolio.AccountBalance > 0)
-                throw new ArgumentException($"Não é possível excluir a carteira enquanto houver saldo");
+                throw new ArgumentException("Não é possível excluir a carteira enquanto houver saldo");
 
             if (portfolio.Products is not null)
-                throw new ArgumentException($"Não é possível excluir a carteira enquanto houver produtos nela investidos");
+                throw new ArgumentException("Não é possível excluir a carteira enquanto houver produtos nela investidos");
 
             repository.Remove(portfolio);
             _unitOfWork.SaveChanges();

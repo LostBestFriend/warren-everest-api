@@ -34,7 +34,7 @@ namespace AppServices.Tests.Services
 
             var result = await _productAppService.GetAllAsync();
 
-            result.Should().NotBeNull();
+            result.Should().HaveCount(3);
 
             _productServiceMock.Verify(p => p.GetAllAsync(), Times.Once);
         }
@@ -65,7 +65,8 @@ namespace AppServices.Tests.Services
             _productServiceMock.Setup(p => p.CreateAsync(It.IsAny<Product>())).ReturnsAsync(id);
 
             var result = await _productAppService.CreateAsync(createProduct);
-            result.Should().BeGreaterThanOrEqualTo(0);
+
+            result.Should().Be(id);
 
             _productServiceMock.Verify(p => p.CreateAsync(It.IsAny<Product>()), Times.Once);
         }

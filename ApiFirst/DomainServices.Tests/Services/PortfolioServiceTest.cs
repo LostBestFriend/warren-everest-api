@@ -44,7 +44,7 @@ namespace DomainServices.Tests.Services
 
             var result = await _portfolioService.GetAccountBalanceAsync(portfolioId);
 
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(balance);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Select(It.IsAny<Expression<Func<Portfolio, decimal>>>()), Times.Once);
@@ -60,15 +60,10 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(false);
             _repositoryFactoryMock.Setup(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Select(It.IsAny<Expression<Func<Portfolio, decimal>>>())).Returns(It.IsAny<IQuery<Portfolio, decimal>>());
             _repositoryFactoryMock.Setup(p => p.Repository<Portfolio>().FirstOrDefaultAsync(It.IsAny<IQuery<Portfolio, decimal>>(), default)).ReturnsAsync(balance);
-            try
-            {
-                var result = await _portfolioService.GetAccountBalanceAsync(portfolioId);
-                result.Should().BeGreaterThanOrEqualTo(0);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+
+            var action = () => _portfolioService.GetAccountBalanceAsync(portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentNullException>($"Cliente não encontrado para o id {portfolioId}");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Select(It.IsAny<Expression<Func<Portfolio, decimal>>>()), Times.Never);
@@ -85,7 +80,7 @@ namespace DomainServices.Tests.Services
 
             var result = await _portfolioService.CreateAsync(portfolio);
 
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(portfolio.Id);
 
             _unitOfWorkMock.Verify(p => p.Repository<Portfolio>().AddAsync(It.IsAny<Portfolio>(), default), Times.Once);
             _unitOfWorkMock.Verify(p => p.SaveChangesAsync(true, false, default), Times.Once);
@@ -100,7 +95,7 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<Portfolio>().SearchAsync(It.IsAny<IQuery<Portfolio>>(), default)).ReturnsAsync(portfolios);
 
             var result = await _portfolioService.GetAllAsync();
-            result.Should().HaveCountGreaterThanOrEqualTo(0);
+            result.Should().HaveCount(3);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>()
                 .MultipleResultQuery().Include(It.IsAny<Func<IQueryable<Portfolio>, IIncludableQueryable<Portfolio, object>>>()), Times.Once);
@@ -118,7 +113,8 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<Portfolio>().SingleOrDefaultAsync(It.IsAny<IQuery<Portfolio>>(), default)).ReturnsAsync(portfolio);
 
             var result = await _portfolioService.GetByIdAsync(portfolioId);
-            result.Should().NotBeNull();
+
+            result.Should().Be(portfolio);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>()
                 .SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Include(It.IsAny<Func<IQueryable<Portfolio>, IIncludableQueryable<Portfolio, object>>>()), Times.Once);
@@ -135,15 +131,9 @@ namespace DomainServices.Tests.Services
                 .SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Include(It.IsAny<Func<IQueryable<Portfolio>, IIncludableQueryable<Portfolio, object>>>())).Returns(It.IsAny<IQuery<Portfolio>>());
             _repositoryFactoryMock.Setup(p => p.Repository<Portfolio>().SingleOrDefaultAsync(It.IsAny<IQuery<Portfolio>>(), default));
 
-            try
-            {
-                var result = await _portfolioService.GetByIdAsync(portfolioId);
-                result.Should().NotBeNull();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _portfolioService.GetByIdAsync(portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentNullException>($"Carteira não encontrada para o Id: {portfolioId}");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>()
                 .SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Include(It.IsAny<Func<IQueryable<Portfolio>, IIncludableQueryable<Portfolio, object>>>()), Times.Once);
@@ -161,7 +151,6 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<Portfolio>().SingleOrDefaultAsync(It.IsAny<IQuery<Portfolio>>(), default)).ReturnsAsync(portfolio);
             _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
-
 
             await _portfolioService.DepositAsync(amount, portfolioId);
 
@@ -204,14 +193,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            try
-            {
-                await _portfolioService.DepositAccountBalanceAsync(amount, portfolioId);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _portfolioService.DepositAccountBalanceAsync(amount, portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentException>("Não há saldo suficiente para o depósito");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Include(It.IsAny<Func<IQueryable<Portfolio>, IIncludableQueryable<Portfolio, object>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleOrDefaultAsync(It.IsAny<IQuery<Portfolio>>(), default), Times.Once);
@@ -252,14 +236,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false)); _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Any(It.IsAny<Expression<Func<Portfolio, bool>>>())).Returns(true);
 
-            try
-            {
-                await _portfolioService.WithdrawAsync(amount, portfolioId);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _portfolioService.WithdrawAsync(amount, portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentException>("Não há saldo suficiente para o saque");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Include(It.IsAny<Func<IQueryable<Portfolio>, IIncludableQueryable<Portfolio, object>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleOrDefaultAsync(It.IsAny<IQuery<Portfolio>>(), default), Times.Once);
@@ -300,14 +279,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Update(It.IsAny<Portfolio>(), It.IsAny<Expression<Func<Portfolio, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            try
-            {
-                await _portfolioService.WithdrawAccountBalanceAsync(amount, portfolioId);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _portfolioService.WithdrawAccountBalanceAsync(amount, portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentException>("Não há saldo suficiente para o saque");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Include(It.IsAny<Func<IQueryable<Portfolio>, IIncludableQueryable<Portfolio, object>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleOrDefaultAsync(It.IsAny<IQuery<Portfolio>>(), default), Times.Once);
@@ -378,7 +352,7 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public async void Should_Not_Delete_When_Balance_Is_Greater_Than_ZeroAsync()
+        public async void Should_Not_Delete_When_Balance_Is_Greater_Than_Zero()
         {
             long portfolioId = 1;
             var portfolio = PortfolioFixture.GeneratePortfolioFixture();
@@ -389,14 +363,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            try
-            {
-                await _portfolioService.DeleteAsync(portfolioId);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _portfolioService.DeleteAsync(portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentException>("Não é possível excluir a carteira enquanto houver saldo");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Include(It.IsAny<Func<IQueryable<Portfolio>, IIncludableQueryable<Portfolio, object>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleOrDefaultAsync(It.IsAny<IQuery<Portfolio>>(), default), Times.Once);
@@ -405,7 +374,7 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public async void Should_Not_Delete_When_Products_Isnt_NullAsync()
+        public async void Should_Not_Delete_When_Products_Isnt_Null()
         {
             long portfolioId = 1;
             var portfolio = PortfolioFixture.GeneratePortfolioFixture();
@@ -417,14 +386,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<Portfolio>().Remove(It.IsAny<Portfolio>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            try
-            {
-                await _portfolioService.DeleteAsync(portfolioId);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _portfolioService.DeleteAsync(portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentException>("Não é possível excluir a carteira enquanto houver produtos nela investidos");
 
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<Portfolio, bool>>>()).Include(It.IsAny<Func<IQueryable<Portfolio>, IIncludableQueryable<Portfolio, object>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<Portfolio>().SingleOrDefaultAsync(It.IsAny<IQuery<Portfolio>>(), default), Times.Once);

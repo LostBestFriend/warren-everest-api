@@ -11,7 +11,8 @@ namespace DomainServices.Tests.Fixtures
         public static List<Order> GenerateOrderFixture(int quantity)
         {
             return new Faker<Order>("en_US")
-                .CustomInstantiator(p => new Order(quotes: 1,
+                .CustomInstantiator(p => new Order(
+                    quotes: 1,
                     unitPrice: 1,
                     liquidatedAt: DateTime.Now.AddDays(-2),
                     direction: OrderDirection.Buy,

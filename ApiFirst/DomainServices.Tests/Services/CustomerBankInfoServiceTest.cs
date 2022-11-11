@@ -54,7 +54,7 @@ namespace DomainServices.Tests.Services
 
             var result = await _customerBankInfoService.GetByCustomerIdAsync(customerId);
 
-            result.Should().NotBeNull();
+            result.Should().Be(bankInfo);
 
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
@@ -69,15 +69,9 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo>>());
             _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default));
 
-            try
-            {
-                var result = await _customerBankInfoService.GetByCustomerIdAsync(customerId);
-                result.Should().NotBeNull();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerBankInfoService.GetByCustomerIdAsync(customerId);
+
+            await action.Should().ThrowAsync<ArgumentNullException>($"Cliente não encontrado para o Id {customerId}");
 
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
@@ -109,7 +103,7 @@ namespace DomainServices.Tests.Services
 
             var result = await _customerBankInfoService.GetBalanceAsync(customerId);
 
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(bankInfoBalance);
 
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().Any(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
@@ -126,15 +120,9 @@ namespace DomainServices.Tests.Services
             _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()).Select(It.IsAny<Expression<Func<CustomerBankInfo, decimal>>>())).Returns(It.IsAny<IQuery<CustomerBankInfo, decimal>>());
             _repositoryFactoryMock.Setup(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo, decimal>>(), default)).ReturnsAsync(bankInfoBalance);
 
-            try
-            {
-                var result = await _customerBankInfoService.GetBalanceAsync(customerId);
-                result.Should().BeGreaterThanOrEqualTo(0);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerBankInfoService.GetBalanceAsync(customerId);
+
+            await action.Should().ThrowAsync<ArgumentNullException>($"Cliente não encontrado para o Id {customerId}");
 
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().Any(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Never);
@@ -144,7 +132,7 @@ namespace DomainServices.Tests.Services
 
 
         [Fact]
-        public void Should_Deposit_Sucessfully()
+        public async void Should_Deposit_Sucessfully()
         {
             var bankInfo = CustomerBankInfoFixture.GenerateCustomerBankInfoFixture();
             decimal amount = 10;
@@ -155,7 +143,7 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            _ = _customerBankInfoService.DepositAsync(id, amount);
+            await _customerBankInfoService.DepositAsync(id, amount);
 
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
@@ -164,7 +152,7 @@ namespace DomainServices.Tests.Services
         }
 
         [Fact]
-        public void Should_Withdraw_Sucessfully()
+        public async void Should_Withdraw_Sucessfully()
         {
             var bankInfo = CustomerBankInfoFixture.GenerateCustomerBankInfoFixture();
             decimal amount = 1;
@@ -175,7 +163,7 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            _ = _customerBankInfoService.WithdrawAsync(id, amount);
+            await _customerBankInfoService.WithdrawAsync(id, amount);
 
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);
@@ -196,14 +184,9 @@ namespace DomainServices.Tests.Services
             _unitOfWorkMock.Setup(p => p.Repository<CustomerBankInfo>().Update(It.IsAny<CustomerBankInfo>(), It.IsAny<Expression<Func<CustomerBankInfo, object>>>()));
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
-            try
-            {
-                await _customerBankInfoService.WithdrawAsync(id, amount);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _customerBankInfoService.WithdrawAsync(id, amount);
+
+            await action.Should().ThrowAsync<ArgumentException>("Não é possível sacar o valor informado pois não há saldo suficiente");
 
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<CustomerBankInfo, bool>>>()), Times.Once);
             _repositoryFactoryMock.Verify(p => p.Repository<CustomerBankInfo>().FirstOrDefaultAsync(It.IsAny<IQuery<CustomerBankInfo>>(), default), Times.Once);

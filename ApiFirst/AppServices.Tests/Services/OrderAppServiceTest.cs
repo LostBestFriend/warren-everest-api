@@ -29,12 +29,13 @@ namespace AppServices.Tests.Services
         public async void Should_CreateAsync_Sucessfully()
         {
             CreateOrder order = CreateOrderFixture.GenerateCreateOrderFixture();
+            var id = 1;
 
-            _orderServiceMock.Setup(p => p.CreateAsync(It.IsAny<Order>())).ReturnsAsync(It.IsAny<long>());
+            _orderServiceMock.Setup(p => p.CreateAsync(It.IsAny<Order>())).ReturnsAsync(id);
 
             var result = await _orderAppService.CreateAsync(order);
 
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(id);
 
             _orderServiceMock.Verify(p => p.CreateAsync(It.IsAny<Order>()), Times.Once);
         }
@@ -49,7 +50,7 @@ namespace AppServices.Tests.Services
 
             var result = await _orderAppService.GetAllAsync();
 
-            result.Should().HaveCountGreaterThanOrEqualTo(0);
+            result.Should().HaveCount(3);
 
             _orderServiceMock.Verify(p => p.GetAllAsync(), Times.Once);
         }
@@ -80,7 +81,7 @@ namespace AppServices.Tests.Services
             _orderServiceMock.Setup(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(quantity);
 
             var result = await _orderAppService.GetQuotesAvaliableAsync(portfolioId, productId);
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(quantity);
 
             _orderServiceMock.Verify(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
         }
@@ -94,7 +95,7 @@ namespace AppServices.Tests.Services
             _orderServiceMock.Setup(p => p.GetExecutableOrdersAsync()).ReturnsAsync(orders);
 
             var result = await _orderAppService.GetExecutableOrdersAsync();
-            result.Should().NotBeNull();
+            result.Should().HaveCount(3);
 
             _orderServiceMock.Verify(p => p.GetExecutableOrdersAsync(), Times.Once);
         }

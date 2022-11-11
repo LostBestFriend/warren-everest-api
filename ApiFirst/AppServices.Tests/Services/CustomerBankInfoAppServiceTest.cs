@@ -51,7 +51,7 @@ namespace AppServices.Tests.Services
             _customerBankInfoServiceMock.Setup(p => p.GetBalanceAsync(It.IsAny<long>())).ReturnsAsync(balance);
 
             var result = await _customerBankInfoAppService.GetBalanceAsync(customerId);
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(balance);
 
             _customerBankInfoServiceMock.Verify(p => p.GetBalanceAsync(It.IsAny<long>()), Times.Once);
         }

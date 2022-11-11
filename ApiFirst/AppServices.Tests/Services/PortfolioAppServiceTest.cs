@@ -55,7 +55,7 @@ namespace AppServices.Tests.Services
 
             var result = await _portfolioAppService.CreateAsync(createPortfolio);
 
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(id);
 
             _portfolioServiceMock.Verify(p => p.CreateAsync(It.IsAny<Portfolio>()), Times.Once);
         }
@@ -70,7 +70,7 @@ namespace AppServices.Tests.Services
 
             var result = await _portfolioAppService.GetAllAsync();
 
-            result.Should().NotBeNull();
+            result.Should().HaveCount(3);
 
             _portfolioServiceMock.Verify(p => p.GetAllAsync(), Times.Once);
         }
@@ -100,7 +100,7 @@ namespace AppServices.Tests.Services
 
             var result = await _portfolioAppService.GetAccountBalanceAsync(portfolioId);
 
-            result.Should().BeGreaterThanOrEqualTo(0);
+            result.Should().Be(balance);
 
             _portfolioServiceMock.Verify(p => p.GetAccountBalanceAsync(It.IsAny<long>()), Times.Once);
         }
@@ -136,14 +136,9 @@ namespace AppServices.Tests.Services
             _customerBankInfoAppServiceMock.Setup(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()));
             _portfolioServiceMock.Setup(p => p.DepositAsync(It.IsAny<decimal>(), It.IsAny<long>()));
 
-            try
-            {
-                await _portfolioAppService.DepositAsync(amount, customerId, portfolioId);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _portfolioAppService.DepositAsync(amount, customerId, portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentException>("Não há saldo suficiente na conta corrente para realizar este depósito");
 
             _customerBankInfoAppServiceMock.Verify(p => p.GetBalanceAsync(It.IsAny<long>()), Times.Once);
             _customerBankInfoAppServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Never);
@@ -181,14 +176,9 @@ namespace AppServices.Tests.Services
             _portfolioServiceMock.Setup(p => p.WithdrawAsync(It.IsAny<decimal>(), It.IsAny<long>()));
             _customerBankInfoAppServiceMock.Setup(p => p.DepositAsync(It.IsAny<long>(), It.IsAny<decimal>()));
 
-            try
-            {
-                await _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var action = () => _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentException>("Não há saldo suficiente na carteira para realizar o saque requerido");
 
             _portfolioServiceMock.Verify(p => p.GetAccountBalanceAsync(It.IsAny<long>()), Times.Once);
             _portfolioServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Never);
@@ -257,14 +247,10 @@ namespace AppServices.Tests.Services
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(product);
             _orderAppServiceMock.Setup(p => p.CreateAsync(It.IsAny<CreateOrder>())).ReturnsAsync(orderId);
             _orderAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(orderResponse);
-            try
-            {
-                await _portfolioAppService.InvestAsync(quotes, liquidateAt, productId, portfolioId);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+
+            var action = () => _portfolioAppService.InvestAsync(quotes, liquidateAt, productId, portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentException>("Não há saldo suficiente na carteira para realizar este investimento");
 
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
             _orderAppServiceMock.Verify(p => p.CreateAsync(It.IsAny<CreateOrder>()), Times.Once);
@@ -355,6 +341,10 @@ namespace AppServices.Tests.Services
                 Console.WriteLine(e.Message);
             }
 
+            var action = () => _portfolioAppService.WithdrawProductAsync(quotes, liquidateAt, productId, portfolioId);
+
+            await action.Should().ThrowAsync<ArgumentException>("A quantidade de cotas informada é maior do que as cotas existentes na carteira");
+
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
             _orderAppServiceMock.Verify(p => p.GetQuotesAvaliableAsync(portfolioId, productId), Times.Once);
@@ -363,7 +353,7 @@ namespace AppServices.Tests.Services
         }
 
         [Fact]
-        public void Should_ExecuteNowOrdersAsync_Sucessfully_With_Sell_And_Buy_Orders()
+        public async void Should_ExecuteNowOrdersAsync_Sucessfully_With_Sell_And_Buy_Orders()
         {
             var orders = OrderResponseFixture.GenerateOrderResponseFixture(4);
             orders[0].Direction = OrderDirection.Sell;
@@ -373,7 +363,7 @@ namespace AppServices.Tests.Services
 
             _orderAppServiceMock.Setup(p => p.GetExecutableOrdersAsync()).ReturnsAsync(orders);
 
-            _ = _portfolioAppService.ExecuteNowOrdersAsync();
+            await _portfolioAppService.ExecuteNowOrdersAsync();
 
             _orderAppServiceMock.Verify(p => p.GetExecutableOrdersAsync(), Times.Once);
         }
