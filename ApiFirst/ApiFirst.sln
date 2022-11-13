@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.CrossCutting
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HostedServices", "HostedServices\HostedServices.csproj", "{9905A0A1-26C3-4C43-A877-A415840A9B41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppServices.Tests", "AppServices.Tests\AppServices.Tests.csproj", "{C96BE6CC-0490-4528-A807-AE0117C5780B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiFirst.Tests", "AppServices.Tests\ApiFirst.Tests.csproj", "{C96BE6CC-0490-4528-A807-AE0117C5780B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
