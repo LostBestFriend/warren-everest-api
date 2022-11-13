@@ -35,6 +35,7 @@ namespace AppServices.Tests.Services
             long id = 1;
 
             _customerServiceMock.Setup(p => p.CreateAsync(It.IsAny<Customer>())).ReturnsAsync(id);
+
             _customerBankInfoServiceMock.Setup(p => p.CreateAsync(id));
 
             long idResult = await _customerAppService.CreateAsync(customer);
@@ -42,6 +43,7 @@ namespace AppServices.Tests.Services
             idResult.Should().BeGreaterThanOrEqualTo(1);
 
             _customerServiceMock.Verify(p => p.CreateAsync(It.IsAny<Customer>()), Times.Once);
+
             _customerBankInfoServiceMock.Verify(p => p.CreateAsync(id), Times.Once);
         }
 
@@ -67,7 +69,7 @@ namespace AppServices.Tests.Services
 
             var customersResponse = await _customerAppService.GetAllAsync();
 
-            customersResponse.Should().HaveCountGreaterThanOrEqualTo(0);
+            customersResponse.Should().HaveCount(3);
 
             _customerServiceMock.Verify(p => p.GetAllAsync(), Times.Once);
         }

@@ -17,9 +17,7 @@ namespace AppModels.AppModels.Products
         }
 
         public ProductResponse()
-        {
-
-        }
+        { }
 
         public long Id { get; set; }
         public string Symbol { get; set; }

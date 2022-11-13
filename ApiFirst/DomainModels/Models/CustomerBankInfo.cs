@@ -15,9 +15,7 @@
         }
 
         public CustomerBankInfo()
-        {
-
-        }
+        { }
 
         public decimal AccountBalance { get; set; }
         public long CustomerId { get; set; }

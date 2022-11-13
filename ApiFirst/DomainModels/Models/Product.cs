@@ -17,9 +17,7 @@ namespace DomainModels.Models
         }
 
         public Product()
-        {
-
-        }
+        { }
 
 
         public string Symbol { get; set; }

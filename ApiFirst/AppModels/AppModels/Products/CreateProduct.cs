@@ -15,9 +15,7 @@ namespace AppModels.AppModels.Products
         }
 
         public CreateProduct()
-        {
-
-        }
+        { }
 
         public string Symbol { get; set; }
         public decimal UnitPrice { get; set; }

@@ -16,9 +16,7 @@ namespace AppModels.AppModels.Products
         }
 
         public UpdateProduct()
-        {
-
-        }
+        { }
 
         public string Symbol { get; set; }
         public DateTime IssuanceAt { get; set; }

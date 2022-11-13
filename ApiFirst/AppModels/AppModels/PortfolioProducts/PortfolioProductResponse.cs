@@ -10,9 +10,7 @@ namespace AppModels.AppModels.PortfolioProducts
         }
 
         public PortfolioProductResponse()
-        {
-
-        }
+        { }
 
         public ProductResponse Product { get; set; }
     }

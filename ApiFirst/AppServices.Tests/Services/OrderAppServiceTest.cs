@@ -81,6 +81,7 @@ namespace AppServices.Tests.Services
             _orderServiceMock.Setup(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(quantity);
 
             var result = await _orderAppService.GetQuotesAvaliableAsync(portfolioId, productId);
+
             result.Should().Be(quantity);
 
             _orderServiceMock.Verify(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
@@ -95,6 +96,7 @@ namespace AppServices.Tests.Services
             _orderServiceMock.Setup(p => p.GetExecutableOrdersAsync()).ReturnsAsync(orders);
 
             var result = await _orderAppService.GetExecutableOrdersAsync();
+
             result.Should().HaveCount(3);
 
             _orderServiceMock.Verify(p => p.GetExecutableOrdersAsync(), Times.Once);

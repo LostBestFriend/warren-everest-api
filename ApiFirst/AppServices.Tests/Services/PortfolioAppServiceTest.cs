@@ -114,13 +114,17 @@ namespace AppServices.Tests.Services
             decimal balance = 1000;
 
             _customerBankInfoAppServiceMock.Setup(p => p.GetBalanceAsync(It.IsAny<long>())).ReturnsAsync(balance);
+
             _customerBankInfoAppServiceMock.Setup(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()));
+
             _portfolioServiceMock.Setup(p => p.DepositAsync(It.IsAny<decimal>(), It.IsAny<long>()));
 
             await _portfolioAppService.DepositAsync(amount, customerId, portfolioId);
 
             _customerBankInfoAppServiceMock.Verify(p => p.GetBalanceAsync(It.IsAny<long>()), Times.Once);
+
             _customerBankInfoAppServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
+
             _portfolioServiceMock.Verify(p => p.DepositAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
         }
 
@@ -133,7 +137,9 @@ namespace AppServices.Tests.Services
             decimal balance = 10;
 
             _customerBankInfoAppServiceMock.Setup(p => p.GetBalanceAsync(It.IsAny<long>())).ReturnsAsync(balance);
+
             _customerBankInfoAppServiceMock.Setup(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()));
+
             _portfolioServiceMock.Setup(p => p.DepositAsync(It.IsAny<decimal>(), It.IsAny<long>()));
 
             var action = () => _portfolioAppService.DepositAsync(amount, customerId, portfolioId);
@@ -141,7 +147,9 @@ namespace AppServices.Tests.Services
             await action.Should().ThrowAsync<ArgumentException>("Não há saldo suficiente na conta corrente para realizar este depósito");
 
             _customerBankInfoAppServiceMock.Verify(p => p.GetBalanceAsync(It.IsAny<long>()), Times.Once);
+
             _customerBankInfoAppServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Never);
+
             _portfolioServiceMock.Verify(p => p.DepositAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Never);
         }
 
@@ -154,13 +162,17 @@ namespace AppServices.Tests.Services
             decimal balance = 1000;
 
             _portfolioServiceMock.Setup(p => p.GetAccountBalanceAsync(It.IsAny<long>())).ReturnsAsync(balance);
+
             _portfolioServiceMock.Setup(p => p.WithdrawAsync(It.IsAny<decimal>(), It.IsAny<long>()));
+
             _customerBankInfoAppServiceMock.Setup(p => p.DepositAsync(It.IsAny<long>(), It.IsAny<decimal>()));
 
             await _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
 
             _portfolioServiceMock.Verify(p => p.GetAccountBalanceAsync(It.IsAny<long>()), Times.Once);
+
             _portfolioServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+
             _customerBankInfoAppServiceMock.Verify(p => p.DepositAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Once);
         }
 
@@ -173,7 +185,9 @@ namespace AppServices.Tests.Services
             decimal balance = 10;
 
             _portfolioServiceMock.Setup(p => p.GetAccountBalanceAsync(It.IsAny<long>())).ReturnsAsync(balance);
+
             _portfolioServiceMock.Setup(p => p.WithdrawAsync(It.IsAny<decimal>(), It.IsAny<long>()));
+
             _customerBankInfoAppServiceMock.Setup(p => p.DepositAsync(It.IsAny<long>(), It.IsAny<decimal>()));
 
             var action = () => _portfolioAppService.WithdrawAsync(amount, customerId, portfolioId);
@@ -181,7 +195,9 @@ namespace AppServices.Tests.Services
             await action.Should().ThrowAsync<ArgumentException>("Não há saldo suficiente na carteira para realizar o saque requerido");
 
             _portfolioServiceMock.Verify(p => p.GetAccountBalanceAsync(It.IsAny<long>()), Times.Once);
+
             _portfolioServiceMock.Verify(p => p.WithdrawAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Never);
+
             _customerBankInfoAppServiceMock.Verify(p => p.DepositAsync(It.IsAny<long>(), It.IsAny<decimal>()), Times.Never);
         }
 
@@ -199,13 +215,17 @@ namespace AppServices.Tests.Services
             var orderId = 1;
 
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(product);
+
             _orderAppServiceMock.Setup(p => p.CreateAsync(It.IsAny<CreateOrder>())).ReturnsAsync(orderId);
+
             _orderAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(orderResponse);
 
             await _portfolioAppService.InvestAsync(quotes, liquidateAt, productId, portfolioId);
 
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Exactly(2));
+
             _orderAppServiceMock.Verify(p => p.CreateAsync(It.IsAny<CreateOrder>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
         }
 
@@ -222,13 +242,17 @@ namespace AppServices.Tests.Services
             var orderId = 1;
 
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(product);
+
             _orderAppServiceMock.Setup(p => p.CreateAsync(It.IsAny<CreateOrder>())).ReturnsAsync(orderId);
+
             _orderAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(orderResponse);
 
             await _portfolioAppService.InvestAsync(quotes, liquidateAt, productId, portfolioId);
 
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.CreateAsync(It.IsAny<CreateOrder>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Never);
         }
 
@@ -245,7 +269,9 @@ namespace AppServices.Tests.Services
             var orderId = 1;
 
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(product);
+
             _orderAppServiceMock.Setup(p => p.CreateAsync(It.IsAny<CreateOrder>())).ReturnsAsync(orderId);
+
             _orderAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(orderResponse);
 
             var action = () => _portfolioAppService.InvestAsync(quotes, liquidateAt, productId, portfolioId);
@@ -253,7 +279,9 @@ namespace AppServices.Tests.Services
             await action.Should().ThrowAsync<ArgumentException>("Não há saldo suficiente na carteira para realizar este investimento");
 
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.CreateAsync(It.IsAny<CreateOrder>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Never);
         }
 
@@ -271,17 +299,25 @@ namespace AppServices.Tests.Services
             var orderResponse = OrderResponseFixture.GenerateOrderResponseFixture();
 
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(product);
+
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
+
             _orderAppServiceMock.Setup(p => p.GetQuotesAvaliableAsync(portfolioId, productId)).ReturnsAsync(avaliableQuotes);
+
             _orderAppServiceMock.Setup(p => p.CreateAsync(It.IsAny<CreateOrder>())).ReturnsAsync(orderId);
+
             _orderAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(orderResponse);
 
             await _portfolioAppService.WithdrawProductAsync(quotes, liquidateAt, productId, portfolioId);
 
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Exactly(2));
+
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Exactly(2));
+
             _orderAppServiceMock.Verify(p => p.GetQuotesAvaliableAsync(portfolioId, productId), Times.Exactly(2));
+
             _orderAppServiceMock.Verify(p => p.CreateAsync(It.IsAny<CreateOrder>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
         }
 
@@ -299,17 +335,25 @@ namespace AppServices.Tests.Services
             var orderResponse = OrderResponseFixture.GenerateOrderResponseFixture();
 
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(product);
+
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
+
             _orderAppServiceMock.Setup(p => p.GetQuotesAvaliableAsync(portfolioId, productId)).ReturnsAsync(avaliableQuotes);
+
             _orderAppServiceMock.Setup(p => p.CreateAsync(It.IsAny<CreateOrder>())).ReturnsAsync(orderId);
+
             _orderAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(orderResponse);
 
             await _portfolioAppService.WithdrawProductAsync(quotes, liquidateAt, productId, portfolioId);
 
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.GetQuotesAvaliableAsync(portfolioId, productId), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.CreateAsync(It.IsAny<CreateOrder>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Never);
         }
 
@@ -327,28 +371,28 @@ namespace AppServices.Tests.Services
             var orderResponse = OrderResponseFixture.GenerateOrderResponseFixture();
 
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(product);
-            _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
-            _orderAppServiceMock.Setup(p => p.GetQuotesAvaliableAsync(portfolioId, productId)).ReturnsAsync(avaliableQuotes);
-            _orderAppServiceMock.Setup(p => p.CreateAsync(It.IsAny<CreateOrder>())).ReturnsAsync(orderId);
-            _orderAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(orderResponse);
 
-            try
-            {
-                await _portfolioAppService.WithdrawProductAsync(quotes, liquidateAt, productId, portfolioId);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
+
+            _orderAppServiceMock.Setup(p => p.GetQuotesAvaliableAsync(portfolioId, productId)).ReturnsAsync(avaliableQuotes);
+
+            _orderAppServiceMock.Setup(p => p.CreateAsync(It.IsAny<CreateOrder>())).ReturnsAsync(orderId);
+
+            _orderAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(orderResponse);
 
             var action = () => _portfolioAppService.WithdrawProductAsync(quotes, liquidateAt, productId, portfolioId);
 
             await action.Should().ThrowAsync<ArgumentException>("A quantidade de cotas informada é maior do que as cotas existentes na carteira");
 
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
+
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.GetQuotesAvaliableAsync(portfolioId, productId), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.CreateAsync(It.IsAny<CreateOrder>()), Times.Never);
+
             _orderAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Never);
         }
 
@@ -377,17 +421,25 @@ namespace AppServices.Tests.Services
             var product = ProductFixture.GenerateProductFixture();
 
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
+
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(productResponse);
+
             _portfolioServiceMock.Setup(p => p.ExecuteBuyOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()));
+
             _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(false);
+
             _portfolioProductServiceMock.Setup(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
             await _portfolioAppService.ExecuteBuyOrderAsync(orderResponse);
 
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _portfolioServiceMock.Verify(p => p.ExecuteBuyOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+
             _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
+
             _portfolioProductServiceMock.Verify(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Once);
         }
 
@@ -400,17 +452,25 @@ namespace AppServices.Tests.Services
             var product = ProductFixture.GenerateProductFixture();
 
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
+
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(productResponse);
+
             _portfolioServiceMock.Setup(p => p.ExecuteBuyOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()));
+
             _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(true);
+
             _portfolioProductServiceMock.Setup(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
             await _portfolioAppService.ExecuteBuyOrderAsync(orderResponse);
 
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _portfolioServiceMock.Verify(p => p.ExecuteBuyOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+
             _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
+
             _portfolioProductServiceMock.Verify(p => p.InitRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Never);
         }
 
@@ -424,17 +484,25 @@ namespace AppServices.Tests.Services
             var quotesAvaliable = 0;
 
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
+
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(productResponse);
+
             _portfolioServiceMock.Setup(p => p.ExecuteSellOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()));
+
             _orderAppServiceMock.Setup(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(quotesAvaliable);
+
             _portfolioProductServiceMock.Setup(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
             await _portfolioAppService.ExecuteSellOrderAsync(orderResponse);
 
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _portfolioServiceMock.Verify(p => p.ExecuteSellOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
+
             _portfolioProductServiceMock.Verify(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Once);
         }
 
@@ -448,17 +516,25 @@ namespace AppServices.Tests.Services
             var quotesAvaliable = 3;
 
             _portfolioServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(portfolio);
+
             _productAppServiceMock.Setup(p => p.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(productResponse);
+
             _portfolioServiceMock.Setup(p => p.ExecuteSellOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()));
+
             _orderAppServiceMock.Setup(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(quotesAvaliable);
+
             _portfolioProductServiceMock.Setup(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()));
 
             await _portfolioAppService.ExecuteSellOrderAsync(orderResponse);
 
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _productAppServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Once);
+
             _portfolioServiceMock.Verify(p => p.ExecuteSellOrderAsync(It.IsAny<decimal>(), It.IsAny<long>()), Times.Once);
+
             _orderAppServiceMock.Verify(p => p.GetQuotesAvaliableAsync(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
+
             _portfolioProductServiceMock.Verify(p => p.DisposeRelationAsync(It.IsAny<Portfolio>(), It.IsAny<Product>()), Times.Never);
         }
 

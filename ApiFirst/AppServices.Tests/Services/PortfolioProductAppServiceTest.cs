@@ -54,6 +54,7 @@ namespace AppServices.Tests.Services
             _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(true);
 
             var result = await _portfolioProductAppService.RelationAlreadyExistsAsync(portfolioId, productId);
+
             result.Should().BeTrue();
 
             _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>()));
@@ -68,6 +69,7 @@ namespace AppServices.Tests.Services
             _portfolioProductServiceMock.Setup(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(false);
 
             var result = await _portfolioProductAppService.RelationAlreadyExistsAsync(portfolioId, productId);
+
             result.Should().BeFalse();
 
             _portfolioProductServiceMock.Verify(p => p.RelationAlreadyExistsAsync(It.IsAny<long>(), It.IsAny<long>()));

@@ -9,14 +9,11 @@ namespace AppServices.Tests.Validator.Customers
 {
     public class CustomerCreateValidatorTest
     {
-
         public readonly CustomerCreateValidator validatorCreate;
-        public readonly CustomerUpdateValidator validatorUpdate;
 
         public CustomerCreateValidatorTest()
         {
             validatorCreate = new CustomerCreateValidator();
-            validatorUpdate = new CustomerUpdateValidator();
         }
 
         [Fact]

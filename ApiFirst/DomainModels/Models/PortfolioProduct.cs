@@ -9,9 +9,7 @@
         }
 
         public PortfolioProduct()
-        {
-
-        }
+        { }
 
         public Portfolio Portfolio { get; set; }
         public long PortfolioId { get; set; }

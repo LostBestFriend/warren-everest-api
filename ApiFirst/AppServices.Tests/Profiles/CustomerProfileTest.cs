@@ -12,7 +12,6 @@ namespace AppServices.Tests.Profiles
     {
         private readonly IMapper _mapper;
 
-
         public CustomerProfileTest()
         {
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<CustomerProfile>()).CreateMapper();

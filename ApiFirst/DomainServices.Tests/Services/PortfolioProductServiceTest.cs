@@ -37,11 +37,13 @@ namespace DomainServices.Tests.Services
             var product = ProductFixture.GenerateProductFixture();
 
             _unitOfWorkMock.Setup(p => p.Repository<PortfolioProduct>().AddAsync(It.IsAny<PortfolioProduct>(), default));
+
             _unitOfWorkMock.Setup(p => p.SaveChangesAsync(true, false, default));
 
             await _portfolioProductService.InitRelationAsync(portfolio, product);
 
             _unitOfWorkMock.Verify(p => p.Repository<PortfolioProduct>().AddAsync(It.IsAny<PortfolioProduct>(), default), Times.Once);
+
             _unitOfWorkMock.Verify(p => p.SaveChangesAsync(true, false, default), Times.Once);
         }
 
@@ -53,15 +55,21 @@ namespace DomainServices.Tests.Services
             var portfolioProduct = PortfolioProductFixture.GeneratePortfolioProductFixture();
 
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>())).Returns(It.IsAny<IQuery<PortfolioProduct>>());
+
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default)).ReturnsAsync(portfolioProduct);
+
             _unitOfWorkMock.Setup(p => p.Repository<PortfolioProduct>().Remove(It.IsAny<PortfolioProduct>()));
+
             _unitOfWorkMock.Setup(p => p.SaveChanges(true, false));
 
             await _portfolioProductService.DisposeRelationAsync(portfolio, product);
 
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>()), Times.Once);
+
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default), Times.Once);
+
             _unitOfWorkMock.Verify(p => p.Repository<PortfolioProduct>().Remove(It.IsAny<PortfolioProduct>()), Times.Once);
+
             _unitOfWorkMock.Verify(p => p.SaveChanges(true, false), Times.Once);
         }
 
@@ -73,6 +81,7 @@ namespace DomainServices.Tests.Services
             var portfolioProduct = PortfolioProductFixture.GeneratePortfolioProductFixture();
 
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>())).Returns(It.IsAny<IQuery<PortfolioProduct>>());
+
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default)).ReturnsAsync(portfolioProduct);
 
             var result = await _portfolioProductService.GetByRelationAsync(portfolioId, productId);
@@ -80,6 +89,7 @@ namespace DomainServices.Tests.Services
             result.Should().Be(portfolioProduct);
 
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>()), Times.Once);
+
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default), Times.Once);
         }
 
@@ -91,6 +101,7 @@ namespace DomainServices.Tests.Services
             var portfolioProduct = PortfolioProductFixture.GeneratePortfolioProductFixture();
 
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>())).Returns(It.IsAny<IQuery<PortfolioProduct>>());
+
             _repositoryFactoryMock.Setup(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default));
 
             var action = () => _portfolioProductService.GetByRelationAsync(portfolioId, productId);
@@ -98,6 +109,7 @@ namespace DomainServices.Tests.Services
             await action.Should().ThrowAsync<ArgumentNullException>($"Nenhuma relação encontrada para ProductId: {productId} e PortfolioId: {portfolioId}");
 
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().SingleResultQuery().AndFilter(It.IsAny<Expression<Func<PortfolioProduct, bool>>>()), Times.Once);
+
             _repositoryFactoryMock.Verify(p => p.Repository<PortfolioProduct>().FirstOrDefaultAsync(It.IsAny<IQuery<PortfolioProduct>>(), default), Times.Once);
         }
 
