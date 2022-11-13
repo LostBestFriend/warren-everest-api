@@ -4,7 +4,7 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace AppServices.Tests.Services
+namespace AppServices.Tests.Services.AppServices
 {
     public class CustomerBankInfoAppServiceTest
     {

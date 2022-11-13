@@ -8,10 +8,9 @@ using DomainServices.Interfaces;
 using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
-using System.Collections.Generic;
 using Xunit;
 
-namespace AppServices.Tests.Services
+namespace AppServices.Tests.Services.AppServices
 {
     public class CustomerAppServiceTest
     {
@@ -62,8 +61,7 @@ namespace AppServices.Tests.Services
         [Fact]
         public async void Should_GetAll_SucessFully()
         {
-            var customer = CustomerResponseFixture.GenerateCustomerResponseFixture(3);
-            var customers = new List<Customer>();
+            var customers = CustomerFixture.GenerateCustomerFixture(3);
 
             _customerServiceMock.Setup(p => p.GetAllAsync()).ReturnsAsync(customers);
 

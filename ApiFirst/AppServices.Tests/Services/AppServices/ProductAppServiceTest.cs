@@ -10,7 +10,7 @@ using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace AppServices.Tests.Services
+namespace AppServices.Tests.Services.AppServices
 {
     public class ProductAppServiceTest
     {

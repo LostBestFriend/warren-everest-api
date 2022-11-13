@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiFirst\ApiFirst.csproj" />
-    <ProjectReference Include="..\DomainServices.Tests\DomainServices.Tests.csproj" />
   </ItemGroup>
 
 </Project>

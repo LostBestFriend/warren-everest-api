@@ -524,20 +524,5 @@ namespace AppServices.Tests.Validator.Customers
 
             result.ShouldHaveValidationErrorFor(x => x.Number);
         }
-
-        [Fact]
-        public void Should_Validate_UpdateCustomer_Sucessfully()
-        {
-            var updateCustomer = new UpdateCustomer(fullName: "João Pedro", email: "aaaaaaaaaaaaa@g",
-                cpf: "42713070848", cellphone: "47991541506",
-                dateOfBirth: new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                emailSms: true, whatsapp: true, country: "Brazil",
-                city: "Blumenau", postalCode: "89035360",
-                address: "Rua Prudente de Moraes", number: 123);
-
-            var result = validatorUpdate.Validate(updateCustomer);
-
-            result.IsValid.Should().BeTrue();
-        }
     }
 }
