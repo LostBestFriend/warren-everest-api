@@ -1,12 +1,12 @@
-﻿using AppModels.AppModels.Portfolios;
+﻿using ApiFirst.Tests.Fixtures.DomainServices;
+using AppModels.AppModels.Portfolios;
 using AppServices.Profiles;
 using AutoMapper;
 using DomainModels.Models;
-using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Xunit;
 
-namespace AppServices.Tests.Profiles
+namespace ApiFirst.Tests.Profiles
 {
     public class PortfolioProfileTest
     {

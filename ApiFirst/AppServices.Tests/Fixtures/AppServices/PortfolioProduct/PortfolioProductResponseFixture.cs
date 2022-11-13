@@ -1,9 +1,9 @@
-﻿using AppModels.AppModels.PortfolioProducts;
-using AppServices.Tests.Fixtures.Product;
+﻿using ApiFirst.Tests.Fixtures.AppServices.Product;
+using AppModels.AppModels.PortfolioProducts;
 using Bogus;
 using System.Collections.Generic;
 
-namespace AppServices.Tests.Fixtures.PortfolioProduct
+namespace ApiFirst.Tests.Fixtures.AppServices.PortfolioProduct
 {
     public class PortfolioProductResponseFixture
     {

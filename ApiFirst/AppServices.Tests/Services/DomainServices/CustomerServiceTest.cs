@@ -1,6 +1,6 @@
-﻿using DomainModels.Models;
+﻿using ApiFirst.Tests.Fixtures.DomainServices;
+using DomainModels.Models;
 using DomainServices.Services;
-using DomainServices.Tests.Fixtures;
 using EntityFrameworkCore.QueryBuilder;
 using EntityFrameworkCore.QueryBuilder.Interfaces;
 using EntityFrameworkCore.UnitOfWork.Interfaces;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace DomainServices.Tests.Services
+namespace ApiFirst.Tests.Services.DomainServices
 {
     public class CustomerServiceTest
     {

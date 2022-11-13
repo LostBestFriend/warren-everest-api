@@ -4,7 +4,7 @@ using Bogus;
 using System;
 using System.Collections.Generic;
 
-namespace AppServices.Tests.Fixtures.Product
+namespace ApiFirst.Tests.Fixtures.AppServices.Product
 {
     public class CreateProductFixture
     {

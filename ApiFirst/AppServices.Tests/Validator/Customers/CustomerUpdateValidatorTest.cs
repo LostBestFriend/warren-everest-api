@@ -5,7 +5,7 @@ using FluentValidation.TestHelper;
 using System;
 using Xunit;
 
-namespace AppServices.Tests.Validator.Customers
+namespace ApiFirst.Tests.Validator.Customers
 {
     public class CustomerUpdateValidatorTest
     {

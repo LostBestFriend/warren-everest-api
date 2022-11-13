@@ -6,7 +6,7 @@ using FluentValidation.TestHelper;
 using System;
 using Xunit;
 
-namespace AppServices.Tests.Validator
+namespace ApiFirst.Tests.Validator
 {
     public class OrderValidatorTest
     {

@@ -2,7 +2,7 @@
 using Bogus;
 using System.Collections.Generic;
 
-namespace AppServices.Tests.Fixtures.Portfolio
+namespace ApiFirst.Tests.Fixtures.AppServices.Portfolio
 {
     public class UpdatePortfolioFixture
     {

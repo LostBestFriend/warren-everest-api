@@ -1,17 +1,17 @@
-﻿using AppModels.AppModels.Orders;
+﻿using ApiFirst.Tests.Fixtures.AppServices.Order;
+using ApiFirst.Tests.Fixtures.DomainServices;
+using AppModels.AppModels.Orders;
 using AppServices.Profiles;
 using AppServices.Services;
-using AppServices.Tests.Fixtures.Order;
 using AutoMapper;
 using DomainModels.Models;
 using DomainServices.Interfaces;
-using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace AppServices.Tests.Services.AppServices
+namespace ApiFirst.Tests.Services.AppServices
 {
     public class OrderAppServiceTest
     {

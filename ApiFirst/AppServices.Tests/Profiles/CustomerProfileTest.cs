@@ -1,12 +1,12 @@
-﻿using AppModels.AppModels.Customers;
+﻿using ApiFirst.Tests.Fixtures.DomainServices;
+using AppModels.AppModels.Customers;
 using AppServices.Profiles;
 using AutoMapper;
 using DomainModels.Models;
-using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Xunit;
 
-namespace AppServices.Tests.Profiles
+namespace ApiFirst.Tests.Profiles
 {
     public class CustomerProfileTest
     {

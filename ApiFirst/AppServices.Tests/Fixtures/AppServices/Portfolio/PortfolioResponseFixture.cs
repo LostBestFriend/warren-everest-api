@@ -1,11 +1,11 @@
-﻿using AppModels.AppModels.Portfolios;
-using AppServices.Tests.Fixtures.Customer;
-using AppServices.Tests.Fixtures.Order;
-using AppServices.Tests.Fixtures.PortfolioProduct;
+﻿using ApiFirst.Tests.Fixtures.AppServices.Customer;
+using ApiFirst.Tests.Fixtures.AppServices.Order;
+using ApiFirst.Tests.Fixtures.AppServices.PortfolioProduct;
+using AppModels.AppModels.Portfolios;
 using Bogus;
 using System.Collections.Generic;
 
-namespace AppServices.Tests.Fixtures.Portfolio
+namespace ApiFirst.Tests.Fixtures.AppServices.Portfolio
 {
     public class PortfolioResponseFixture
     {

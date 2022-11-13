@@ -4,7 +4,7 @@ using FluentAssertions;
 using FluentValidation.TestHelper;
 using Xunit;
 
-namespace AppServices.Tests.Validator
+namespace ApiFirst.Tests.Validator
 {
     public class PortfolioValidatorTest
     {

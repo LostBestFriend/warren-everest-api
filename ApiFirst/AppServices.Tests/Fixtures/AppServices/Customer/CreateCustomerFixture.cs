@@ -4,7 +4,7 @@ using Bogus.Extensions.Brazil;
 using System;
 using System.Collections.Generic;
 
-namespace AppServices.Tests.Fixtures.Customer
+namespace ApiFirst.Tests.Fixtures.AppServices.Customer
 {
     public class CreateCustomerFixture
     {

@@ -1,16 +1,16 @@
-﻿using AppServices.Profiles;
+﻿using ApiFirst.Tests.Fixtures.AppServices.Product;
+using ApiFirst.Tests.Fixtures.DomainServices;
+using AppServices.Profiles;
 using AppServices.Services;
-using AppServices.Tests.Fixtures.Product;
 using AutoMapper;
 using DomainModels.Models;
 using DomainServices.Interfaces;
-using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace AppServices.Tests.Services.AppServices
+namespace ApiFirst.Tests.Services.AppServices
 {
     public class ProductAppServiceTest
     {

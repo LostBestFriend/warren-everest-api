@@ -1,13 +1,13 @@
-﻿using AppModels.AppModels.Orders;
+﻿using ApiFirst.Tests.Fixtures.DomainServices;
+using AppModels.AppModels.Orders;
 using AppModels.EnumModels;
 using AppServices.Profiles;
 using AutoMapper;
 using DomainModels.Models;
-using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Xunit;
 
-namespace AppServices.Tests.Profiles
+namespace ApiFirst.Tests.Profiles
 {
     public class OrderProfileTest
     {

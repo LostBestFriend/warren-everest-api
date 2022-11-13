@@ -4,7 +4,7 @@ using Bogus;
 using System;
 using System.Collections.Generic;
 
-namespace AppServices.Tests.Fixtures.Order
+namespace ApiFirst.Tests.Fixtures.AppServices.Order
 {
     public class UpdateOrderFixture
     {

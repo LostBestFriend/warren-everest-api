@@ -1,6 +1,6 @@
-﻿using DomainModels.Models;
+﻿using ApiFirst.Tests.Fixtures.DomainServices;
+using DomainModels.Models;
 using DomainServices.Services;
-using DomainServices.Tests.Fixtures;
 using EntityFrameworkCore.QueryBuilder.Interfaces;
 using EntityFrameworkCore.UnitOfWork.Interfaces;
 using FluentAssertions;
@@ -10,7 +10,7 @@ using System;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace DomainServices.Tests.Services
+namespace ApiFirst.Tests.Services.DomainServices
 {
     public class PortfolioProductServiceTest
     {

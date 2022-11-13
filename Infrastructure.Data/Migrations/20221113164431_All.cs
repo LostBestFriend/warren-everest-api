@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
 
 #nullable disable
 
 namespace Infrastructure.Data.Migrations
 {
-    public partial class ReMigrate : Migration
+    public partial class All : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -121,7 +121,7 @@ namespace Infrastructure.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Quotes = table.Column<int>(type: "int", nullable: false),
                     NetValue = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    LiquidateAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    LiquidatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Direction = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<long>(type: "bigint", nullable: false),
                     PorfolioId = table.Column<long>(type: "bigint", nullable: false)
@@ -215,7 +215,7 @@ namespace Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_LiquidateAt",
+                name: "IX_Orders_LiquidatedAt",
                 table: "Orders",
                 column: "LiquidatedAt");
 

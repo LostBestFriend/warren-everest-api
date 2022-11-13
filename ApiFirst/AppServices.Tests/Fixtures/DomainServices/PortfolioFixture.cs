@@ -2,7 +2,7 @@
 using DomainModels.Models;
 using System.Collections.Generic;
 
-namespace DomainServices.Tests.Fixtures
+namespace ApiFirst.Tests.Fixtures.DomainServices
 {
     public class PortfolioFixture
     {

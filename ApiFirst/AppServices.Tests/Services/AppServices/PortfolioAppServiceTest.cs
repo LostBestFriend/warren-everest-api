@@ -1,22 +1,22 @@
-﻿using AppModels.AppModels.Orders;
+﻿using ApiFirst.Tests.Fixtures.AppServices.Order;
+using ApiFirst.Tests.Fixtures.AppServices.Portfolio;
+using ApiFirst.Tests.Fixtures.AppServices.Product;
+using ApiFirst.Tests.Fixtures.DomainServices;
+using AppModels.AppModels.Orders;
 using AppModels.EnumModels;
 using AppServices.Interfaces;
 using AppServices.Profiles;
 using AppServices.Services;
-using AppServices.Tests.Fixtures.Order;
-using AppServices.Tests.Fixtures.Portfolio;
-using AppServices.Tests.Fixtures.Product;
 using AutoMapper;
 using DomainModels.Models;
 using DomainServices.Interfaces;
-using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace AppServices.Tests.Services.AppServices
+namespace ApiFirst.Tests.Services.AppServices
 {
     public class PortfolioAppServiceTest
     {

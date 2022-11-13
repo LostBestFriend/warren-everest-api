@@ -1,12 +1,12 @@
-﻿using AppServices.Services;
+﻿using ApiFirst.Tests.Fixtures.DomainServices;
+using AppServices.Services;
 using DomainModels.Models;
 using DomainServices.Interfaces;
-using DomainServices.Tests.Fixtures;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace AppServices.Tests.Services.AppServices
+namespace ApiFirst.Tests.Services.AppServices
 {
     public class PortfolioProductAppServiceTest
     {
