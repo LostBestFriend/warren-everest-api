@@ -16,8 +16,8 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Order
                     unitPrice: p.Random.Decimal(0, 200000000),
                     liquidatedAt: DateTime.Now.AddDays(-2),
                     direction: p.PickRandom<OrderDirection>(),
-                    productId: p.Random.Long(0, 10),
-                    portfolioId: p.Random.Long(0, 10)))
+                    productId: p.Random.Long(1, 10),
+                    portfolioId: p.Random.Long(1, 10)))
                 .Generate(quantity);
         }
         public static UpdateOrder GenerateUpdateOrderFixture()
@@ -28,8 +28,8 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Order
                     unitPrice: p.Random.Decimal(0, 200000000),
                     liquidatedAt: DateTime.Now.AddDays(-2),
                     direction: p.PickRandom<OrderDirection>(),
-                    productId: p.Random.Long(0, 10),
-                    portfolioId: p.Random.Long(0, 10)))
+                    productId: p.Random.Long(1, 10),
+                    portfolioId: p.Random.Long(1, 10)))
                 .Generate();
         }
     }

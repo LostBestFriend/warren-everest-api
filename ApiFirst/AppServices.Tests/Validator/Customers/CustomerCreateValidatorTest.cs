@@ -1,5 +1,6 @@
 ﻿using ApiFirst.Tests.Fixtures.AppServices.Customer;
 using AppServices.Validator.Customers;
+using FluentAssertions;
 using FluentValidation.TestHelper;
 using System;
 using Xunit;
@@ -20,9 +21,9 @@ namespace ApiFirst.Tests.Validator.Customers
         {
             var createCustomer = CreateCustomerFixture.GenerateCreateCustomerFixture();
 
-            var result = validatorCreate.TestValidate(createCustomer);
+            var result = validatorCreate.Validate(createCustomer);
 
-            result.ShouldNotHaveAnyValidationErrors();
+            result.IsValid.Should().BeTrue();
         }
 
         [Fact]

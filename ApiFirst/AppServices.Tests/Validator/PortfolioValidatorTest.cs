@@ -1,4 +1,4 @@
-﻿using AppModels.AppModels.Portfolios;
+﻿using ApiFirst.Tests.Fixtures.AppServices.Portfolio;
 using AppServices.Validator.Portfolios;
 using FluentAssertions;
 using FluentValidation.TestHelper;
@@ -21,8 +21,7 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Validate_CreatePortfolio_Sucessfully()
         {
-            var createPortfolio = new CreatePortfolio(name: "João",
-                description: "aaa", customerId: 1);
+            var createPortfolio = CreatePortfolioFixture.GenerateCreatePortfolioFixture();
 
             var result = validatorCreate.Validate(createPortfolio);
 
@@ -32,8 +31,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_CreatePortfolio_When_Name_Is_Empty()
         {
-            var createPortfolio = new CreatePortfolio(name: "",
-                description: "aaa", customerId: 1);
+            var createPortfolio = CreatePortfolioFixture.GenerateCreatePortfolioFixture();
+            createPortfolio.Name = "";
 
             var result = validatorCreate.TestValidate(createPortfolio);
 
@@ -43,8 +42,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_CreatePortfolio_When_Description_Is_Empty()
         {
-            var createPortfolio = new CreatePortfolio(name: "aaa",
-                description: "", customerId: 1);
+            var createPortfolio = CreatePortfolioFixture.GenerateCreatePortfolioFixture();
+            createPortfolio.Description = "";
 
             var result = validatorCreate.TestValidate(createPortfolio);
 
@@ -54,8 +53,7 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Validate_UpdatePortfolio_Sucessfully()
         {
-            var updatePortfolio = new UpdatePortfolio(name: "João",
-                description: "aaa", customerId: 1);
+            var updatePortfolio = UpdatePortfolioFixture.GenerateUpdatePortfolioFixture();
 
             var result = validatorUpdate.Validate(updatePortfolio);
 
@@ -65,8 +63,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_UpdatePortfolio_When_Name_Is_Empty()
         {
-            var updatePortfolio = new UpdatePortfolio(name: "",
-                description: "aaa", customerId: 1);
+            var updatePortfolio = UpdatePortfolioFixture.GenerateUpdatePortfolioFixture();
+            updatePortfolio.Name = "";
 
             var result = validatorUpdate.TestValidate(updatePortfolio);
 
@@ -76,8 +74,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_UpdatePortfolio_When_Description_Is_Empty()
         {
-            var updatePortfolio = new UpdatePortfolio(name: "aaa",
-                description: "", customerId: 1);
+            var updatePortfolio = UpdatePortfolioFixture.GenerateUpdatePortfolioFixture();
+            updatePortfolio.Description = "";
 
             var result = validatorUpdate.TestValidate(updatePortfolio);
 

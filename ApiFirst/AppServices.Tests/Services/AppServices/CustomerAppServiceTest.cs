@@ -29,15 +29,15 @@ namespace ApiFirst.Tests.Services.AppServices
         [Fact]
         public async void Should_Create_SucessFully()
         {
-            var customer = CreateCustomerFixture.GenerateCreateCustomerFixture();
-            Customer custom = CustomerFixture.GenerateCustomerFixture();
+            var createCustomer = CreateCustomerFixture.GenerateCreateCustomerFixture();
+            var custom = CustomerFixture.GenerateCustomerFixture();
             long id = 1;
 
             _customerServiceMock.Setup(p => p.CreateAsync(It.IsAny<Customer>())).ReturnsAsync(id);
 
             _customerBankInfoServiceMock.Setup(p => p.CreateAsync(id));
 
-            long idResult = await _customerAppService.CreateAsync(customer);
+            long idResult = await _customerAppService.CreateAsync(createCustomer);
 
             idResult.Should().BeGreaterThanOrEqualTo(1);
 

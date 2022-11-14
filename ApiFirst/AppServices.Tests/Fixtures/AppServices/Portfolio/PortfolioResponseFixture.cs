@@ -13,7 +13,7 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Portfolio
         {
             return new Faker<PortfolioResponse>("en_US")
                 .CustomInstantiator(p => new PortfolioResponse(
-                    id: p.Random.Long(0, 10),
+                    id: p.Random.Long(1, 10),
                     name: p.Name.FirstName(),
                     description: p.Lorem.Text(),
                     totalBalance: p.Random.Decimal(0, 200000000),
@@ -27,7 +27,7 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Portfolio
         {
             return new Faker<PortfolioResponse>("en_US")
                 .CustomInstantiator(p => new PortfolioResponse(
-                    id: p.Random.Long(0, 10),
+                    id: p.Random.Long(1, 10),
                     name: p.Name.FirstName(),
                     description: p.Lorem.Text(),
                     totalBalance: p.Random.Decimal(0, 200000000),

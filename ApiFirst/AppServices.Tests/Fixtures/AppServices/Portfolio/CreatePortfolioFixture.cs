@@ -12,7 +12,7 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Portfolio
                 .CustomInstantiator(p => new CreatePortfolio(
                     name: p.Name.FirstName(),
                     description: p.Lorem.Text(),
-                    customerId: p.Random.Long(0, 10)))
+                    customerId: p.Random.Long(1, 10)))
                 .Generate(quantity);
         }
         public static CreatePortfolio GenerateCreatePortfolioFixture()
@@ -21,7 +21,7 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Portfolio
                 .CustomInstantiator(p => new CreatePortfolio(
                     name: p.Name.FirstName(),
                     description: p.Lorem.Text(),
-                    customerId: p.Random.Long(0, 10)))
+                    customerId: p.Random.Long(1, 10)))
                 .Generate();
         }
     }

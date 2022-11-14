@@ -1,5 +1,4 @@
-﻿using AppModels.AppModels.Orders;
-using AppModels.EnumModels;
+﻿using ApiFirst.Tests.Fixtures.AppServices.Order;
 using AppServices.Validator.Orders;
 using FluentAssertions;
 using FluentValidation.TestHelper;
@@ -23,10 +22,7 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Validate_CreateOrder_Sucessfully()
         {
-            var createOrder = new CreateOrder(quotes: 1, unitPrice: 1, liquidatedAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var createOrder = CreateOrderFixture.GenerateCreateOrderFixture();
 
             var result = validatorCreate.Validate(createOrder);
 
@@ -36,10 +32,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_CreateOrder_When_Quotes_Is_Lesser_Than_One()
         {
-            var createOrder = new CreateOrder(quotes: 0, unitPrice: 1, liquidatedAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var createOrder = CreateOrderFixture.GenerateCreateOrderFixture();
+            createOrder.Quotes = 0;
 
             var result = validatorCreate.TestValidate(createOrder);
 
@@ -50,10 +44,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_CreateOrder_When_Quotes_Is_Empty()
         {
-            var createOrder = new CreateOrder(quotes: int.MinValue, unitPrice: 1, liquidatedAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var createOrder = CreateOrderFixture.GenerateCreateOrderFixture();
+            createOrder.Quotes = int.MinValue;
 
             var result = validatorCreate.TestValidate(createOrder);
 
@@ -63,10 +55,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_CreateOrder_When_LiquidatedAt_Is_Empty()
         {
-            var createOrder = new CreateOrder(quotes: 1, unitPrice: 1, liquidatedAt:
-                DateTime.MinValue,
-                direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var createOrder = CreateOrderFixture.GenerateCreateOrderFixture();
+            createOrder.LiquidatedAt = new DateTime();
 
             var result = validatorCreate.TestValidate(createOrder);
 
@@ -76,10 +66,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_CreateOrder_When_Direction_Is_Empty()
         {
-            var createOrder = new CreateOrder(quotes: 1, unitPrice: 1, liquidatedAt:
-                DateTime.MinValue,
-                direction: 0,
-                productId: 1, portfolioId: 1);
+            var createOrder = CreateOrderFixture.GenerateCreateOrderFixture();
+            createOrder.Direction = 0;
 
             var result = validatorCreate.TestValidate(createOrder);
 
@@ -89,23 +77,18 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Validate_UpdateOrder_Sucessfully()
         {
-            var updateOrder = new UpdateOrder(quotes: 1, unitPrice: 1, liquidatedAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var updateOrder = UpdateOrderFixture.GenerateUpdateOrderFixture();
 
-            var result = validatorUpdate.Validate(updateOrder);
+            var result = validatorUpdate.TestValidate(updateOrder);
 
-            result.IsValid.Should().BeTrue();
+            result.ShouldNotHaveAnyValidationErrors();
         }
 
         [Fact]
         public void Should_Not_Validate_UpdateOrder_When_Quotes_Is_Lesser_Than_One()
         {
-            var updateOrder = new UpdateOrder(quotes: 0, unitPrice: 1, liquidatedAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var updateOrder = UpdateOrderFixture.GenerateUpdateOrderFixture();
+            updateOrder.Quotes = 0;
 
             var result = validatorUpdate.TestValidate(updateOrder);
 
@@ -116,10 +99,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_UpdateOrder_When_Quotes_Is_Empty()
         {
-            var updateOrder = new UpdateOrder(quotes: int.MinValue, unitPrice: 1, liquidatedAt:
-                new DateTime(year: 2002, month: 2, day: 2, hour: 14, minute: 22, second: 2),
-                direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var updateOrder = UpdateOrderFixture.GenerateUpdateOrderFixture();
+            updateOrder.Quotes = int.MinValue;
 
             var result = validatorUpdate.TestValidate(updateOrder);
 
@@ -129,10 +110,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_UpdateOrder_When_LiquidatedAt_Is_Empty()
         {
-            var updateOrder = new UpdateOrder(quotes: 1, unitPrice: 1, liquidatedAt:
-                DateTime.MinValue,
-                direction: OrderDirection.Buy,
-                productId: 1, portfolioId: 1);
+            var updateOrder = UpdateOrderFixture.GenerateUpdateOrderFixture();
+            updateOrder.LiquidatedAt = new DateTime();
 
             var result = validatorUpdate.TestValidate(updateOrder);
 
@@ -142,10 +121,8 @@ namespace ApiFirst.Tests.Validator
         [Fact]
         public void Should_Not_Validate_UpdateOrder_When_Direction_Is_Empty()
         {
-            var updateOrder = new UpdateOrder(quotes: 1, unitPrice: 1, liquidatedAt:
-                DateTime.MinValue,
-                direction: 0,
-                productId: 1, portfolioId: 1);
+            var updateOrder = UpdateOrderFixture.GenerateUpdateOrderFixture();
+            updateOrder.Direction = 0;
 
             var result = validatorUpdate.TestValidate(updateOrder);
 
