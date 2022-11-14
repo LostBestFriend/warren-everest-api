@@ -12,24 +12,24 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Product
         {
             return new Faker<ProductResponse>("en_US")
                 .CustomInstantiator(p => new ProductResponse(
-                    id: 1,
+                    id: p.Random.Long(0, 10),
                     symbol: p.Image.ToString(),
-                    unitPrice: 1,
+                    unitPrice: p.Random.Decimal(0, 200000000),
                     issuanceAt: DateTime.Now.AddDays(-2),
                     expirationAt: DateTime.Now.AddDays(2),
-                    type: ProductType.FixedIncome))
+                    type: p.PickRandom<ProductType>()))
                 .Generate(quantity);
         }
         public static ProductResponse GenerateProductResponseFixture()
         {
             return new Faker<ProductResponse>("en_US")
                 .CustomInstantiator(p => new ProductResponse(
-                    id: 1,
+                    id: p.Random.Long(0, 10),
                     symbol: p.Image.ToString(),
-                    unitPrice: 1,
+                    unitPrice: p.Random.Decimal(0, 200000000),
                     issuanceAt: DateTime.Now.AddDays(-2),
                     expirationAt: DateTime.Now.AddDays(2),
-                    type: ProductType.FixedIncome))
+                    type: p.PickRandom<ProductType>()))
                 .Generate();
         }
     }

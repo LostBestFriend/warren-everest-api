@@ -10,8 +10,8 @@ namespace ApiFirst.Tests.Fixtures.DomainServices
         {
             return new Faker<CustomerBankInfo>("en_US")
                 .CustomInstantiator(p => new CustomerBankInfo(
-                    customerId: 1,
-                    accountBalance: 1000,
+                    customerId: p.Random.Long(0, 10),
+                    accountBalance: p.Random.Decimal(0, 200000000),
                     customer: CustomerFixture.GenerateCustomerFixture()))
                 .Generate(quantity);
         }
@@ -19,8 +19,8 @@ namespace ApiFirst.Tests.Fixtures.DomainServices
         {
             return new Faker<CustomerBankInfo>("en_US")
                 .CustomInstantiator(p => new CustomerBankInfo(
-                    customerId: 1,
-                    accountBalance: 1000,
+                    customerId: p.Random.Long(0, 10),
+                    accountBalance: p.Random.Decimal(0, 200000000),
                     customer: CustomerFixture.GenerateCustomerFixture()))
                 .Generate();
         }

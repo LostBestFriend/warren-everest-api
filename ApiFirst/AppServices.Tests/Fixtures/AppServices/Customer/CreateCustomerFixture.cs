@@ -10,39 +10,45 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Customer
     {
         public static List<CreateCustomer> GenerateCreateCustomerFixture(int quantity)
         {
+            Faker e = new Faker();
+            string email = e.Internet.Email();
+
             return new Faker<CreateCustomer>("en_US")
                 .CustomInstantiator(p => new CreateCustomer(
-                    cpf: p.Person.Cpf(false),
+                    cpf: p.Person.Cpf(),
                     country: p.Address.Country(),
                     city: p.Address.City(),
-                    cellphone: p.Phone.PhoneNumber(),
-                    whatsapp: p.PickRandom(true, false),
-                    emailSms: p.PickRandom(true, false),
-                    email: p.Person.Email,
-                    emailConfirmation: p.Person.Email,
+                    cellphone: p.Phone.PhoneNumberFormat(),
+                    whatsapp: p.Random.Bool(),
+                    emailSms: p.Random.Bool(),
+                    email: email,
+                    emailConfirmation: email,
                     number: int.Parse(p.Address.BuildingNumber()),
-                    address: p.Address.FullAddress(),
+                    address: p.Address.StreetAddress(),
                     fullName: p.Person.FullName,
-                    dateOfBirth: p.Date.BetweenDateOnly(DateOnly.FromDateTime(DateTime.Now), DateOnly.FromDateTime(DateTime.Now.AddYears(-18))).ToDateTime(TimeOnly.FromDateTime(DateTime.Now)),
+                    dateOfBirth: DateTime.Now.AddYears(-20),
                     postalCode: p.Address.ZipCode()))
                 .Generate(quantity);
         }
         public static CreateCustomer GenerateCreateCustomerFixture()
         {
+            Faker e = new Faker();
+            string email = e.Internet.Email();
+
             return new Faker<CreateCustomer>("en_US")
                 .CustomInstantiator(p => new CreateCustomer(
-                    cpf: p.Person.Cpf(false),
+                    cpf: p.Person.Cpf(),
                     country: p.Address.Country(),
                     city: p.Address.City(),
-                    cellphone: p.Phone.PhoneNumber(),
-                    whatsapp: p.PickRandom(false, true),
-                    emailSms: p.PickRandom(true, false),
-                    email: p.Person.Email,
-                    emailConfirmation: p.Person.Email,
+                    cellphone: p.Phone.PhoneNumberFormat(),
+                    whatsapp: p.Random.Bool(),
+                    emailSms: p.Random.Bool(),
+                    email: email,
+                    emailConfirmation: email,
                     number: int.Parse(p.Address.BuildingNumber()),
-                    address: p.Address.FullAddress(),
+                    address: p.Address.StreetAddress(),
                     fullName: p.Person.FullName,
-                    dateOfBirth: p.Date.BetweenDateOnly(DateOnly.FromDateTime(DateTime.Now), DateOnly.FromDateTime(DateTime.Now.AddYears(-18))).ToDateTime(TimeOnly.FromDateTime(DateTime.Now)),
+                    dateOfBirth: DateTime.Now.AddYears(-20),
                     postalCode: p.Address.ZipCode()))
                 .Generate();
         }

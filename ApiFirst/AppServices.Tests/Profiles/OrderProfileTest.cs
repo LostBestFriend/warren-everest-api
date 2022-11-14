@@ -22,6 +22,7 @@ namespace ApiFirst.Tests.Profiles
         public void Should_Map_UpdateOrder_Sucessfully()
         {
             var order = OrderFixture.GenerateOrderFixture();
+            order.Direction = DomainModels.Enums.OrderDirection.Buy;
 
             var updateOrder = new UpdateOrder(
                 quotes: order.Quotes,
@@ -40,6 +41,7 @@ namespace ApiFirst.Tests.Profiles
         public void Should_Map_CreateOrder_Sucessfully()
         {
             var order = OrderFixture.GenerateOrderFixture();
+            order.Direction = DomainModels.Enums.OrderDirection.Buy;
 
             var createOrder = new CreateOrder(
                 quotes: order.Quotes,

@@ -12,8 +12,8 @@ namespace ApiFirst.Tests.Fixtures.DomainServices
                 .CustomInstantiator(p => new Portfolio(
                     name: p.Name.FirstName(),
                     description: p.Lorem.Text(),
-                    totalBalance: p.PickRandom(100, 200, 500, 1000),
-                    customerId: 1))
+                    totalBalance: p.Random.Decimal(0, 200000000),
+                    customerId: p.Random.Long(0, 10)))
                 .Generate(quantity);
         }
         public static Portfolio GeneratePortfolioFixture()
@@ -22,8 +22,8 @@ namespace ApiFirst.Tests.Fixtures.DomainServices
                 .CustomInstantiator(p => new Portfolio(
                     name: p.Name.FirstName(),
                     description: p.Lorem.Text(),
-                    totalBalance: p.PickRandom(100, 200, 500, 1000),
-                    customerId: 1))
+                    totalBalance: p.Random.Decimal(0, 200000000),
+                    customerId: p.Random.Long(0, 10)))
                 .Generate();
         }
     }

@@ -1,5 +1,6 @@
 using AppModels.AppModels.Customers;
 using FluentValidation;
+using FluentValidation.Validators;
 using System;
 using System.Linq;
 
@@ -16,14 +17,14 @@ namespace AppServices.Validator.Customers
                 .WithMessage("Please enter a valid CPF, this CPF is not valid");
 
             RuleFor(x => x.Email)
-                .EmailAddress()
+                .EmailAddress(EmailValidationMode.Net4xRegex)
                 .MinimumLength(12)
                 .MaximumLength(50)
                 .NotEmpty();
 
             RuleFor(x => x.DateOfBirth)
                 .NotEmpty()
-                .LessThan(DateTime.Now.AddYears(-18))
+                .LessThanOrEqualTo(DateTime.Now.AddYears(-18))
                 .GreaterThan(DateTime.MinValue);
 
             RuleFor(x => x.FullName)
@@ -57,14 +58,12 @@ namespace AppServices.Validator.Customers
 
             RuleFor(x => x.PostalCode)
                 .NotEmpty()
-                .Length(8);
+                .MaximumLength(9);
 
             RuleFor(x => x.Address)
                 .NotEmpty()
                 .MinimumLength(3)
-                .MaximumLength(200)
-                .Must(FirstLetterIsUpperCase)
-                .WithMessage("Please enter a valid Address");
+                .MaximumLength(200);
 
             RuleFor(x => x.Number)
                 .NotEmpty()

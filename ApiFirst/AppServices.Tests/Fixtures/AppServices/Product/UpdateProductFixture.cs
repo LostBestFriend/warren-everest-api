@@ -13,10 +13,10 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Product
             return new Faker<UpdateProduct>("en_US")
                 .CustomInstantiator(p => new UpdateProduct(
                     symbol: p.Image.ToString(),
-                    unitPrice: 1,
+                    unitPrice: p.Random.Decimal(0, 200000000),
                     issuanceAt: DateTime.Now.AddDays(-2),
                     expirationAt: DateTime.Now.AddDays(2),
-                    type: ProductType.FixedIncome))
+                    type: p.PickRandom<ProductType>()))
                 .Generate(quantity);
         }
         public static UpdateProduct GenerateUpdateProductFixture()
@@ -24,10 +24,10 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Product
             return new Faker<UpdateProduct>("en_US")
                 .CustomInstantiator(p => new UpdateProduct(
                     symbol: p.Image.ToString(),
-                    unitPrice: 1,
+                    unitPrice: p.Random.Decimal(0, 200000000),
                     issuanceAt: DateTime.Now.AddDays(-2),
                     expirationAt: DateTime.Now.AddDays(2),
-                    type: ProductType.FixedIncome))
+                    type: p.PickRandom<ProductType>()))
                 .Generate();
         }
     }

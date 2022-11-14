@@ -314,7 +314,7 @@ namespace ApiFirst.Tests.Services.AppServices
 
             _portfolioServiceMock.Verify(p => p.GetByIdAsync(It.IsAny<long>()), Times.Exactly(2));
 
-            _orderAppServiceMock.Verify(p => p.GetQuotesAvaliableAsync(portfolioId, productId), Times.Exactly(2));
+            _orderAppServiceMock.Verify(p => p.GetQuotesAvaliableAsync(portfolioId, productId), Times.Once);
 
             _orderAppServiceMock.Verify(p => p.CreateAsync(It.IsAny<CreateOrder>()), Times.Once);
 

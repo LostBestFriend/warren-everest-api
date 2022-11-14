@@ -5,7 +5,7 @@ namespace AppModels.AppModels.Orders
 {
     public class OrderResponse
     {
-        public OrderResponse(int id, int quotes, int unitPrice, DateTime liquidatedAt, OrderDirection direction, long productId, long portfolioId)
+        public OrderResponse(long id, int quotes, decimal unitPrice, DateTime liquidatedAt, OrderDirection direction, long productId, long portfolioId)
         {
             Id = id;
             Quotes = quotes;

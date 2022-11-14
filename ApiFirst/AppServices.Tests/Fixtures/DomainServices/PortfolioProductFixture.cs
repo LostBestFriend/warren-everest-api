@@ -10,16 +10,16 @@ namespace ApiFirst.Tests.Fixtures.DomainServices
         {
             return new Faker<PortfolioProduct>("en_US")
                 .CustomInstantiator(p => new PortfolioProduct(
-                    portfolioId: 1,
-                    productId: 1))
+                    portfolioId: p.Random.Long(0, 10),
+                    productId: p.Random.Long(0, 10)))
                 .Generate(quantity);
         }
         public static PortfolioProduct GeneratePortfolioProductFixture()
         {
             return new Faker<PortfolioProduct>("en_US")
                 .CustomInstantiator(p => new PortfolioProduct(
-                    portfolioId: 1,
-                    productId: 1))
+                    portfolioId: p.Random.Long(0, 10),
+                    productId: p.Random.Long(0, 10)))
                 .Generate();
         }
     }

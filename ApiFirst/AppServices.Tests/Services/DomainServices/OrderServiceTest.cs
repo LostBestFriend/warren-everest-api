@@ -1,4 +1,5 @@
 ﻿using ApiFirst.Tests.Fixtures.DomainServices;
+using DomainModels.Enums;
 using DomainModels.Models;
 using DomainServices.Services;
 using EntityFrameworkCore.QueryBuilder.Interfaces;
@@ -127,7 +128,14 @@ namespace ApiFirst.Tests.Services.DomainServices
             long portfolioId = 1;
             long productId = 1;
             var orders = OrderFixture.GenerateOrderFixture(3);
-            int ordersBuyQuantity = 3;
+            int availableQuotes = 0;
+
+            foreach (var order in orders)
+            {
+                availableQuotes = order.Direction == OrderDirection.Buy ?
+                    availableQuotes += order.Quotes :
+                    availableQuotes -= order.Quotes;
+            }
 
             _repositoryFactoryMock.Setup(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>())).Returns(It.IsAny<IQuery<Order>>());
 
@@ -137,7 +145,7 @@ namespace ApiFirst.Tests.Services.DomainServices
 
             var result = await _orderService.GetQuotesAvaliableAsync(portfolioId, productId);
 
-            result.Should().Be(ordersBuyQuantity);
+            result.Should().Be(availableQuotes);
 
             _repositoryFactoryMock.Verify(p => p.Repository<Order>().MultipleResultQuery().AndFilter(It.IsAny<Expression<Func<Order, bool>>>()), Times.Once);
 

@@ -12,26 +12,26 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Order
         {
             return new Faker<OrderResponse>("en_US")
                 .CustomInstantiator(p => new OrderResponse(
-                    id: 1,
-                    quotes: 1,
-                    unitPrice: 1,
+                    id: p.Random.Long(0, 10),
+                    quotes: p.Random.Int(0, 1000),
+                    unitPrice: p.Random.Decimal(0, 200000000),
                     liquidatedAt: DateTime.Now.AddDays(-2),
-                    direction: OrderDirection.Buy,
-                    productId: 1,
-                    portfolioId: 1))
+                    direction: p.PickRandom<OrderDirection>(),
+                    productId: p.Random.Long(0, 10),
+                    portfolioId: p.Random.Long(0, 10)))
                 .Generate(quantity);
         }
         public static OrderResponse GenerateOrderResponseFixture()
         {
             return new Faker<OrderResponse>("en_US")
                 .CustomInstantiator(p => new OrderResponse(
-                    id: 1,
-                    quotes: 1,
-                    unitPrice: 1,
+                    id: p.Random.Long(0, 10),
+                    quotes: p.Random.Int(0, 1000),
+                    unitPrice: p.Random.Decimal(0, 200000000),
                     liquidatedAt: DateTime.Now.AddDays(-2),
-                    direction: OrderDirection.Buy,
-                    productId: 1,
-                    portfolioId: 1))
+                    direction: p.PickRandom<OrderDirection>(),
+                    productId: p.Random.Long(0, 10),
+                    portfolioId: p.Random.Long(0, 10)))
                 .Generate();
         }
     }

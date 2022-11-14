@@ -13,10 +13,11 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Portfolio
         {
             return new Faker<PortfolioResponse>("en_US")
                 .CustomInstantiator(p => new PortfolioResponse(
-                    id: 1, name: p.Name.FirstName(),
+                    id: p.Random.Long(0, 10),
+                    name: p.Name.FirstName(),
                     description: p.Lorem.Text(),
-                    totalBalance: 1000,
-                    accountBalance: 1000,
+                    totalBalance: p.Random.Decimal(0, 200000000),
+                    accountBalance: p.Random.Decimal(0, 200000000),
                     customer: CustomerResponseFixture.GenerateCustomerResponseFixture(),
                     products: PortfolioProductResponseFixture.GeneratePortfolioProductResponseFixture(3),
                     orders: OrderResponseFixture.GenerateOrderResponseFixture(3)))
@@ -26,10 +27,11 @@ namespace ApiFirst.Tests.Fixtures.AppServices.Portfolio
         {
             return new Faker<PortfolioResponse>("en_US")
                 .CustomInstantiator(p => new PortfolioResponse(
-                    id: 1, name: p.Name.FirstName(),
+                    id: p.Random.Long(0, 10),
+                    name: p.Name.FirstName(),
                     description: p.Lorem.Text(),
-                    totalBalance: 1000,
-                    accountBalance: 1000,
+                    totalBalance: p.Random.Decimal(0, 200000000),
+                    accountBalance: p.Random.Decimal(0, 200000000),
                     customer: CustomerResponseFixture.GenerateCustomerResponseFixture(),
                     products: PortfolioProductResponseFixture.GeneratePortfolioProductResponseFixture(3),
                     orders: OrderResponseFixture.GenerateOrderResponseFixture(3)))

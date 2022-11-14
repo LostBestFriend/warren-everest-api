@@ -23,6 +23,7 @@ namespace ApiFirst.Tests.Profiles
         public void Should_Map_UpdateProduct_Sucessfully()
         {
             var product = ProductFixture.GenerateProductFixture();
+            product.Type = DomainModels.Enums.ProductType.FixedIncome;
 
             var updateProduct = new UpdateProduct(
                symbol: product.Symbol,
@@ -40,6 +41,7 @@ namespace ApiFirst.Tests.Profiles
         public void Should_Map_CreateProduct_Sucessfully()
         {
             var product = ProductFixture.GenerateProductFixture();
+            product.Type = DomainModels.Enums.ProductType.FixedIncome;
 
             var createProduct = new CreateProduct(
                 symbol: product.Symbol,
@@ -47,9 +49,7 @@ namespace ApiFirst.Tests.Profiles
                 expirationAt: product.ExpirationAt,
                 type: ProductType.FixedIncome,
                 unitPrice: product.UnitPrice);
-
             var result = _mapper.Map<Product>(createProduct);
-
             result.Should().BeEquivalentTo(product);
         }
 
