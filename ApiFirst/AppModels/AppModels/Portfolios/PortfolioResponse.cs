@@ -19,6 +19,9 @@ namespace AppModels.AppModels.Portfolios
             Orders = orders;
         }
 
+        public PortfolioResponse()
+        { }
+
         public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

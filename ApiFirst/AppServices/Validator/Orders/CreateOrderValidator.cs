@@ -12,17 +12,13 @@ namespace AppServices.Validator.Orders
                 .GreaterThan(0);
 
             RuleFor(order => order.NetValue)
-                .Equal(p => p.Quotes * p.UnitPrice)
-                .NotEmpty();
-
-            RuleFor(order => order.UnitPrice)
                 .NotEmpty();
 
             RuleFor(order => order.Direction)
                 .IsInEnum()
                 .NotEmpty();
 
-            RuleFor(order => order.LiquidateAt)
+            RuleFor(order => order.LiquidatedAt)
                 .NotEmpty();
 
             RuleFor(order => order.PortfolioId)

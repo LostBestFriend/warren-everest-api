@@ -6,14 +6,19 @@ namespace DomainModels.Models
 {
     public class Product : BaseModel
     {
-        public Product(string symbol, DateTime issuanceAt, DateTime expirationAt, ProductType type)
+        public Product(string symbol, DateTime issuanceAt, DateTime expirationAt, ProductType type, decimal unitPrice)
         {
             Symbol = symbol;
             IssuanceAt = issuanceAt;
             ExpirationAt = expirationAt;
             DaysToExpire = (expirationAt.Date - issuanceAt.Date).Days;
             Type = type;
+            UnitPrice = unitPrice;
         }
+
+        public Product()
+        { }
+
 
         public string Symbol { get; set; }
         public decimal UnitPrice { get; set; }

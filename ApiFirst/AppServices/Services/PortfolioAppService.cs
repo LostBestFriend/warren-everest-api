@@ -69,7 +69,8 @@ namespace AppServices.Services
 
         public async Task DepositAsync(decimal amount, long customerId, long portfolioId)
         {
-            if (await _customerBankInfoAppService.GetBalanceAsync(customerId) < amount)
+            if (await _customerBankInfoAppService.GetBalanceAsync(customerId).ConfigureAwait(false) < amount)
+
                 throw new ArgumentException("Não há saldo suficiente na conta corrente para realizar este depósito");
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
@@ -80,7 +81,7 @@ namespace AppServices.Services
 
         public async Task WithdrawAsync(decimal amount, long customerId, long portfolioId)
         {
-            if (await _portfolioService.GetAccountBalanceAsync(portfolioId) < amount)
+            if (await _portfolioService.GetAccountBalanceAsync(portfolioId).ConfigureAwait(false) < amount)
                 throw new ArgumentException("Não há saldo suficiente na carteira para realizar o saque requerido");
 
             using var transactionScope = TransactionScopeFactory.CreateTransactionScope();
@@ -150,15 +151,15 @@ namespace AppServices.Services
         public async Task ExecuteBuyOrderAsync(OrderResponse order)
         {
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            var portfolio = await _portfolioService.GetByIdAsync(order.PortfolioId);
-            var productResult = await _productAppService.GetByIdAsync(order.ProductId);
+            var portfolio = await _portfolioService.GetByIdAsync(order.PortfolioId).ConfigureAwait(false);
+            var productResult = await _productAppService.GetByIdAsync(order.ProductId).ConfigureAwait(false);
             var product = _mapper.Map<Product>(productResult);
 
-            await _portfolioService.ExecuteBuyOrderAsync(order.NetValue, order.PortfolioId);
+            await _portfolioService.ExecuteBuyOrderAsync(order.NetValue, order.PortfolioId).ConfigureAwait(false);
 
-            if (!await _portfolioProductService.RelationAlreadyExistsAsync(order.PortfolioId, order.ProductId))
+            if (!await _portfolioProductService.RelationAlreadyExistsAsync(order.PortfolioId, order.ProductId).ConfigureAwait(false))
             {
-                await _portfolioProductService.InitRelationAsync(portfolio, product);
+                await _portfolioProductService.InitRelationAsync(portfolio, product).ConfigureAwait(false);
             }
             transactionScope.Complete();
         }
@@ -166,17 +167,17 @@ namespace AppServices.Services
         public async Task ExecuteSellOrderAsync(OrderResponse order)
         {
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            var portfolio = await _portfolioService.GetByIdAsync(order.PortfolioId);
-            var productResult = await _productAppService.GetByIdAsync(order.ProductId);
+            var portfolio = await _portfolioService.GetByIdAsync(order.PortfolioId).ConfigureAwait(false);
+            var productResult = await _productAppService.GetByIdAsync(order.ProductId).ConfigureAwait(false);
             var product = _mapper.Map<Product>(productResult);
 
-            await _portfolioService.ExecuteSellOrderAsync(order.NetValue, order.PortfolioId);
+            await _portfolioService.ExecuteSellOrderAsync(order.NetValue, order.PortfolioId).ConfigureAwait(false);
 
-            int availableQuotes = await _orderAppService.GetQuotesAvaliableAsync(order.PortfolioId, order.ProductId);
+            int availableQuotes = await _orderAppService.GetQuotesAvaliableAsync(order.PortfolioId, order.ProductId).ConfigureAwait(false);
 
             if (availableQuotes == 0)
             {
-                await _portfolioProductService.DisposeRelationAsync(portfolio, product);
+                await _portfolioProductService.DisposeRelationAsync(portfolio, product).ConfigureAwait(false);
 
             }
             transactionScope.Complete();
@@ -184,7 +185,7 @@ namespace AppServices.Services
 
         public async Task DeleteAsync(long portfolioId)
         {
-            await _portfolioService.DeleteAsync(portfolioId);
+            await _portfolioService.DeleteAsync(portfolioId).ConfigureAwait(false);
         }
     }
 }

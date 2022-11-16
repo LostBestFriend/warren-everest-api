@@ -12,6 +12,9 @@ namespace DomainModels.Models
             CustomerId = customerId;
         }
 
+        public Portfolio()
+        { }
+
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal TotalBalance { get; set; }

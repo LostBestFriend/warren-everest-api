@@ -31,7 +31,7 @@ namespace DomainServices.Services
         public async Task DisposeRelationAsync(Portfolio portfolio, Product product)
         {
             var repository = _unitOfWork.Repository<PortfolioProduct>();
-            var relationToRemove = await GetByRelationAsync(portfolio.Id, product.Id);
+            var relationToRemove = await GetByRelationAsync(portfolio.Id, product.Id).ConfigureAwait(false);
 
             repository.Remove(relationToRemove);
             _unitOfWork.SaveChanges();

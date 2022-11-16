@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Data.Migrations
 {
-    public partial class CardSeven : Migration
+    public partial class All : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,6 +43,26 @@ namespace Infrastructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Symbol = table.Column<string>(type: "varchar(15)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UnitPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    IssuanceAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ExpirationAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DaysToExpire = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -94,41 +114,14 @@ namespace Infrastructure.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Symbol = table.Column<string>(type: "varchar(15)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UnitPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    IssuanceAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ExpirationAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DaysToExpire = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    PortfolioId = table.Column<long>(type: "bigint", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Products_Portfolios_PortfolioId",
-                        column: x => x.PortfolioId,
-                        principalTable: "Portfolios",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Quotes = table.Column<int>(type: "int", nullable: false),
-                    UnitPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     NetValue = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    LiquidateAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    LiquidatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Direction = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<long>(type: "bigint", nullable: false),
                     PorfolioId = table.Column<long>(type: "bigint", nullable: false)
@@ -145,6 +138,31 @@ namespace Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Orders_Products_ProductId",
                         column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "PortfolioProduct",
+                columns: table => new
+                {
+                    PortfoliosId = table.Column<long>(type: "bigint", nullable: false),
+                    ProductsId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PortfolioProduct", x => new { x.PortfoliosId, x.ProductsId });
+                    table.ForeignKey(
+                        name: "FK_PortfolioProduct_Portfolios_PortfoliosId",
+                        column: x => x.PortfoliosId,
+                        principalTable: "Portfolios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PortfolioProduct_Products_ProductsId",
+                        column: x => x.ProductsId,
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -181,7 +199,8 @@ namespace Infrastructure.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CustomerBankInfos_CustomerId",
                 table: "CustomerBankInfos",
-                column: "CustomerId");
+                column: "CustomerId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_Cpf",
@@ -196,9 +215,9 @@ namespace Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_LiquidateAt",
+                name: "IX_Orders_LiquidatedAt",
                 table: "Orders",
-                column: "LiquidateAt");
+                column: "LiquidatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_PorfolioId",
@@ -209,6 +228,11 @@ namespace Infrastructure.Data.Migrations
                 name: "IX_Orders_ProductId",
                 table: "Orders",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PortfolioProduct_ProductsId",
+                table: "PortfolioProduct",
+                column: "ProductsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PortfolioProducts_PortfolioId",
@@ -224,11 +248,6 @@ namespace Infrastructure.Data.Migrations
                 name: "IX_Portfolios_CustomerId",
                 table: "Portfolios",
                 column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_PortfolioId",
-                table: "Products",
-                column: "PortfolioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_Symbol",
@@ -250,13 +269,16 @@ namespace Infrastructure.Data.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
+                name: "PortfolioProduct");
+
+            migrationBuilder.DropTable(
                 name: "PortfolioProducts");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Portfolios");
 
             migrationBuilder.DropTable(
-                name: "Portfolios");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Customers");

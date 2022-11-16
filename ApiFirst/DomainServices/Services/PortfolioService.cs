@@ -77,7 +77,7 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            var portfolio = await GetByIdAsync(portfolioId);
+            var portfolio = await GetByIdAsync(portfolioId).ConfigureAwait(false);
 
             portfolio.TotalBalance += amount;
             repository.Update(portfolio);
@@ -88,7 +88,7 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            var portfolio = await GetByIdAsync(portfolioId);
+            var portfolio = await GetByIdAsync(portfolioId).ConfigureAwait(false);
 
             if (portfolio.AccountBalance < amount)
                 throw new ArgumentException("Não há saldo suficiente para o saque");
@@ -102,7 +102,7 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            var portfolio = await GetByIdAsync(portfolioId);
+            var portfolio = await GetByIdAsync(portfolioId).ConfigureAwait(false);
 
             if (portfolio.AccountBalance < amount)
                 throw new ArgumentException("Não há saldo suficiente para o depósito");
@@ -116,7 +116,7 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            var portfolio = await GetByIdAsync(portfolioId);
+            var portfolio = await GetByIdAsync(portfolioId).ConfigureAwait(false);
 
             if (portfolio.AccountBalance < amount)
                 throw new ArgumentException("Não há saldo suficiente para o saque");
@@ -130,7 +130,7 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            var portfolio = await GetByIdAsync(portfolioId);
+            var portfolio = await GetByIdAsync(portfolioId).ConfigureAwait(false);
 
             portfolio.TotalBalance += amount;
             portfolio.AccountBalance -= amount;
@@ -142,7 +142,7 @@ namespace DomainServices.Services
         {
             var repository = _unitOfWork.Repository<Portfolio>();
 
-            var portfolio = await GetByIdAsync(portfolioId);
+            var portfolio = await GetByIdAsync(portfolioId).ConfigureAwait(false);
 
             portfolio.TotalBalance -= amount;
             portfolio.AccountBalance += amount;
@@ -153,13 +153,13 @@ namespace DomainServices.Services
         public async Task DeleteAsync(long portfolioId)
         {
             var repository = _unitOfWork.Repository<Portfolio>();
-            var portfolio = await GetByIdAsync(portfolioId);
+            var portfolio = await GetByIdAsync(portfolioId).ConfigureAwait(false);
 
             if (portfolio.AccountBalance > 0)
-                throw new ArgumentException($"Não é possível excluir a carteira enquanto houver saldo");
+                throw new ArgumentException("Não é possível excluir a carteira enquanto houver saldo");
 
             if (portfolio.Products is not null)
-                throw new ArgumentException($"Não é possível excluir a carteira enquanto houver produtos nela investidos");
+                throw new ArgumentException("Não é possível excluir a carteira enquanto houver produtos nela investidos");
 
             repository.Remove(portfolio);
             _unitOfWork.SaveChanges();

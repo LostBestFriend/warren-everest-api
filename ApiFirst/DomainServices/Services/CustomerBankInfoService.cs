@@ -39,7 +39,8 @@ namespace DomainServices.Services
             var repository = _repositoryFactory.Repository<CustomerBankInfo>();
 
             if (!repository.Any(bankinfo => bankinfo.CustomerId == customerId))
-                throw new ArgumentNullException($"Cliente não encontrado para o id {customerId}");
+
+                throw new ArgumentNullException($"Cliente não encontrado para o Id {customerId}");
 
             var query = repository.SingleResultQuery().AndFilter(bankinfo => bankinfo.CustomerId == customerId).Select(bankinfo => bankinfo.AccountBalance);
             var accountBalance = await repository.FirstOrDefaultAsync(query);

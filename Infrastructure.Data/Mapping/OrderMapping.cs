@@ -16,15 +16,15 @@ namespace Infrastructure.Data.Mapping
                    .ValueGeneratedOnAdd()
                    .HasColumnName("Id");
 
-            builder.HasIndex(order => order.LiquidateAt);
+            builder.HasIndex(order => order.LiquidatedAt);
 
             builder.Property(order => order.Quotes)
                     .IsRequired()
                     .HasColumnName("Quotes");
 
-            builder.Property(order => order.LiquidateAt)
+            builder.Property(order => order.LiquidatedAt)
                    .IsRequired()
-                   .HasColumnName("LiquidateAt");
+                   .HasColumnName("LiquidatedAt");
 
             builder.Property(order => order.Direction)
                    .IsRequired()
