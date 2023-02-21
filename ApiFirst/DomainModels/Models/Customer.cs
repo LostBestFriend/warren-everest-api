@@ -1,12 +1,14 @@
-﻿namespace DomainModels.Models
+using Infrastructure.CrossCutting.ExtensionMethods;
+using System;
+using System.Collections.Generic;
+
+namespace DomainModels.Models
 {
     public class Customer : BaseModel
     {
-        public Customer
-        (
+        public Customer(
             string fullName,
             string email,
-            string emailConfirmation,
             string cpf,
             string cellphone,
             DateTime dateOfBirth,
@@ -21,21 +23,20 @@
         {
             FullName = fullName;
             Email = email;
-            EmailConfirmation = emailConfirmation;
-            Cpf = cpf.Trim().Replace(".", "").Replace("-", "");
+            Cpf = cpf.FormatString();
             Cellphone = cellphone;
             DateOfBirth = dateOfBirth;
             EmailSms = emailSms;
             Whatsapp = whatsapp;
             Country = country;
             City = city;
-            PostalCode = postalCode;
+            PostalCode = postalCode.FormatString();
             Address = address;
             Number = number;
         }
+
         public string FullName { get; set; }
         public string Email { get; set; }
-        public string EmailConfirmation { get; set; }
         public string Cpf { get; set; }
         public string Cellphone { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -46,5 +47,7 @@
         public string PostalCode { get; set; }
         public string Address { get; set; }
         public int Number { get; set; }
+        public CustomerBankInfo CustomerBankInfo { get; set; }
+        public ICollection<Portfolio> Portfolios { get; set; }
     }
 }

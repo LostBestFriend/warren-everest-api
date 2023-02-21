@@ -1,26 +1,28 @@
+using AppModels.AppModels.Customers;
 using AppServices.Interfaces;
-using DomainModels.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
-namespace WebApi.Controllers
+namespace ApiFirst.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerAppService _customerAppServices;
+        private readonly ICustomerAppService _customerAppService;
 
         public CustomersController(ICustomerAppService customerAppServices)
         {
-            _customerAppServices = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
+            _customerAppService = customerAppServices ?? throw new ArgumentNullException(nameof(customerAppServices));
         }
 
         [HttpGet("cpf/{cpf}")]
-        public IActionResult GetByCpf(string cpf)
+        public async Task<IActionResult> GetByCpfAsync(string cpf)
         {
             try
             {
-                var response = _customerAppServices.GetByCpf(cpf);
+                var response = await _customerAppService.GetByCpfAsync(cpf).ConfigureAwait(false);
                 return Ok(response);
             }
             catch (ArgumentNullException e)
@@ -31,21 +33,21 @@ namespace WebApi.Controllers
             {
                 return Problem(e.Message);
             }
-
         }
+
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var response = _customerAppServices.GetAll();
-            return Ok(response);
+            var result = await _customerAppService.GetAllAsync().ConfigureAwait(false);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
             try
             {
-                var response = _customerAppServices.GetById(id);
+                var response = await _customerAppService.GetByIdAsync(id).ConfigureAwait(false);
                 return Ok(response);
             }
             catch (ArgumentNullException e)
@@ -59,11 +61,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Customer model)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCustomer model)
         {
             try
             {
-                long id = _customerAppServices.Create(model);
+                long id = await _customerAppService.CreateAsync(model).ConfigureAwait(false);
                 return Created("", id);
             }
             catch (ArgumentException e)
@@ -77,11 +79,11 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
             try
             {
-                _customerAppServices.Delete(id);
+                await _customerAppService.DeleteAsync(id).ConfigureAwait(false);
                 return NoContent();
             }
             catch (ArgumentNullException e)
@@ -94,34 +96,12 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Customer model)
+        [HttpPut]
+        public IActionResult Update(UpdateCustomer model)
         {
             try
             {
-                _customerAppServices.Update(id, model);
-                return Ok();
-            }
-            catch (ArgumentNullException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message);
-            }
-        }
-
-        [HttpPatch("{id}")]
-        public IActionResult Modify(int id, string email)
-        {
-            try
-            {
-                _customerAppServices.Modify(id, email);
+                _customerAppService.Update(model);
                 return Ok();
             }
             catch (ArgumentNullException ex)

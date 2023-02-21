@@ -1,22 +1,16 @@
 ﻿using DomainModels.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DomainServices.Interfaces
 {
     public interface ICustomerService
-
     {
-        long Create(Customer model);
-
-        void Update(int id, Customer model);
-
-        void Delete(int id);
-
-        List<Customer> GetAll();
-
-        Customer GetById(int id);
-
-        void Modify(int id, string email);
-
-        Customer GetByCpf(string cpf);
+        Task<long> CreateAsync(Customer model);
+        void Update(Customer model);
+        Task DeleteAsync(long id);
+        Task<IEnumerable<Customer>> GetAllAsync();
+        Task<Customer> GetByIdAsync(long id);
+        Task<Customer> GetByCpfAsync(string cpf);
     }
 }

@@ -1,21 +1,16 @@
-﻿using DomainModels.Models;
+using AppModels.AppModels.Customers;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AppServices.Interfaces
 {
     public interface ICustomerAppService
     {
-        long Create(Customer model);
-
-        void Update(int id, Customer model);
-
-        void Delete(int id);
-
-        List<Customer> GetAll();
-
-        Customer GetById(int id);
-
-        void Modify(int id, string email);
-
-        Customer GetByCpf(string cpf);
+        Task<long> CreateAsync(CreateCustomer model);
+        void Update(UpdateCustomer model);
+        Task DeleteAsync(long id);
+        Task<IEnumerable<CustomerResponse>> GetAllAsync();
+        Task<CustomerResponse> GetByIdAsync(long id);
+        Task<CustomerResponse> GetByCpfAsync(string cpf);
     }
 }
